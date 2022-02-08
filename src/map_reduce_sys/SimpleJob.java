@@ -1,19 +1,18 @@
 package map_reduce_sys;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-
-import fr.sorbonne_u.components.AbstractComponent;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public  class SimpleJob  {
 	
 	protected ArrayList<Tuple> data;
 	protected Nature nature;
-	protected Callable f;
-	protected Callable g;
+	protected Function <Tuple,Tuple> f;
+	protected BiFunction < Tuple,Tuple,Tuple>g;
 	
 	
-	protected SimpleJob(ArrayList<Tuple>data, Callable f,Callable g,Nature nature) {
+	protected SimpleJob(ArrayList<Tuple>data,Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Nature nature) {
 		this.data=data;
 		this.f=f;
 		this.g=g;
@@ -28,11 +27,11 @@ public  class SimpleJob  {
      
 	
 	
-	public Callable getF() {
+	public Function <Tuple,Tuple> getF() {
 		return f;
 	}
 	
-	public Callable getG() {
+	public BiFunction < Tuple,Tuple,Tuple> getG() {
 		return g;
 	}
 	

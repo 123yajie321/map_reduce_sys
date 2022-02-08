@@ -8,19 +8,19 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 public class Tuple implements Serializable {
 	
 	  private static final long serialVersionUID = 1L;
-	  private  ArrayList<Object> tuple;
+	  private Object[] tuple    ;
 	 
 	  
 
-	  public Tuple (ArrayList<Object>tuple){
+	  public Tuple (int dimention){
 	
-		  	this.tuple=tuple; 
-	 }
+		  	tuple=new Object [dimention]; 
+	  }
 
-    public ArrayList<Object> getTuple() {
-		return tuple;
-	}
-		
-	
+      public Object getIndiceData(int indice) {
+    	  return tuple[indice];
+      }
+      
+      
 
 }

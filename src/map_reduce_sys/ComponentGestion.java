@@ -43,8 +43,9 @@ public class ComponentGestion extends AbstractComponent {
 	
 	
 	
-	public <R> Tuple map(Callable<?> f,Tuple tuple1) {
+	public <R> Tuple map(Function < Tuple,Tuple>f,Tuple tuple1) {
 		
+
 	   ArrayList<Object> tuple=tuple1.getTuple();
 	   ArrayList<Object> result=(ArrayList<Object>) tuple.stream().map( (Function<? super Object, ? extends R>) f).collect(Collectors.toList());	   
 	   Tuple res=new Tuple(result);
