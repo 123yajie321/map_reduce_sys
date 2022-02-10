@@ -7,8 +7,8 @@ public class ConnectorMapGestion extends AbstractConnector implements SendTupleS
 
 
 	@Override
-	public Tuple tupleSender() {
-		return ((SendTupleServiceI)this.offering).tupleSender();
+	public Tuple tupleSender() throws Exception {
+		return ((RecieveTupleServiceI)this.offering).tupleReciever(t)();
 	}
 
 }

@@ -15,9 +15,9 @@ public class MapServiceOutboundPort extends AbstractOutboundPort implements Send
 	}
 
 	@Override
-	public Tuple tupleSender() {
-		// TODO Auto-generated method stub
-		return null;
+	public Tuple tupleSender() throws Exception {
+		return ((SendTupleServiceI)this.getConnector()).tupleSender();
 	}
+	
 
 }
