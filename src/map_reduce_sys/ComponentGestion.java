@@ -2,6 +2,7 @@ package map_reduce_sys;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.*;
@@ -15,6 +16,10 @@ public class ComponentGestion extends AbstractComponent {
 
 	public static final String CGOP_URI = "cgop-uri";
 	protected CalculServiceOutboundPort cgop;
+	protected ConcurrentLinkedQueue<Tuple> bufferRessource;
+	protected ConcurrentLinkedQueue<Tuple> bufferResult;
+
+
 	
 	protected ComponentGestion() throws Exception {
 		super(1, 0);
@@ -43,6 +48,25 @@ public class ComponentGestion extends AbstractComponent {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	
 	public <R> Tuple map(Function < Tuple,Tuple>f,Tuple tuple1) {
 		
 
@@ -69,7 +93,7 @@ public class ComponentGestion extends AbstractComponent {
 		  ArrayList<Tuple>result=(ArrayList<Tuple>) g.call();
 		  return result;
 	  }
-	
+	*/
 	
 
 

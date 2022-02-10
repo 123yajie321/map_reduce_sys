@@ -6,33 +6,28 @@ import java.util.function.Function;
 
 public  class SimpleJob  {
 	
-	protected ArrayList<Tuple> data;
 	protected Nature nature;
-	protected Function <Tuple,Tuple> f;
-	protected BiFunction < Tuple,Tuple,Tuple>g;
+	protected Function <Tuple,Tuple> function_map;
+	protected BiFunction < Tuple,Tuple,Tuple>function_reduce;
+	protected Function<Void, Tuple> data_generator;
 	
 	
-	protected SimpleJob(ArrayList<Tuple>data,Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Nature nature) {
-		this.data=data;
-		this.f=f;
-		this.g=g;
+	protected SimpleJob(Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Function<Void, Tuple> s,Nature nature) {
+	
+		this.function_map=f;
+		this.function_reduce=g;
+		this.data_generator=s;
 		this.nature=nature;
 		
 	}
-	
-	public ArrayList<Tuple> getData() {
-		return data;
-	}
-	
-     
-	
+		
 	
 	public Function <Tuple,Tuple> getF() {
-		return f;
+		return function_map;
 	}
 	
 	public BiFunction < Tuple,Tuple,Tuple> getG() {
-		return g;
+		return function_reduce;
 	}
 	
 	

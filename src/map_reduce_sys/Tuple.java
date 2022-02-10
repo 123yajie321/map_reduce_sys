@@ -9,11 +9,11 @@ public class Tuple implements Serializable {
 	
 	  private static final long serialVersionUID = 1L;
 	  private Object[] tuple    ;
-	 
+	  private int dimention; 
 	  
 
 	  public Tuple (int dimention){
-	
+		  	this.dimention=dimention;
 		  	tuple=new Object [dimention]; 
 	  }
 

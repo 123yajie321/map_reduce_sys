@@ -2,28 +2,35 @@ package map_reduce_sys;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RejectedExecutionException;
 
 import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.interfaces.RequiredCI;
+import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
 
-
-
-public class CalculServiceInboundPort extends AbstractInboundPort implements CalculServiceI {
-
-	private static final long serialVersionUID=1L;
+public class MapServiceInboundPort extends AbstractInboundPort implements SendTupleServiceI {
 	
-	public CalculServiceInboundPort( ComponentI owner)throws Exception {
-		super(CalculServiceI.class, owner);
-		
+	private static final long serialVersionUID=1L;
+
+
+	public MapServiceInboundPort(ComponentI owner) throws Exception {
+		super(SendTupleServiceI.class, owner);
+		// TODO Auto-generated constructor stub
 	}
 
+
+	@Override
+	public boolean tupleSender(Tuple t, String uri) {
+		
+		
+		return ;
+	}
 	
-	public CalculServiceInboundPort(String uri,ComponentI owner) throws Exception {
+	
+	
+
+	
+	public MapServiceInboundPort(String uri,ComponentI owner) throws Exception {
 		super(uri, CalculServiceI.class,owner);
 	}
 	
@@ -42,6 +49,13 @@ public class CalculServiceInboundPort extends AbstractInboundPort implements Cal
 	public ArrayList<Tuple> generate_data(Callable<?> g)throws Exception {
 		
 		return this.getOwner().handleRequest(cg->((ComponentGestion)cg).generate_data(g));
+	}
+
+
+	@Override
+	public Tuple tupleSender() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
