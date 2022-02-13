@@ -21,6 +21,11 @@ public class Tuple implements Serializable {
     	  return tuple[indice];
       }
       
+      public void setIndiceTuple(int indice,Object o) {
+    	  tuple[indice] = o;
+      }
+      
+      
       
 
 }

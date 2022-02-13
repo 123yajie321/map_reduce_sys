@@ -20,7 +20,23 @@ public class CalculServiceOutboundPort extends AbstractOutboundPort implements C
 	public CalculServiceOutboundPort(String uri,ComponentI owner) throws Exception {
 		super(uri, CalculServiceI.class,owner);
 	}
+	@Override
+	public Tuple map(Callable<?> f, Tuple tuple) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Tuple reduce(Callable<?> g, Object acc, Tuple tuple) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public ArrayList<Tuple> generate_data(Callable<?> g) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	/*
 	@Override
 	public Tuple map(Callable<?> f, Tuple tuple) throws Exception {
 		
@@ -38,5 +54,6 @@ public class CalculServiceOutboundPort extends AbstractOutboundPort implements C
 		return this.getOwner().handleRequest(cg->((ComponentGestion)cg).generate_data(g));
 	}
 
+*/
 
 }

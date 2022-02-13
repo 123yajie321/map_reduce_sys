@@ -1,10 +1,11 @@
-package map_reduce_sys;
+package map_reduce_sys.interfaces;
 
 import fr.sorbonne_u.components.interfaces.RequiredCI;
+import map_reduce_sys.Tuple;
 
 public interface SendTupleServiceI extends RequiredCI {
 	
-	public Tuple tupleSender()throws Exception;
+	public void tupleSender(Tuple t)throws Exception;
 	
 
 }

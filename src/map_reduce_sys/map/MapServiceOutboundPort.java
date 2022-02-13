@@ -1,8 +1,10 @@
-package map_reduce_sys;
+package map_reduce_sys.map;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import map_reduce_sys.Tuple;
+import map_reduce_sys.interfaces.SendTupleServiceI;
 
 public class MapServiceOutboundPort extends AbstractOutboundPort implements SendTupleServiceI {
 	
@@ -13,10 +15,15 @@ public class MapServiceOutboundPort extends AbstractOutboundPort implements Send
 		super(SendTupleServiceI.class, owner);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public MapServiceOutboundPort(String uri, ComponentI owner)
+			throws Exception {
+		super(uri, SendTupleServiceI.class, owner);
+	}
 
 	@Override
-	public Tuple tupleSender() throws Exception {
-		return ((SendTupleServiceI)this.getConnector()).tupleSender();
+	public void tupleSender(Tuple t) throws Exception {
+		((SendTupleServiceI)this.getConnector()).tupleSender(t);
 	}
 	
 

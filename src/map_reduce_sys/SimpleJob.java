@@ -12,7 +12,7 @@ public  class SimpleJob  {
 	protected Function<Void, Tuple> data_generator;
 	
 	
-	protected SimpleJob(Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Function<Void, Tuple> s,Nature nature) {
+	public SimpleJob(Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Function<Void, Tuple> s,Nature nature) {
 	
 		this.function_map=f;
 		this.function_reduce=g;

@@ -1,16 +1,25 @@
-package map_reduce_sys;
+package map_reduce_sys.gestion;
 
 import java.util.ArrayList;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.*;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
-@RequiredInterfaces(required = {CalculServiceI.class})
+import map_reduce_sys.CalculServiceOutboundPort;
+import map_reduce_sys.Nature;
+import map_reduce_sys.SimpleJob;
+import map_reduce_sys.Tuple;
+import map_reduce_sys.interfaces.RecieveTupleServiceI;
+
+@OfferedInterfaces(offered= {RecieveTupleServiceI.class})
 
 public class ComponentGestion extends AbstractComponent {
 
@@ -18,6 +27,8 @@ public class ComponentGestion extends AbstractComponent {
 	protected CalculServiceOutboundPort cgop;
 	protected ConcurrentLinkedQueue<Tuple> bufferRessource;
 	protected ConcurrentLinkedQueue<Tuple> bufferResult;
+	protected ConcurrentLinkedQueue<Tuple> bufferResultMap;
+	protected SimpleJob job;
 
 
 	
@@ -30,8 +41,49 @@ public class ComponentGestion extends AbstractComponent {
 	@Override
 	public synchronized void execute() throws Exception {
 		super.execute();
-		SimpleJob job;
+		/*
+		Function<Tuple, Tuple> f_map = a -> {
+			Double resDouble = (Double)a.getIndiceData(0)*10.0;
+			Tuple tuple = new Tuple(1);
+			tuple.setIndiceTuple(0, resDouble);
+			return tuple;
+		};
 		
+		BiFunction<Tuple, Tuple, Tuple> g_reduce = (a,b) -> {
+			Double resDouble = (Double)a.getIndiceData(0)+(Double)b.getIndiceData(0);
+			Tuple tuple = new Tuple(1);
+			tuple.setIndiceTuple(0, resDouble);
+			return tuple;
+		};
+		
+		Function<Void, Tuple> s_generator = (Void v) -> {
+			Object[] randomNum=new Object[10];
+			for(int i=0;i<randomNum.length;i++){
+				randomNum[i]=(int)(Math.random()*20);
+			}	
+			Tuple tuple = new Tuple(1);
+			tuple.setIndiceTuple(0, randomNum);
+			return tuple;
+		};
+		 
+		SimpleJob job = new SimpleJob(f_map,g_reduce,s_generator,Nature.COMMUTATIVE_ASSOCIATIVE);
+		setJob(job);
+		*/
+		
+		
+	}
+	
+	public SimpleJob getSimpleJob() {
+		return this.job;
+	}
+	
+	public void setJob(SimpleJob job) {
+		this.job = job;
+	}
+	
+	public boolean recieveTuple(Tuple t) {
+		this.bufferResultMap.add(t);
+		return true;
 	}
 	
 	@Override
