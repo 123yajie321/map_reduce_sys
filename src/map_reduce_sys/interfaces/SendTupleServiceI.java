@@ -5,7 +5,7 @@ import map_reduce_sys.Tuple;
 
 public interface SendTupleServiceI extends RequiredCI {
 	
-	public void tupleSender(Tuple t)throws Exception;
+	public boolean tupleSender(Tuple t)throws Exception;
 	
 
 }

@@ -22,8 +22,8 @@ public class GestionMapOutboundPort extends AbstractOutboundPort implements Send
 	}
 
 	@Override
-	public void tupleSender(Tuple t) throws Exception {
-		((SendTupleServiceI)this.getConnector()).tupleSender(t);
+	public boolean tupleSender(Tuple t) throws Exception {
+		return ((SendTupleServiceI)this.getConnector()).tupleSender(t);
 	}
 
 }

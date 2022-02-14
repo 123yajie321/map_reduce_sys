@@ -18,13 +18,15 @@ import map_reduce_sys.Nature;
 import map_reduce_sys.SimpleJob;
 import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
+import map_reduce_sys.interfaces.SendTupleServiceI;
 
-@OfferedInterfaces(offered= {RecieveTupleServiceI.class})
+@RequiredInterfaces(required ={SendTupleServiceI.class})
+
 
 public class ComponentGestion extends AbstractComponent {
 
-	public static final String CGOP_URI = "cgop-uri";
-	protected CalculServiceOutboundPort cgop;
+	public static final String GMOP_URI = "gmop-uri";
+	protected GestionMapOutboundPort gmop;
 	protected ConcurrentLinkedQueue<Tuple> bufferRessource;
 	protected ConcurrentLinkedQueue<Tuple> bufferResult;
 	protected ConcurrentLinkedQueue<Tuple> bufferResultMap;
@@ -34,8 +36,8 @@ public class ComponentGestion extends AbstractComponent {
 	
 	protected ComponentGestion() throws Exception {
 		super(1, 0);
-	    this.cgop=new CalculServiceOutboundPort(CGOP_URI,this);
-	    this.cgop.publishPort();
+	    this.gmop=new GestionMapOutboundPort(GMOP_URI,this);
+	    this.gmop.publishPort();
 	}
 	
 	@Override
@@ -70,6 +72,19 @@ public class ComponentGestion extends AbstractComponent {
 		setJob(job);
 		*/
 		
+
+		ArrayList<Tuple>source=new ArrayList<Tuple>();
+		
+		for(int i=0;i<6;i++) {
+			Tuple tuple=new Tuple(1);
+			Double randomNum=(double)(Math.random()*20);
+			tuple.setIndiceTuple(0, randomNum);
+			source.add(tuple);
+		}
+		Tuple tuple=new Tuple(1);
+		tuple.setIndiceTuple(0, tuple);
+		this.gmop.tupleSender(tuple);
+		
 		
 	}
 	
@@ -88,7 +103,7 @@ public class ComponentGestion extends AbstractComponent {
 	
 	@Override
 	public synchronized void finalise() throws Exception {		
-		this.doPortDisconnection(CGOP_URI);
+		this.doPortDisconnection(GMOP_URI);
 		super.finalise();
 	}
 	
