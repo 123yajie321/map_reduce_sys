@@ -2,12 +2,12 @@ package map_reduce_sys.gestion;
 
 import java.util.ArrayList;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedQueue;
+
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
-import java.util.stream.*;
+
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
@@ -27,9 +27,9 @@ public class ComponentGestion extends AbstractComponent {
 
 	public static final String GMOP_URI = "gmop-uri";
 	protected GestionMapOutboundPort gmop;
-	protected ConcurrentLinkedQueue<Tuple> bufferRessource;
-	protected ConcurrentLinkedQueue<Tuple> bufferResult;
-	protected ConcurrentLinkedQueue<Tuple> bufferResultMap;
+	protected LinkedBlockingQueue<Tuple> bufferRessource;
+	protected LinkedBlockingQueue<Tuple> bufferResult;
+	protected LinkedBlockingQueue<Tuple> bufferResultMap;
 	protected SimpleJob job;
 
 
@@ -96,8 +96,8 @@ public class ComponentGestion extends AbstractComponent {
 		this.job = job;
 	}
 	
-	public boolean recieveTuple(Tuple t) {
-		this.bufferResultMap.add(t);
+	public boolean recieveTuple(Tuple t) throws InterruptedException {
+		this.bufferResultMap.put(t);
 		return true;
 	}
 	

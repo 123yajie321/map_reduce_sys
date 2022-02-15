@@ -1,6 +1,7 @@
 package map_reduce_sys.map;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -17,16 +18,18 @@ public class ComponentMap extends AbstractComponent {
 	public static final String MSROP_URI = "msrop-uri";
 	public static final String MSOP_URI = "msop-uri";
 	public static final String MGIP_URI = "mgip-uri";
+	public static final String MRRIP_URI = "mrrip-uri";
+	
 	
 
 	protected MapSendReduceOutboundPort msrop;
 	protected MapServiceOutboundPort msop;// pour envouyer Tuple a Maps
 	protected MapGestionInboundPort mgip;//pour recevoir Tuple depuis Map
-
+	protected MapRecieveRessourceInboundPort mrrip;
 	
 	protected Function<Tuple, Tuple> fonction_map;
-	protected ConcurrentLinkedQueue<Tuple> bufferRecive;
-	protected ConcurrentLinkedQueue<Tuple> bufferSend;
+	protected LinkedBlockingQueue<Tuple> bufferRecive;
+	protected LinkedBlockingQueue<Tuple> bufferSend;
 	
 	protected ComponentMap(Function<Tuple, Tuple> f) throws Exception {
 		super(1,0);
@@ -36,13 +39,15 @@ public class ComponentMap extends AbstractComponent {
 		 */		
 		this.msrop=new MapSendReduceOutboundPort(MSROP_URI,this);
 		this.mgip = new MapGestionInboundPort(MGIP_URI,this);
+		this.mrrip=new MapRecieveRessourceInboundPort(MRRIP_URI,this);
 		this.msrop.publishPort();
 		this.mgip.publishPort();
+		this.mrrip.publishPort();
 		
 		
 		this.fonction_map=f;
-		this.bufferRecive=new ConcurrentLinkedQueue<Tuple>();
-		this.bufferSend=new ConcurrentLinkedQueue<Tuple>();
+		this.bufferRecive=new LinkedBlockingQueue<Tuple>();
+		this.bufferSend=new LinkedBlockingQueue<Tuple>();
 		
 	}
 	
@@ -51,7 +56,7 @@ public class ComponentMap extends AbstractComponent {
 		super.execute();
 		while(true) {
 			application();
-			Tuple t = bufferSend.poll();
+			Tuple t = bufferSend.take();
 			this.msrop.tupleSender(t);
 		}
 		
@@ -64,14 +69,14 @@ public class ComponentMap extends AbstractComponent {
 		   
 	   }
 	
-	public boolean recieve_Tuple(Tuple t) {
-		   this.bufferRecive.add(t);
+	public boolean recieve_Tuple(Tuple t)throws Exception{
+		 bufferRecive.put(t);
 		   return true;
 	   }
 	
-	public void application() {
-		Tuple t=bufferRecive.poll();
-		bufferSend.add(fonction_map.apply(t));
+	public void application() throws InterruptedException {
+		Tuple t=bufferRecive.take();
+		bufferSend.put(fonction_map.apply(t));
 	}
 	
 	

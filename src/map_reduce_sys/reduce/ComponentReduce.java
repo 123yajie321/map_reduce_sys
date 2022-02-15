@@ -1,6 +1,7 @@
 package map_reduce_sys.reduce;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -17,16 +18,16 @@ public class ComponentReduce extends AbstractComponent {
 	
 	public static final String RRMIP_URI = "rrmip-uri";
 	protected BiFunction<Tuple, Tuple, Tuple> fonction_reduce;
-	protected ConcurrentLinkedQueue<Tuple> bufferRecive;
-	protected ConcurrentLinkedQueue<Tuple> bufferSend;
+	protected LinkedBlockingQueue<Tuple> bufferRecive;
+	protected LinkedBlockingQueue<Tuple> bufferSend;
 	
 	protected ReduceReciveMapInboundPort rrmip;
 	
 	protected ComponentReduce(BiFunction<Tuple, Tuple, Tuple> g) throws Exception {
 		super(1, 0);
 		this.fonction_reduce = g;
-		this.bufferRecive=new ConcurrentLinkedQueue<Tuple>();
-		this.bufferSend=new ConcurrentLinkedQueue<Tuple>();
+		this.bufferRecive=new LinkedBlockingQueue<Tuple>();
+		this.bufferSend=new LinkedBlockingQueue<Tuple>();
 		this.rrmip=new ReduceReciveMapInboundPort(RRMIP_URI,this);
 		this.rrmip.publishPort();
 	}
@@ -35,7 +36,7 @@ public class ComponentReduce extends AbstractComponent {
 	public synchronized void execute() throws Exception {
 		super.execute();
 		application();
-		Tuple tuple=bufferSend.poll();
+		Tuple tuple=bufferSend.take();
 		Double result=(Double)tuple.getIndiceData(0);
 		System.out.println("final result is :  "+ result);
 		
@@ -43,30 +44,30 @@ public class ComponentReduce extends AbstractComponent {
 		
 	}
 	
-	public Tuple send_Tuple() {
+	public Tuple send_Tuple() throws InterruptedException {
 		   
-		   return bufferSend.poll();
-		   
-	   }
-	
-	public boolean Recieve_Tuple(Tuple t) {
-		   
-		   return bufferRecive.add(t);
+		   return bufferSend.take();
 		   
 	   }
 	
-	public void application() {
+	public boolean Recieve_Tuple(Tuple t)throws InterruptedException{
+		   
+		   bufferRecive.put(t);
+		   return true;
+	   }
+	
+	public void application() throws InterruptedException {
 		
-		//Tuple t1=bufferRecive.poll();
+		//Tuple t1=bufferRecive.take();
 		Double double1=0.0;
 		Tuple t1=new Tuple(1);
 		t1.setIndiceTuple(0, double1);
-		Tuple t2=bufferRecive.poll();
-		bufferSend.add(fonction_reduce.apply(t1,t2));
+		Tuple t2=bufferRecive.take();
+		bufferSend.put(fonction_reduce.apply(t1,t2));
 	}
 
-	public boolean recieveTuple(Tuple t) {
-		bufferRecive.add(t);
+	public boolean recieveTuple(Tuple t) throws InterruptedException {
+		bufferRecive.put(t);
 		return true;
 	}
 	@Override
