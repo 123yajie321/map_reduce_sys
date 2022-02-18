@@ -1,6 +1,7 @@
 package map_reduce_sys.reduce;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -18,7 +19,7 @@ public class ComponentReduce extends AbstractComponent {
 	
 	public static final String RRMIP_URI = "rrmip-uri";
 	protected BiFunction<Tuple, Tuple, Tuple> fonction_reduce;
-	protected LinkedBlockingQueue<Tuple> bufferRecive;
+	protected LinkedBlockingDeque<Tuple> bufferRecive;
 	protected LinkedBlockingQueue<Tuple> bufferSend;
 	
 	protected ReduceReciveMapInboundPort rrmip;
@@ -26,7 +27,7 @@ public class ComponentReduce extends AbstractComponent {
 	protected ComponentReduce(BiFunction<Tuple, Tuple, Tuple> g) throws Exception {
 		super(1, 0);
 		this.fonction_reduce = g;
-		this.bufferRecive=new LinkedBlockingQueue<Tuple>();
+		this.bufferRecive=new LinkedBlockingDeque<Tuple>(20);
 		this.bufferSend=new LinkedBlockingQueue<Tuple>();
 		this.rrmip=new ReduceReciveMapInboundPort(RRMIP_URI,this);
 		this.rrmip.publishPort();
@@ -35,10 +36,21 @@ public class ComponentReduce extends AbstractComponent {
 	@Override
 	public synchronized void execute() throws Exception {
 		super.execute();
-		application();
-		Tuple tuple=bufferSend.take();
-		Double result=(Double)tuple.getIndiceData(0);
-		System.out.println("final result is :  "+ result);
+		while(true) {
+			Tuple t1=bufferRecive.take();
+			Tuple t2=bufferRecive.take();
+			if(t2.getIndiceData(0)instanceof Boolean) {
+				
+				System.out.println("Calcul finished, the result is :" +t1.getIndiceData(0));
+				break;
+			}
+			application(t1,t2);
+			Tuple tuple=bufferSend.take();
+			Double result=(Double)tuple.getIndiceData(0);
+			System.out.println("final result is :  "+ result);
+			
+		}
+		
 		
 		
 		
@@ -56,18 +68,19 @@ public class ComponentReduce extends AbstractComponent {
 		   return true;
 	   }
 	
-	public void application() throws InterruptedException {
+	public void application(Tuple t1,Tuple t2) throws InterruptedException {
 		
 		//Tuple t1=bufferRecive.take();
-		Double double1=0.0;
-		Tuple t1=new Tuple(1);
-		t1.setIndiceTuple(0, double1);
-		Tuple t2=bufferRecive.take();
-		bufferSend.put(fonction_reduce.apply(t1,t2));
+		/*
+		 * Double double1=0.0; Tuple t1=new Tuple(1); t1.setIndiceTuple(0, double1);
+		 */
+		//Tuple t2=bufferRecive.take();
+		bufferRecive.addFirst(fonction_reduce.apply(t1,t2));
 	}
 
 	public boolean recieveTuple(Tuple t) throws InterruptedException {
 		bufferRecive.put(t);
+		System.out.println("Component reduce receive  :" +t.getIndiceData(0));
 		return true;
 	}
 	@Override

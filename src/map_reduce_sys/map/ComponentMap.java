@@ -54,10 +54,20 @@ public class ComponentMap extends AbstractComponent {
 	@Override
 	public synchronized void execute() throws Exception {
 		super.execute();
+		
 		while(true) {
-			application();
+			Tuple tuple=bufferRecive.take();
+			if(tuple.getIndiceData(0) instanceof Boolean) {
+				
+				this.msrop.tupleSender(tuple);
+				System.out.println("Component  map finnished" );
+				break;
+			}
+			application(tuple);
 			Tuple t = bufferSend.take();
 			this.msrop.tupleSender(t);
+			System.out.println("Component  map send  :" +t.getIndiceData(0));
+			
 		}
 		
 		
@@ -71,11 +81,12 @@ public class ComponentMap extends AbstractComponent {
 	
 	public boolean recieve_Tuple(Tuple t)throws Exception{
 		 bufferRecive.put(t);
+		 System.out.println("Component map receive  ressource :" +t.getIndiceData(0));
 		   return true;
 	   }
 	
-	public void application() throws InterruptedException {
-		Tuple t=bufferRecive.take();
+	public void application(Tuple t) throws InterruptedException {
+		
 		bufferSend.put(fonction_map.apply(t));
 	}
 	

@@ -4,9 +4,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import map_reduce_sys.Tuple;
-
+import map_reduce_sys.interfaces.SendTupleServiceI;
+@RequiredInterfaces(required ={SendTupleServiceI.class})
 public class ComponentRessource extends AbstractComponent {
 	public static final String RSMOP_URI = "rsmop-uri";
 	protected  RessourceSendMapOutboundPort rsmop;
@@ -23,6 +25,24 @@ public class ComponentRessource extends AbstractComponent {
 	}
 	
 	
+	
+	@Override
+	public synchronized void execute() throws Exception {
+		super.execute();
+		for(int i=0;i<10;i++) {
+			application();
+			Tuple t = bufferSend.take();
+			this.rsmop.tupleSender(t);
+			System.out.println("Component  create ressource :" +t.getIndiceData(0));
+		}
+		Tuple fin= new Tuple(1);
+		fin.setIndiceTuple(0, true);
+		bufferSend.add(fin);
+		this.rsmop.tupleSender(fin);
+		System.out.println("Component Ressource  finished :");
+		
+		
+	}
 	public void application() {
 	
 		Void v = null;
