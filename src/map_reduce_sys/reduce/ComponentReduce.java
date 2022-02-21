@@ -25,7 +25,7 @@ public class ComponentReduce extends AbstractComponent {
 	protected ReduceReciveMapInboundPort rrmip;
 	
 	protected ComponentReduce(BiFunction<Tuple, Tuple, Tuple> g) throws Exception {
-		super(1, 0);
+		super(2, 0);
 		this.fonction_reduce = g;
 		this.bufferRecive=new LinkedBlockingDeque<Tuple>(20);
 		this.bufferSend=new LinkedBlockingQueue<Tuple>(20);

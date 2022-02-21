@@ -25,8 +25,8 @@ public class ReduceReciveMapInboundPort extends AbstractInboundPort implements R
 
 	@Override
 	public boolean tupleReciever(Tuple t) throws Exception {
-		//return this.getOwner().handleRequest(g->((ComponentReduce)g).recieveTuple(t));	
-		return((ComponentReduce)this.getOwner()).recieve_Tuple(t);
+		return this.getOwner().handleRequest(g->((ComponentReduce)g).recieve_Tuple(t));	
+		//return((ComponentReduce)this.getOwner()).recieve_Tuple(t);
 	}
 
 }

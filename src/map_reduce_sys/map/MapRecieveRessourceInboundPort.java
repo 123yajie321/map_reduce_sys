@@ -26,9 +26,9 @@ public class MapRecieveRessourceInboundPort extends AbstractInboundPort implemen
 
 	@Override
 	public boolean tupleReciever(Tuple t) throws Exception {
-		//return this.getOwner().handleRequest(m->((ComponentMap)m).recieve_Tuple(t));	
+		return this.getOwner().handleRequest(m->((ComponentMap)m).recieve_Tuple(t));	
 		
-		return((ComponentMap)this.getOwner()).recieve_Tuple(t);
+		//return((ComponentMap)this.getOwner()).recieve_Tuple(t);
 	}
 
 }

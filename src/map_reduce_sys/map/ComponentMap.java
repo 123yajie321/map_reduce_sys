@@ -32,7 +32,7 @@ public class ComponentMap extends AbstractComponent {
 	protected LinkedBlockingQueue<Tuple> bufferSend;
 	
 	protected ComponentMap(Function<Tuple, Tuple> f) throws Exception {
-		super(1,0);
+		super(2,0);
 		/*
 		 * this.msop = new MapServiceOutboundPort(MSOP_URI,this);
 		 * this.msop.publishPort();
