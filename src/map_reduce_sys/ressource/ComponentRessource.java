@@ -1,4 +1,4 @@
-package ressource;
+package map_reduce_sys.ressource;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
@@ -19,9 +19,11 @@ public class ComponentRessource extends AbstractComponent {
 	protected ComponentRessource(Function<Void, Tuple> s) throws Exception {
 		super(1, 0);
 		this.data_generator=s;
+		System.out.println("Component Ressource  finished :");
 		this.rsmop=new RessourceSendMapOutboundPort(RSMOP_URI,this);
 		this.rsmop.publishPort();
 		bufferSend=new LinkedBlockingQueue<Tuple>();
+		System.out.println("Component Ressource created");
 	}
 	
 	
@@ -29,11 +31,13 @@ public class ComponentRessource extends AbstractComponent {
 	@Override
 	public synchronized void execute() throws Exception {
 		super.execute();
+		System.out.println("Component Ressource executing");
 		for(int i=0;i<10;i++) {
 			application();
 			Tuple t = bufferSend.take();
+			System.out.println("Component Ressource created ressource :"+t.getIndiceData(0));
 			this.rsmop.tupleSender(t);
-			System.out.println("Component  create ressource :" +t.getIndiceData(0));
+			System.out.println("Component  ressource send " +t.getIndiceData(0));
 		}
 		Tuple fin= new Tuple(1);
 		fin.setIndiceTuple(0, true);

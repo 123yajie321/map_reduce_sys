@@ -12,7 +12,7 @@ public class MapRecieveRessourceInboundPort extends AbstractInboundPort implemen
 
 	public MapRecieveRessourceInboundPort(ComponentI owner) throws Exception {
 		super(RecieveTupleServiceI.class, owner);
-		assert owner instanceof ComponentGestion;
+		assert owner instanceof ComponentMap;
 
 	}
 
@@ -20,13 +20,15 @@ public class MapRecieveRessourceInboundPort extends AbstractInboundPort implemen
 	
 	public MapRecieveRessourceInboundPort(String uri,ComponentI owner) throws Exception {
 		super(uri, RecieveTupleServiceI.class,owner);
+		assert owner instanceof ComponentMap;
 	}
 	
 
 	@Override
 	public boolean tupleReciever(Tuple t) throws Exception {
-		return this.getOwner().handleRequest(m->((ComponentMap)m).recieve_Tuple(t));	
-
+		//return this.getOwner().handleRequest(m->((ComponentMap)m).recieve_Tuple(t));	
+		
+		return((ComponentMap)this.getOwner()).recieve_Tuple(t);
 	}
 
 }

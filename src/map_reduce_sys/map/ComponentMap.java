@@ -46,8 +46,8 @@ public class ComponentMap extends AbstractComponent {
 		
 		
 		this.fonction_map=f;
-		this.bufferRecive=new LinkedBlockingQueue<Tuple>();
-		this.bufferSend=new LinkedBlockingQueue<Tuple>();
+		this.bufferRecive=new LinkedBlockingQueue<Tuple>(20);
+		this.bufferSend=new LinkedBlockingQueue<Tuple>(20);
 		
 	}
 	
@@ -60,7 +60,7 @@ public class ComponentMap extends AbstractComponent {
 			if(tuple.getIndiceData(0) instanceof Boolean) {
 				
 				this.msrop.tupleSender(tuple);
-				System.out.println("Component  map finnished" );
+				System.out.println("Component  map finished" );
 				break;
 			}
 			application(tuple);
@@ -80,14 +80,15 @@ public class ComponentMap extends AbstractComponent {
 	   }
 	
 	public boolean recieve_Tuple(Tuple t)throws Exception{
-		 bufferRecive.put(t);
-		 System.out.println("Component map receive  ressource :" +t.getIndiceData(0));
+		System.out.println("Component map receive  ressource :" +t.getIndiceData(0)); 
+		bufferRecive.put(t);
+		 System.out.println("Component map buffer receive  ressource :" +t.getIndiceData(0));
 		   return true;
 	   }
 	
 	public void application(Tuple t) throws InterruptedException {
 		
-		bufferSend.put(fonction_map.apply(t));
+		bufferSend.add(fonction_map.apply(t));
 	}
 	
 	

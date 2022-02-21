@@ -16,7 +16,7 @@ import map_reduce_sys.connector.ConnectorRessourceMap;
 import map_reduce_sys.gestion.ComponentGestion;
 import map_reduce_sys.map.ComponentMap;
 import map_reduce_sys.reduce.ComponentReduce;
-import ressource.ComponentRessource;
+import map_reduce_sys.ressource.ComponentRessource;
 
 public class CVM extends AbstractCVM {
 	
@@ -98,43 +98,45 @@ public class CVM extends AbstractCVM {
 	
 		Function<Void, Tuple> data_generator = (v)->{
 			
-			double number=Math.random()*20;
+			int number=(int) (Math.random()*20);
 			Tuple tuple=new Tuple(1);
 			tuple.setIndiceTuple(0, number);
 			return tuple;	
 			
 		};
 				
-		Object[] paramRessources= new Object[1];	
-		paramRessources[0]=data_generator;
+		/*
+		 * Object[] paramRessources= new Object[1]; paramRessources[0]=data_generator;
+		 */
 		
 		Function<Tuple, Tuple> f_map = a -> { 
-			Double resDouble =(Double)a.getIndiceData(0)*10.0;
+			Integer res =(Integer)a.getIndiceData(0)*10;
 			Tuple tuple = new Tuple(1);
-			tuple.setIndiceTuple(0, resDouble); 
+			tuple.setIndiceTuple(0, res); 
 			return tuple;
 		};
 		
-		Object[] paramMap= new Object[1];	
-		paramMap[0]=f_map;
-		
+		/*
+		 * Object[] paramMap= new Object[1]; paramMap[0]=f_map;
+		 */
 		
 		
 		
 		BiFunction<Tuple, Tuple, Tuple> g_reduce = (a,b) -> { 
-			Double resDouble =(Double)a.getIndiceData(0)+(Double)b.getIndiceData(0); 
+			int resInteger =(int)a.getIndiceData(0)+(int)b.getIndiceData(0); 
 			Tuple tuple = new Tuple(1); 
-			tuple.setIndiceTuple(0, resDouble); 
+			tuple.setIndiceTuple(0, resInteger); 
 			return tuple; 
 				  
 		};
-		Object[] paramReduce= new Object[1];	
-		paramReduce[0]=g_reduce;
+		/*
+		 * Object[] paramReduce= new Object[1]; paramReduce[0]=g_reduce;
+		 */
 		
 	
-		String uriRessource=AbstractComponent.createComponent(ComponentRessource.class.getCanonicalName(), paramRessources);
-		String uriMap=AbstractComponent.createComponent(ComponentMap.class.getCanonicalName(), paramMap);
-	    String uriReduce=AbstractComponent.createComponent(ComponentReduce.class.getCanonicalName(), paramReduce);
+		String uriRessource=AbstractComponent.createComponent(ComponentRessource.class.getCanonicalName(), new Object[] {data_generator});
+		String uriMap=AbstractComponent.createComponent(ComponentMap.class.getCanonicalName(),  new Object[] {f_map});
+		AbstractComponent.createComponent(ComponentReduce.class.getCanonicalName(),  new Object[] {g_reduce});
 	 
 		this.doPortConnection(uriRessource, ComponentRessource.RSMOP_URI, ComponentMap.MRRIP_URI, ConnectorRessourceMap.class.getCanonicalName());
 		this.doPortConnection(uriMap,ComponentMap.MSROP_URI,ComponentReduce.RRMIP_URI,ConnectorMapReduce.class.getCanonicalName() );
@@ -147,7 +149,7 @@ public class CVM extends AbstractCVM {
 		
 		try {
 			CVM c = new CVM();
-			c.startStandardLifeCycle(4000L);
+			c.startStandardLifeCycle(6000L);
 			System.exit(0);
 		} catch (Exception e) {
 		

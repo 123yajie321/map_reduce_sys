@@ -1,4 +1,4 @@
-package ressource;
+package map_reduce_sys.ressource;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
