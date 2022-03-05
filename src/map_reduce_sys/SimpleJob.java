@@ -10,14 +10,16 @@ public  class SimpleJob  {
 	protected Function <Tuple,Tuple> function_map;
 	protected BiFunction < Tuple,Tuple,Tuple>function_reduce;
 	protected Function<Void, Tuple> data_generator;
+	protected int data_size  ;
 	
 	
-	public SimpleJob(Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Function<Void, Tuple> s,Nature nature) {
+	public SimpleJob(Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Function<Void, Tuple> s,Nature nature,int size) {
 	
 		this.function_map=f;
 		this.function_reduce=g;
 		this.data_generator=s;
 		this.nature=nature;
+		this.data_size=size;
 		
 	}
 		

@@ -98,7 +98,8 @@ public class CVM extends AbstractCVM {
 	
 		Function<Void, Tuple> data_generator = (v)->{
 			
-			int number=(int) (Math.random()*20);
+			//	int number=(int) (Math.random()*50);
+			int number=5;
 			Tuple tuple=new Tuple(1);
 			tuple.setIndiceTuple(0, number);
 			return tuple;	
@@ -133,14 +134,14 @@ public class CVM extends AbstractCVM {
 		 * Object[] paramReduce= new Object[1]; paramReduce[0]=g_reduce;
 		 */
 		
-	
-		String uriRessource=AbstractComponent.createComponent(ComponentRessource.class.getCanonicalName(), new Object[] {data_generator});
+	     
+		String uriRessource=AbstractComponent.createComponent(ComponentRessource.class.getCanonicalName(), new Object[] {data_generator,20});
 		String uriMap=AbstractComponent.createComponent(ComponentMap.class.getCanonicalName(),  new Object[] {f_map});
 		AbstractComponent.createComponent(ComponentReduce.class.getCanonicalName(),  new Object[] {g_reduce});
 	 
 		this.doPortConnection(uriRessource, ComponentRessource.RSMOP_URI, ComponentMap.MRRIP_URI, ConnectorRessourceMap.class.getCanonicalName());
 		this.doPortConnection(uriMap,ComponentMap.MSROP_URI,ComponentReduce.RRMIP_URI,ConnectorMapReduce.class.getCanonicalName() );
-	 
+	     
 		super.deploy();
 	}
 
