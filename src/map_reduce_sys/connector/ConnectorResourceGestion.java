@@ -9,20 +9,18 @@ import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 
-public class ConnectorMapGestion extends AbstractConnector implements ManagementI{
+public class ConnectorResourceGestion extends AbstractConnector implements ManagementI{
 
-	
 
 	@Override
 	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		 return ((ManagementI)this.offering).runTaskResource(function,t);
 	}
 
 	@Override
 	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {
-		return ((ManagementI)this.offering).runTaskMap(function,t);
-	
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override

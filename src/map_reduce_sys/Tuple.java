@@ -8,7 +8,7 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 public class Tuple implements Serializable {
 	
 	  private static final long serialVersionUID = 1L;
-	  private Object[] tuple    ;
+	  private Object[] tuple;
 	  private int dimention; 
 	  
 
@@ -16,6 +16,11 @@ public class Tuple implements Serializable {
 		  	this.dimention=dimention;
 		  	tuple=new Object [dimention]; 
 	  }
+	  public Tuple (int dimention,Object[]data){
+		  	this.dimention=dimention;
+		  	tuple=data ;
+	  }
+	  
 
       public Object getIndiceData(int indice) {
     	  return tuple[indice];

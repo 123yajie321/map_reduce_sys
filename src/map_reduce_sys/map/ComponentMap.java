@@ -26,8 +26,8 @@ public class ComponentMap extends AbstractComponent {
 	
     protected boolean finished;
 	protected MapSendReduceOutboundPort msrop;
-	protected MapServiceOutboundPort msop;// pour envouyer Tuple a Maps
-	protected MapGestionInboundPort mgip;//pour recevoir Tuple depuis Map
+	//protected MapServiceOutboundPort msop;// pour envouyer Tuple a Maps
+	protected MapGestionInboundPort mgip;//pour recevoir Task depuis getion
 	protected MapRecieveRessourceInboundPort mrrip;
 	
 	protected Function<Tuple, Tuple> fonction_map;
@@ -35,9 +35,10 @@ public class ComponentMap extends AbstractComponent {
 	protected LinkedBlockingQueue<Tuple> bufferSend;
 	protected ThreadPoolExecutor calculExecutor;
 	protected ThreadPoolExecutor SendExecutor;
+	protected int dataSize;
 	
 	
-	protected ComponentMap(Function<Tuple, Tuple> f) throws Exception {
+	protected ComponentMap(/*Function<Tuple, Tuple> f*/) throws Exception {
 		super(2,0);
 		/*
 		 * this.msop = new MapServiceOutboundPort(MSOP_URI,this);
@@ -51,7 +52,7 @@ public class ComponentMap extends AbstractComponent {
 		this.mrrip.publishPort();
 		
 		
-		this.fonction_map=f;
+		//this.fonction_map=f;
 		//this.bufferRecive=new LinkedBlockingQueue<Tuple>(20);
 		this.bufferSend=new LinkedBlockingQueue<Tuple>(20);
 		int N=2;
@@ -65,12 +66,60 @@ public class ComponentMap extends AbstractComponent {
 	@Override
 	public synchronized void execute() throws Exception {
 		super.execute();
-		
+		/*
 		while(!finished) {
 			Tuple result =bufferSend.take();
 			if(result.getIndiceData(0) instanceof Boolean) {
 				finished=true;
+				Thread.sleep(1000);
 			}
+			Runnable task=()->{try {
+				send_Tuple(result);
+				System.out.println("Component map Send ressource :" +result.getIndiceData(0)); 
+			} catch (Exception e) {
+		
+				e.printStackTrace();
+			}};
+		
+			SendExecutor.submit(task);
+		}
+		calculExecutor.shutdown();
+		SendExecutor.shutdown();*/
+		
+		System.out.println("Component  map finished" );
+		
+	}
+	
+	public boolean runTaskMap(Function<Tuple, Tuple> f,int size) throws Exception {
+		/*finished=false;
+		this.fonction_map=f;
+		while(!finished) {
+			Tuple result =bufferSend.take();
+			if(result.getIndiceData(0) instanceof Boolean) {
+				finished=true;
+				Thread.sleep(1000);
+			}
+			Runnable task=()->{try {
+				send_Tuple(result);
+				System.out.println("Component map Send ressource :" +result.getIndiceData(0)); 
+			} catch (Exception e) {
+		
+				e.printStackTrace();
+			}};
+		
+			SendExecutor.submit(task);
+		}
+		//calculExecutor.shutdown();
+		//SendExecutor.shutdown();
+		
+		System.out.println("Component  map finished" );
+		
+		*/
+		
+		this.fonction_map=f;
+		this.dataSize=size;
+		for(int i=0;i<dataSize;i++) {
+			Tuple result =bufferSend.take();
 			Runnable task=()->{try {
 				send_Tuple(result);
 				System.out.println("Component map Send ressource :" +result.getIndiceData(0)); 
@@ -80,12 +129,12 @@ public class ComponentMap extends AbstractComponent {
 			}};
 			SendExecutor.submit(task);
 		}
-		calculExecutor.shutdown();
-		SendExecutor.shutdown();
 		
-		System.out.println("Component  map finished" );
 		
+		return true;
 	}
+	
+	
 	
 	public void send_Tuple(Tuple t) throws Exception {
 		   

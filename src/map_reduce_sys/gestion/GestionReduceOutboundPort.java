@@ -10,17 +10,17 @@ import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 
-public class GestionMapOutboundPort extends AbstractOutboundPort implements ManagementI {
+public class GestionReduceOutboundPort extends AbstractOutboundPort implements ManagementI {
 
 	private static final long serialVersionUID=1L;
 
 
-	public GestionMapOutboundPort(ComponentI owner) throws Exception {
+	public GestionReduceOutboundPort(ComponentI owner) throws Exception {
 		super(SendTupleServiceI.class, owner);
 		
 	}
 	
-	public GestionMapOutboundPort(String uri, ComponentI owner)
+	public GestionReduceOutboundPort(String uri, ComponentI owner)
 			throws Exception {
 		super(uri, SendTupleServiceI.class, owner);
 	}
@@ -35,14 +35,13 @@ public class GestionMapOutboundPort extends AbstractOutboundPort implements Mana
 
 	@Override
 	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {
-	
-			return ((ManagementI)this.getConnector()).runTaskMap(function,t);
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		 return ((ManagementI)this.getConnector()).runTaskReduce(function, t);
 	}
 
 	

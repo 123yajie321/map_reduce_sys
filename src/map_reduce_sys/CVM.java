@@ -96,7 +96,7 @@ public class CVM extends AbstractCVM {
 		 * ConnectorMapGestion.class.getCanonicalName());
 		 */
 	
-		Function<Void, Tuple> data_generator = (v)->{
+		/*function<Void, Tuple> data_generator = (v)->{
 			
 			//	int number=(int) (Math.random()*50);
 			int number=5;
@@ -110,7 +110,7 @@ public class CVM extends AbstractCVM {
 		 * Object[] paramRessources= new Object[1]; paramRessources[0]=data_generator;
 		 */
 		
-		Function<Tuple, Tuple> f_map = a -> { 
+		/*Function<Tuple, Tuple> f_map = a -> { 
 			Integer res =(Integer)a.getIndiceData(0)*10;
 			Tuple tuple = new Tuple(1);
 			tuple.setIndiceTuple(0, res); 
@@ -123,7 +123,7 @@ public class CVM extends AbstractCVM {
 		
 		
 		
-		BiFunction<Tuple, Tuple, Tuple> g_reduce = (a,b) -> { 
+		/*BiFunction<Tuple, Tuple, Tuple> g_reduce = (a,b) -> { 
 			int resInteger =(int)a.getIndiceData(0)+(int)b.getIndiceData(0); 
 			Tuple tuple = new Tuple(1); 
 			tuple.setIndiceTuple(0, resInteger); 
@@ -135,9 +135,10 @@ public class CVM extends AbstractCVM {
 		 */
 		
 	     
-		String uriRessource=AbstractComponent.createComponent(ComponentRessource.class.getCanonicalName(), new Object[] {data_generator,20});
-		String uriMap=AbstractComponent.createComponent(ComponentMap.class.getCanonicalName(),  new Object[] {f_map});
-		AbstractComponent.createComponent(ComponentReduce.class.getCanonicalName(),  new Object[] {g_reduce});
+		String uriRessource=AbstractComponent.createComponent(ComponentRessource.class.getCanonicalName(), new Object[] {});
+		String uriMap=AbstractComponent.createComponent(ComponentMap.class.getCanonicalName(),  new Object[] {});
+		AbstractComponent.createComponent(ComponentReduce.class.getCanonicalName(),  new Object[] {});
+		AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
 	 
 		this.doPortConnection(uriRessource, ComponentRessource.RSMOP_URI, ComponentMap.MRRIP_URI, ConnectorRessourceMap.class.getCanonicalName());
 		this.doPortConnection(uriMap,ComponentMap.MSROP_URI,ComponentReduce.RRMIP_URI,ConnectorMapReduce.class.getCanonicalName() );

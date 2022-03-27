@@ -1,7 +1,7 @@
 package map_reduce_sys.reduce;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +13,7 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import map_reduce_sys.CalculServiceOutboundPort;
+import map_reduce_sys.OrderedTuple;
 import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
@@ -21,20 +22,26 @@ import map_reduce_sys.interfaces.SendTupleServiceI;
 public class ComponentReduce extends AbstractComponent {
 
 	public static final String RRMIP_URI = "rrmip-uri";
+	public static final String GRDIP_URI = "grdip-uri";
 	protected BiFunction<Tuple, Tuple, Tuple> fonction_reduce;
-	protected LinkedBlockingDeque<Tuple> bufferRecive;
-	protected LinkedBlockingQueue<Tuple> bufferSend;
+	protected PriorityBlockingQueue<Tuple> bufferRecive;
+	//protected LinkedBlockingQueue<Tuple> bufferSend;
 	protected ThreadPoolExecutor calculExecutor;
 
 	protected ReduceReciveMapInboundPort rrmip;
+	protected GestionReduceInboundPort grdip;
+	protected Tuple finalResult;
+	protected int dataSize;
 
-	protected ComponentReduce(BiFunction<Tuple, Tuple, Tuple> g) throws Exception {
+	protected ComponentReduce(/*BiFunction<Tuple, Tuple, Tuple> g*/) throws Exception {
 		super(2, 0);
-		this.fonction_reduce = g;
-		this.bufferRecive = new LinkedBlockingDeque<Tuple>(20);
-		this.bufferSend = new LinkedBlockingQueue<Tuple>(20);
+		//this.fonction_reduce = g;
+		this.bufferRecive = new PriorityBlockingQueue<Tuple>(20);
+		//this.bufferSend = new LinkedBlockingQueue<Tuple>(20);
 		this.rrmip = new ReduceReciveMapInboundPort(RRMIP_URI, this);
 		this.rrmip.publishPort();
+		this.grdip=new GestionReduceInboundPort(GRDIP_URI,this);
+		this.grdip.publishPort();
 		int N = 2;
 		calculExecutor = new ThreadPoolExecutor(N, N, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(20));
 		calculExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
@@ -44,12 +51,13 @@ public class ComponentReduce extends AbstractComponent {
 	public synchronized void execute() throws Exception {
 		super.execute();
 
-		while (true) {
+		/*while (true) {
 			Tuple t1 = bufferRecive.take();
 			Tuple t2 = bufferRecive.take();
 			if (t2.getIndiceData(0) instanceof Boolean || t1.getIndiceData(0) instanceof Boolean) {
 				System.out.println("Calcul finished, the result is :" + t1.getIndiceData(0));
-				bufferSend.add(t1);
+				//bufferSend.add(t1);
+				finalResult=t1;
 				break;
 			}
 			// application(t1,t2);
@@ -59,16 +67,70 @@ public class ComponentReduce extends AbstractComponent {
 			calculExecutor.submit(taskCalcul);
 
 		}
-		Tuple tuple = bufferSend.take();
-		int result = (int) tuple.getIndiceData(0);
+		//Tuple tuple = bufferSend.take();
+		int result = (int) finalResult.getIndiceData(0);
+		
 		System.out.println("final result is :  " + result);
-		calculExecutor.shutdown();
+		calculExecutor.shutdown();*/
 
 	}
+	
+	
+	
+public boolean	runTaskReduce(BiFunction<Tuple,Tuple,Tuple>function,int size) throws Exception {
+	this.fonction_reduce=function;
+	this.dataSize=size;
+	
+	/*while (true) {
+		Tuple t1 = bufferRecive.take();
+		Tuple t2 = bufferRecive.take();
+		if (t2.getIndiceData(0) instanceof Boolean || t1.getIndiceData(0) instanceof Boolean) {
+			System.out.println("Calcul finished, the result is :" + t1.getIndiceData(0));
+			//bufferSend.add(t1);
+			finalResult=t1;
+			break;
+		}
+		// application(t1,t2);
+		Runnable taskCalcul = () -> {
+			bufferRecive.addFirst(fonction_reduce.apply(t1,t2));
+		};
+		calculExecutor.submit(taskCalcul);
+
+	}
+	//Tuple tuple = bufferSend.take();
+	int result = (int) finalResult.getIndiceData(0);
+	
+	System.out.println("final result is :  " + result);
+	//calculExecutor.shutdown();*/
+	
+	for(int i=0;i<dataSize;i++) {
+		OrderedTuple t1=(OrderedTuple) bufferRecive.take();
+		OrderedTuple t2=(OrderedTuple) bufferRecive.take();
+		
+		Runnable taskCalcul = () -> {
+			bufferRecive.add(fonction_reduce.apply(t1,t2));
+			
+		};
+		calculExecutor.submit(taskCalcul);
+	}
+		Tuple tuple = bufferRecive.take();
+		int result = (int) finalResult.getIndiceData(0);
+		
+		System.out.println("final result is :  " + result);
+	
+	return true;
+}
+	
+	
+	
+	
+	
+	
 
 	public Tuple send_Tuple() throws InterruptedException {
 
-		return bufferSend.take();
+		//return bufferSend.take();
+		return finalResult;
 
 	}
 
