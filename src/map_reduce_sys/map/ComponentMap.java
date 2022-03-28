@@ -10,6 +10,7 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import map_reduce_sys.OrderedTuple;
 import map_reduce_sys.Task;
 import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
@@ -119,10 +120,10 @@ public class ComponentMap extends AbstractComponent {
 		this.fonction_map=f;
 		this.dataSize=size;
 		for(int i=0;i<dataSize;i++) {
-			Tuple result =bufferSend.take();
+			OrderedTuple result =(OrderedTuple) bufferSend.take();
 			Runnable task=()->{try {
 				send_Tuple(result);
-				System.out.println("Component map Send ressource :" +result.getIndiceData(0)); 
+				System.out.println("Component map Send ressource :" +result.getIndiceData(0)+"  id:  "+result.getId()); 
 			} catch (Exception e) {
 		
 				e.printStackTrace();
@@ -130,7 +131,7 @@ public class ComponentMap extends AbstractComponent {
 			SendExecutor.submit(task);
 		}
 		
-		
+		System.out.println("Component map finshed"); 
 		return true;
 	}
 	
@@ -144,14 +145,16 @@ public class ComponentMap extends AbstractComponent {
 	
 	public boolean recieve_Tuple(Tuple t)throws Exception{
 		
-		System.out.println("Component map receive  ressource :" +t.getIndiceData(0)); 
+	System.out.println("Component map receive  ressource :" +t.getIndiceData(0)+" id :" +((OrderedTuple) t).getId()); 
 		Runnable taskCalcul=()->{	
-			if( t.getIndiceData(0) instanceof Boolean){
+			/*if( t.getIndiceData(0) instanceof Boolean){
 				bufferSend.add(t);
 			}else
 				{
 					bufferSend.add(fonction_map.apply(t));
 				}
+		};*/
+			bufferSend.add(fonction_map.apply(t));
 		};
 		calculExecutor.submit(taskCalcul);
 		

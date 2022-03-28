@@ -1,4 +1,4 @@
-package map_reduce_sys.ressource;
+package map_reduce_sys;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -11,8 +11,10 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import map_reduce_sys.OrderedTuple;
 import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.ressource.GestionResourceInboundPort;
+import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 @RequiredInterfaces(required ={SendTupleServiceI.class})
-public class ComponentRessource extends AbstractComponent {
+public class ComponentCalcul extends AbstractComponent {
 	public static final String RSMOP_URI = "rsmop-uri";
 	public static final String GRSIP_URI = "grsip-uri";
 	protected GestionResourceInboundPort grsip;
@@ -23,7 +25,7 @@ public class ComponentRessource extends AbstractComponent {
 	protected LinkedBlockingQueue<Tuple> bufferSend;
 	protected  int resourceSize;
 
-	protected ComponentRessource(/*Function<Void, Tuple> s,int size*/) throws Exception {
+	protected ComponentCalcul(/*Function<Void, Tuple> s,int size*/) throws Exception {
 		super(2, 0);
 		//this.data_generator=s;
 		this.rsmop=new RessourceSendMapOutboundPort(RSMOP_URI,this);
@@ -109,7 +111,7 @@ public class ComponentRessource extends AbstractComponent {
 	 */
 	
 	
-	public boolean runTaskResource(Function<Void, Tuple> s,int size) throws Exception {
+	public boolean runTask(Function<Void, Tuple> s,int size) throws Exception {
 		this.resourceSize=size;
 		this.data_generator=s;
 		for(int i=0;i<resourceSize;i++) {
@@ -117,7 +119,7 @@ public class ComponentRessource extends AbstractComponent {
 				Void v = null;
 				OrderedTuple t=(OrderedTuple) data_generator.apply(v);
 				bufferSend.add(t);
-			//	System.out.println("Component Ressource created ressource :"+t.getIndiceData( 0)+" id:"+t.getId());
+				System.out.println("Component Ressource created ressource :"+t.getIndiceData( 0)); 
 				
 			};		
 			calculExecutor.submit(taskCalcul);
@@ -125,7 +127,7 @@ public class ComponentRessource extends AbstractComponent {
 			Runnable task=()->{
 				try {
 					send_Tuple(result);
-					System.out.println("Component Ressource Send ressource :"+result.getIndiceData( 0)+" id:"+((OrderedTuple) result).getId()); 
+					System.out.println("Component Ressource Send ressource :"+result.getIndiceData( 0)); 
 				} catch (Exception e) {
 					e.printStackTrace();
 					

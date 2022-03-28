@@ -31,7 +31,7 @@ public class GestionResourceInboundPort extends AbstractInboundPort implements M
 
 	@Override
 	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
-			return  this.getOwner().handleRequest(r->((ComponentRessource)r).runTask(function,(int) t.getIndiceData(0)));	
+			return  this.getOwner().handleRequest(r->((ComponentRessource)r).runTaskResource(function,(int) t.getIndiceData(0)));	
 	}
 	@Override
 	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {

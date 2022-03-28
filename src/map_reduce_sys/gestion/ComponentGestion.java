@@ -102,7 +102,7 @@ public class ComponentGestion extends AbstractComponent {
 		
 		
 		BiFunction<Tuple, Tuple, Tuple> g_reduce = (a,b) -> {
-			OrderedTuple t=(OrderedTuple)a;
+			OrderedTuple t=(OrderedTuple)b;
 
 			int resInteger =(int)a.getIndiceData(0)+(int)b.getIndiceData(0); 
 			Tuple tuple = new OrderedTuple(1,t.getId());

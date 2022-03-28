@@ -103,7 +103,7 @@ public boolean	runTaskReduce(BiFunction<Tuple,Tuple,Tuple>function,int size) thr
 	System.out.println("final result is :  " + result);
 	//calculExecutor.shutdown();*/
 	
-	for(int i=0;i<dataSize;i++) {
+	for(int i=0;i<dataSize-1;i++) {
 		OrderedTuple t1=(OrderedTuple) bufferRecive.take();
 		OrderedTuple t2=(OrderedTuple) bufferRecive.take();
 		
