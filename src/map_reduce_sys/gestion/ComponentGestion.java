@@ -169,7 +169,7 @@ public class ComponentGestion extends AbstractComponent {
 		pluginResOut.setPluginURI("PluginResourceOut");
 		
 		PluginMap pluginMapIn=new PluginMap(managementMapInboundPort, 2,f_map,ResourceSendInboundPort,mapSendInboundPort);
-		pluginResourceIn.setPluginURI("PluginMapIn");
+		pluginMapIn.setPluginURI("pluginMapIn");
 		
 		PluginManagementMapOut pluginMapOut=new PluginManagementMapOut();
 		pluginMapOut.setInboundPortUri(managementMapInboundPort);
@@ -183,17 +183,19 @@ public class ComponentGestion extends AbstractComponent {
 		PluginManagementReduceOut pluginReduceOut=new PluginManagementReduceOut();
 		pluginReduceOut.setInboundPortUri(managementReduceInboundPort);
 		pluginReduceOut.setPluginURI("PluginReduceOut");
-		
+		System.out.println(" install begin");
 
-		
-	
-		ResourcereflectionOutboundPort.installPlugin(pluginResourceIn);
-		MapreflectionOutboundPort.installPlugin(pluginMapIn);
 		ReducereflectionOutboundPort.installPlugin(pluginReduceIn);
+		System.out.println(" install reduce");
+		MapreflectionOutboundPort.installPlugin(pluginMapIn);
+		System.out.println(" install map");
+		ResourcereflectionOutboundPort.installPlugin(pluginResourceIn);
+		System.out.println(" install in");
 		this.installPlugin(pluginResOut);
 		this.installPlugin(pluginMapOut);
 		this.installPlugin(pluginReduceOut);
 
+		System.out.println(" install out");
 		 pluginResOut.getResourceServicePort().runTaskResource(data_generator, sizeTuple);
 		 pluginMapOut.getResMapServicePort().runTaskMap(f_map, sizeTuple);
 		 pluginReduceOut.getReduceServicePort().runTaskReduce(g_reduce, sizeTuple);
