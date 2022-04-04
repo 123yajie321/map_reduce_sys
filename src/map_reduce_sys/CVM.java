@@ -9,7 +9,9 @@ import java.util.function.Function;
 
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.ReflectionInboundPort;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import map_reduce_sys.connector.ConnectorMapGestion;
 import map_reduce_sys.connector.ConnectorMapReduce;
 import map_reduce_sys.connector.ConnectorRessourceMap;
@@ -19,6 +21,10 @@ import map_reduce_sys.reduce.ComponentReduce;
 import map_reduce_sys.ressource.ComponentRessource;
 
 public class CVM extends AbstractCVM {
+	
+	public static final String URI_PORT_REFLEXION1="COMPONENT1";
+	public static final String URI_PORT_REFLEXION2="COMPONENT2";
+	public static final String URI_PORT_REFLEXION3="COMPONENT3";
 	
 	public CVM() throws Exception {
 		// TODO Auto-generated constructor stub
@@ -134,16 +140,21 @@ public class CVM extends AbstractCVM {
 		 * Object[] paramReduce= new Object[1]; paramReduce[0]=g_reduce;
 		 */
 		
-	     
+	   /*  
 		String uriRessource=AbstractComponent.createComponent(ComponentRessource.class.getCanonicalName(), new Object[] {});
 		String uriMap=AbstractComponent.createComponent(ComponentMap.class.getCanonicalName(),  new Object[] {});
 		AbstractComponent.createComponent(ComponentReduce.class.getCanonicalName(),  new Object[] {});
 		AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
-	 
 		this.doPortConnection(uriRessource, ComponentRessource.RSMOP_URI, ComponentMap.MRRIP_URI, ConnectorRessourceMap.class.getCanonicalName());
 		this.doPortConnection(uriMap,ComponentMap.MSROP_URI,ComponentReduce.RRMIP_URI,ConnectorMapReduce.class.getCanonicalName() );
-	     
+	   */
+		
+		AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION1});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION2});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION3});
 		super.deploy();
+	
 	}
 
 

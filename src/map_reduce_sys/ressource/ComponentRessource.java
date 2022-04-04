@@ -1,14 +1,17 @@
 package map_reduce_sys.ressource;
 
+import java.security.PublicKey;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import map_reduce_sys.OrderedTuple;
+import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 @RequiredInterfaces(required ={SendTupleServiceI.class})
@@ -107,20 +110,27 @@ public class ComponentRessource extends AbstractComponent {
 	 * 
 	 * Void v = null; bufferSend.add(data_generator.apply(v)); }
 	 */
-	
-	
+
+	/*
 	public boolean runTaskResource(Function<Void, Tuple> s,int size) throws Exception {
 		this.resourceSize=size;
 		this.data_generator=s;
 		for(int i=0;i<resourceSize;i++) {
+		
 			Runnable taskCalcul=()->{
 				Void v = null;
 				OrderedTuple t=(OrderedTuple) data_generator.apply(v);
 				bufferSend.add(t);
 			//	System.out.println("Component Ressource created ressource :"+t.getIndiceData( 0)+" id:"+t.getId());
 				
-			};		
+			};	
+			
+			
+			
 			calculExecutor.submit(taskCalcul);
+			//handleRequest(executorServiceIndex, request)
+			
+			
 			Tuple result =bufferSend.take();
 			Runnable task=()->{
 				try {
@@ -150,8 +160,8 @@ public class ComponentRessource extends AbstractComponent {
 		};
 		SendExecutor.submit(task);*/
 		
-		
-		calculExecutor.shutdown();
+	
+	/*	calculExecutor.shutdown();
 		SendExecutor.shutdown();
 		System.out.println("Component resource finished" );
 		
@@ -159,14 +169,15 @@ public class ComponentRessource extends AbstractComponent {
 		
 		
 		return true;
-	}
+	}*/
 	
 	
 	
 	
-	public void send_Tuple(Tuple t) throws Exception {
+	public void send_Tuple(SendTupleOutboundPort port, Tuple result) throws Exception {
 		   
-		this.rsmop.tupleSender(t);
+		port.tupleSender(result);
+		System.out.println("Component Ressource Send ressource :"+result.getIndiceData( 0)+" id:"+((OrderedTuple) result).getId()); 
 		   
 	   }
 	
@@ -180,6 +191,16 @@ public class ComponentRessource extends AbstractComponent {
 	public synchronized void shutdown() throws ComponentShutdownException {
 		super.shutdown();
 	}
+	
+	public void createCalculTask(LinkedBlockingQueue<Tuple>bufferSend,Function<Void, Tuple> function) {
+		
+			Void v = null;
+			OrderedTuple t1=(OrderedTuple) function.apply(v);
+			bufferSend.add(t1);
+		
+	
+	}
+	
 	
 	
 	

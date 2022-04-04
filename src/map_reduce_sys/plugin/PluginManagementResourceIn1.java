@@ -1,26 +1,34 @@
 package map_reduce_sys.plugin;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.Tuple;
+import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
 
 
-public class PluginManagementResourceIn extends AbstractPlugin implements EventEmissionCI{
+public class PluginManagementResourceIn1 extends AbstractPlugin implements ManagementI{
 	private static final long serialVersionUID=1L;
 	
 	protected ManagementResourceInboundPortPlugin managementPluginInboundPort;
 	protected String PortUri; 
 	protected int nbThread;
 	
-	public PluginManagementResourceIn(String uri,int nb) {
+	public PluginManagementResourceIn1(String uri,int nb) {
 		super();
 		this.PortUri=uri;
 		this.nbThread=nb;
+		
 	}
+	
+	
 	
 	@Override
 	public void	installOn(ComponentI owner) throws Exception{
@@ -36,34 +44,40 @@ public class PluginManagementResourceIn extends AbstractPlugin implements EventE
 		this.managementPluginInboundPort = new ManagementResourceInboundPortPlugin(PortUri,this.getPluginURI(),this.getOwner());
 		this.managementPluginInboundPort.publishPort();
 		
-		createNewExecutorService("plugin_resource-uri", nbThread);
-	
+		int index=createNewExecutorService("Calculexector_uri", nbThread,false);
+		int index2=createNewExecutorService("Sendexector_uri", nbThread,false);
+		
 }
 	@Override
 	public void uninstall() throws Exception {
-		this.receivePluginInboundPort.unpublishPort();
-		this.receivePluginInboundPort.destroyPort();
-		this.removeRequiredInterface(CepEventRecieveInboundPort.class);
+		this.managementPluginInboundPort.unpublishPort();
+		this.managementPluginInboundPort.destroyPort();
+		this.removeRequiredInterface(ManagementI.class);
+	}
+
+
+
+	@Override
+	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+		return ((ManagementI)this.getOwner()).runTaskResource(function, t);
+	}
+
+
+
+	@Override
+	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {
+		return false;
+	}
+
+
+
+	@Override
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
-	@Override
-	public void sendEvent(String emitterURI, EventI event) throws Exception {
-		System.out.println("begin Send PLugin in");
-		/*
-		this.getOwner().handleRequest(
-				cep -> {	((CEPBus)cep).
-									recieveEvent(emitterURI, event);;
-						return null;
-					 });
-					 */
-		((EventEmissionCI)this.getOwner()).sendEvent(emitterURI, event);;
-		System.out.println("fin Send PLugin in");
-	}
 
-	@Override
-	public void sendEvents(String emitterURI, EventI[] events) {
-		
-
-	}
+	
 	
 }

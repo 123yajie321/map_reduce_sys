@@ -2,15 +2,17 @@ package map_reduce_sys.plugin;
 
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
+import map_reduce_sys.connector.ConnectorReduceGestion;
 import map_reduce_sys.connector.ConnectorResourceGestion;
+import map_reduce_sys.gestion.GestionReduceOutboundPort;
 import map_reduce_sys.gestion.GestionResourceOutboundPort;
 import map_reduce_sys.interfaces.ManagementI;
 
-public class PluginManagementResourceOut  extends AbstractPlugin {
+public class PluginManagementReduceOut  extends AbstractPlugin {
 
 	
 	private static final long serialVersionUID = 1L;
-	protected GestionResourceOutboundPort gestionResOp;
+	protected GestionReduceOutboundPort gestionRedOp;
 	protected String inboundPortUri;
 	
 	@Override
@@ -18,8 +20,8 @@ public class PluginManagementResourceOut  extends AbstractPlugin {
 		super.installOn(owner);
 		
 		this.addRequiredInterface(ManagementI.class);
-		this.gestionResOp = new GestionResourceOutboundPort(this.getOwner());
-		this.gestionResOp.publishPort();
+		this. gestionRedOp = new GestionReduceOutboundPort(this.getOwner());
+		this. gestionRedOp.publishPort();
 		System.out.println(" out install");
 	}
 	
@@ -30,9 +32,9 @@ public class PluginManagementResourceOut  extends AbstractPlugin {
 	@Override
 	public void initialise() throws Exception{
 		this.getOwner().doPortConnection(
-				this.gestionResOp.getPortURI(),
+				this. gestionRedOp.getPortURI(),
 				this.inboundPortUri, 
-				ConnectorResourceGestion.class.getCanonicalName());
+				ConnectorReduceGestion.class.getCanonicalName());
 		
 		System.out.println(" COnnected");
 		super.initialise();
@@ -42,19 +44,19 @@ public class PluginManagementResourceOut  extends AbstractPlugin {
 	
 	@Override
 	public void finalise() throws Exception {		
-		this.getOwner().doPortDisconnection(gestionResOp.getPortURI());
+		this.getOwner().doPortDisconnection( gestionRedOp.getPortURI());
 		
 	}
 	
 	@Override
 	public void uninstall() throws Exception {
-		this.gestionResOp.unpublishPort();
-		this.gestionResOp.destroyPort();
+		this. gestionRedOp.unpublishPort();
+		this. gestionRedOp.destroyPort();
 		this.removeRequiredInterface(ManagementI.class);
 	}
 	
-	public ManagementI getResourceServicePort() {
-		return this.gestionResOp;
+	public ManagementI getReduceServicePort() {
+		return this. gestionRedOp;
 	}
 	
 	

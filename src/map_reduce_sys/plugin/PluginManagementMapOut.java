@@ -2,15 +2,17 @@ package map_reduce_sys.plugin;
 
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
+import map_reduce_sys.connector.ConnectorMapGestion;
 import map_reduce_sys.connector.ConnectorResourceGestion;
+import map_reduce_sys.gestion.GestionMapOutboundPort;
 import map_reduce_sys.gestion.GestionResourceOutboundPort;
 import map_reduce_sys.interfaces.ManagementI;
 
-public class PluginManagementResourceOut  extends AbstractPlugin {
+public class PluginManagementMapOut  extends AbstractPlugin {
 
 	
 	private static final long serialVersionUID = 1L;
-	protected GestionResourceOutboundPort gestionResOp;
+	protected GestionMapOutboundPort gestionMapOp;
 	protected String inboundPortUri;
 	
 	@Override
@@ -18,8 +20,8 @@ public class PluginManagementResourceOut  extends AbstractPlugin {
 		super.installOn(owner);
 		
 		this.addRequiredInterface(ManagementI.class);
-		this.gestionResOp = new GestionResourceOutboundPort(this.getOwner());
-		this.gestionResOp.publishPort();
+		this.gestionMapOp = new GestionMapOutboundPort(this.getOwner());
+		this.gestionMapOp.publishPort();
 		System.out.println(" out install");
 	}
 	
@@ -29,10 +31,11 @@ public class PluginManagementResourceOut  extends AbstractPlugin {
 	
 	@Override
 	public void initialise() throws Exception{
+		System.out.println("uri inbound port: "+inboundPortUri);
 		this.getOwner().doPortConnection(
-				this.gestionResOp.getPortURI(),
+				this.gestionMapOp.getPortURI(),
 				this.inboundPortUri, 
-				ConnectorResourceGestion.class.getCanonicalName());
+				ConnectorMapGestion.class.getCanonicalName());
 		
 		System.out.println(" COnnected");
 		super.initialise();
@@ -42,19 +45,20 @@ public class PluginManagementResourceOut  extends AbstractPlugin {
 	
 	@Override
 	public void finalise() throws Exception {		
-		this.getOwner().doPortDisconnection(gestionResOp.getPortURI());
+		this.getOwner().doPortDisconnection(gestionMapOp.getPortURI());
 		
 	}
 	
 	@Override
 	public void uninstall() throws Exception {
-		this.gestionResOp.unpublishPort();
-		this.gestionResOp.destroyPort();
+		this.gestionMapOp.unpublishPort();
+		this.gestionMapOp.destroyPort();
 		this.removeRequiredInterface(ManagementI.class);
 	}
 	
-	public ManagementI getResourceServicePort() {
-		return this.gestionResOp;
+	
+	public ManagementI getResMapServicePort() {
+		return this.gestionMapOp;
 	}
 	
 	

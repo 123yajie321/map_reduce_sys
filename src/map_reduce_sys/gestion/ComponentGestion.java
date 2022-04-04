@@ -10,10 +10,15 @@ import java.util.function.Function;
 
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.AbstractPort;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.reflection.connectors.ReflectionConnector;
+import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
+import map_reduce_sys.CVM;
 import map_reduce_sys.CalculServiceOutboundPort;
 import map_reduce_sys.Nature;
 import map_reduce_sys.OrderedTuple;
@@ -25,6 +30,13 @@ import map_reduce_sys.connector.ConnectorResourceGestion;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.map.ComponentMap;
+import map_reduce_sys.plugin.PluginManagementMapOut;
+import map_reduce_sys.plugin.PluginManagementReduceOut;
+import map_reduce_sys.plugin.PluginManagementResourceIn1;
+import map_reduce_sys.plugin.PluginResource;
+import map_reduce_sys.plugin.PluginManagementResourceOut;
+import map_reduce_sys.plugin.PluginMap;
+import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.reduce.ComponentReduce;
 import map_reduce_sys.ressource.ComponentRessource;
 
@@ -34,6 +46,7 @@ import map_reduce_sys.ressource.ComponentRessource;
 public class ComponentGestion extends AbstractComponent {
 
 	public static final String GMOP_URI = "gmop-uri";
+	
 	protected GestionMapOutboundPort gmop;
 	protected GestionReduceOutboundPort grdop;
 	protected GestionResourceOutboundPort grsop;
@@ -50,27 +63,27 @@ public class ComponentGestion extends AbstractComponent {
 
 	
 	protected ComponentGestion() throws Exception {
-		super(2, 0);
-	    this.gmop=new GestionMapOutboundPort(GMOP_URI,this);
+		super(5, 0);
+	   /* this.gmop=new GestionMapOutboundPort(GMOP_URI,this);
 	    this.gmop.publishPort();
 	    this.grdop=new GestionReduceOutboundPort(this);
 	    this.grsop=new GestionResourceOutboundPort(this);
 	    this.grdop.publishPort();
-	    this.grsop.publishPort();
+	    this.grsop.publishPort();*/
 	}
 	
 	@Override
 	public synchronized void start() throws ComponentStartException {
 
 		super.start();
-		try {
+		/*try {
 			doPortConnection(this.grsop.getPortURI(),ComponentRessource.GRSIP_URI , ConnectorResourceGestion.class.getCanonicalName());
 			doPortConnection(this.gmop.getPortURI(),ComponentMap.MGIP_URI , ConnectorMapGestion.class.getCanonicalName());
 			doPortConnection(this.grdop.getPortURI(),ComponentReduce.GRDIP_URI , ConnectorReduceGestion.class.getCanonicalName());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 	@Override
 	public synchronized void execute() throws Exception {
@@ -112,10 +125,83 @@ public class ComponentGestion extends AbstractComponent {
 		};
 		Tuple sizeTuple=new Tuple(1);
 		sizeTuple.setIndiceTuple(0, 10);
-		this.grsop.runTaskResource(data_generator, sizeTuple);
+		/*this.grsop.runTaskResource(data_generator, sizeTuple);
 		this.gmop.runTaskMap(f_map,sizeTuple);
-		this.grdop.runTaskReduce(g_reduce,sizeTuple);
+		this.grdop.runTaskReduce(g_reduce,sizeTuple);*/
 		
+		
+		
+		
+		
+		//vesion avec plugin
+		
+		
+		String managementResInboundPort =AbstractPort.generatePortURI();
+		String managementMapInboundPort=AbstractPort.generatePortURI();
+		String managementReduceInboundPort=AbstractPort.generatePortURI();
+		
+		String ResourceSendInboundPort=AbstractPort.generatePortURI();
+		String mapSendInboundPort=AbstractPort.generatePortURI();
+		
+
+		ReflectionOutboundPort ResourcereflectionOutboundPort=new ReflectionOutboundPort(this);
+		ResourcereflectionOutboundPort.publishPort();
+		this.doPortConnection(ResourcereflectionOutboundPort.getPortURI(), CVM.URI_PORT_REFLEXION1, ReflectionConnector.class.getCanonicalName());
+		
+
+		ReflectionOutboundPort MapreflectionOutboundPort=new ReflectionOutboundPort(this);
+		MapreflectionOutboundPort.publishPort();
+		this.doPortConnection(MapreflectionOutboundPort.getPortURI(), CVM.URI_PORT_REFLEXION2, ReflectionConnector.class.getCanonicalName());
+		
+
+		ReflectionOutboundPort ReducereflectionOutboundPort=new ReflectionOutboundPort(this);
+		ReducereflectionOutboundPort.publishPort();
+		this.doPortConnection(ReducereflectionOutboundPort.getPortURI(), CVM.URI_PORT_REFLEXION3, ReflectionConnector.class.getCanonicalName());
+		
+		
+		
+		
+		PluginResource pluginResourceIn=new PluginResource(managementResInboundPort, 2,data_generator,ResourceSendInboundPort);
+		pluginResourceIn.setPluginURI("PluginResourceIn");
+		
+		PluginManagementResourceOut pluginResOut=new PluginManagementResourceOut();
+		pluginResOut.setInboundPortUri(managementResInboundPort);
+		pluginResOut.setPluginURI("PluginResourceOut");
+		
+		PluginMap pluginMapIn=new PluginMap(managementMapInboundPort, 2,f_map,ResourceSendInboundPort,mapSendInboundPort);
+		pluginResourceIn.setPluginURI("PluginMapIn");
+		
+		PluginManagementMapOut pluginMapOut=new PluginManagementMapOut();
+		pluginMapOut.setInboundPortUri(managementMapInboundPort);
+		pluginMapOut.setPluginURI("PluginMapOut");
+		
+		
+		PluginReduce pluginReduceIn=new PluginReduce(managementReduceInboundPort, 2,g_reduce,mapSendInboundPort);
+		pluginReduceIn.setPluginURI("PluginReduceIn");
+		
+		
+		PluginManagementReduceOut pluginReduceOut=new PluginManagementReduceOut();
+		pluginReduceOut.setInboundPortUri(managementReduceInboundPort);
+		pluginReduceOut.setPluginURI("PluginReduceOut");
+		
+
+		
+	
+		ResourcereflectionOutboundPort.installPlugin(pluginResourceIn);
+		MapreflectionOutboundPort.installPlugin(pluginMapIn);
+		ReducereflectionOutboundPort.installPlugin(pluginReduceIn);
+		this.installPlugin(pluginResOut);
+		this.installPlugin(pluginMapOut);
+		this.installPlugin(pluginReduceOut);
+
+		 pluginResOut.getResourceServicePort().runTaskResource(data_generator, sizeTuple);
+		 pluginMapOut.getResMapServicePort().runTaskMap(f_map, sizeTuple);
+		 pluginReduceOut.getReduceServicePort().runTaskReduce(g_reduce, sizeTuple);
+		 
+		 ResourcereflectionOutboundPort.doDisconnection();
+		 MapreflectionOutboundPort.doDisconnection();
+		 ReducereflectionOutboundPort.doDisconnection();
+		 
 		/*
 		Function<Tuple, Tuple> f_map = a -> {
 			Double resDouble = (Double)a.getIndiceData(0)*10.0;
@@ -171,9 +257,11 @@ public class ComponentGestion extends AbstractComponent {
 	 */
 	@Override
 	public synchronized void finalise() throws Exception {		
-		this.doPortDisconnection(GMOP_URI);
-		this.doPortDisconnection(this.grsop.getPortURI());
-		this.doPortDisconnection(this.grdop.getPortURI());
+		/*
+		 * this.doPortDisconnection(GMOP_URI);
+		 * this.doPortDisconnection(this.grsop.getPortURI());
+		 * this.doPortDisconnection(this.grdop.getPortURI());
+		 */
 		super.finalise();
 	}
 	

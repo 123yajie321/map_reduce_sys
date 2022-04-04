@@ -1,4 +1,4 @@
-package map_reduce_sys.ressource;
+package map_reduce_sys.reduce;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -10,10 +10,11 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.plugin.PluginManagementResourceIn1;
-import map_reduce_sys.plugin.PluginResource;
+import map_reduce_sys.plugin.PluginMap;
+import map_reduce_sys.plugin.PluginReduce;
 
 
-public class ManagementResourceInboundPortPlugin extends AbstractInboundPort implements ManagementI {
+public class ManagementReduceInboundPortPlugin extends AbstractInboundPort implements ManagementI {
 
 
 	private static final long serialVersionUID = 1L;
@@ -21,12 +22,12 @@ public class ManagementResourceInboundPortPlugin extends AbstractInboundPort imp
 
 
 
-	public ManagementResourceInboundPortPlugin(String uri,String pluginURI,ComponentI owner)
+	public ManagementReduceInboundPortPlugin(String uri,String pluginURI,ComponentI owner)
 			throws Exception {
 		super(uri,ManagementI.class, owner,pluginURI,null);
 	}
 	
-	public ManagementResourceInboundPortPlugin(String pluginURI,ComponentI owner)
+	public ManagementReduceInboundPortPlugin(String pluginURI,ComponentI owner)
 			throws Exception {
 		super(ManagementI.class, owner,pluginURI,null);
 	}
@@ -35,30 +36,27 @@ public class ManagementResourceInboundPortPlugin extends AbstractInboundPort imp
 	
 	
 	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
-		System.out.println("begin Gestion resource port");
-		return this.getOwner().handleRequest(
-				new AbstractComponent.AbstractService<Boolean>(this.getPluginURI()) {
-					@Override
-					public Boolean call() throws Exception{
-						return ((PluginResource)this.getServiceProviderReference()).
-						 runTaskResource(function, t);
-						
-						
-					}
-				});
+		return false;
 		//System.out.println("fin Gestion resource port");
 }
 
 	@Override
 	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+	
+			System.out.println("begin Gestion reduce port");
+		return this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Boolean>(this.getPluginURI()) {
+					@Override
+					public Boolean call() throws Exception{
+						return ((PluginReduce)this.getServiceProviderReference()).
+						 runTaskReduce(function, t);	
+					}
+				});
 	}
 	
 
