@@ -41,6 +41,8 @@ public class ComponentRessource extends AbstractComponent {
 		SendExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 		//this.resourceSize=size;
 		
+
+		
 	}
 	
 	

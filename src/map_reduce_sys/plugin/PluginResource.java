@@ -52,7 +52,7 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	@Override
 	public void	installOn(ComponentI owner) throws Exception{
 		super.installOn(owner);
-
+		System.out.println("pluginREs install");
 		this.addRequiredInterface(SendTupleServiceI.class);
 		this.sendTupleobp=new SendTupleOutboundPort(this.getOwner());
 		this.sendTupleobp.publishPort();
