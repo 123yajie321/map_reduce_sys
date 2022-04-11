@@ -7,11 +7,11 @@ import java.util.function.Function;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.gestion.ComponentGestion;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.reduce.ComponentReduce;
+import map_reduce_sys.structure.Tuple;
 
 public class MapGestionInboundPort extends AbstractInboundPort implements ManagementI {
 

@@ -9,18 +9,20 @@ import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
-import map_reduce_sys.ComponentCalcul;
-import map_reduce_sys.OrderedTuple;
 import map_reduce_sys.SendTupleInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
-import map_reduce_sys.Tuple;
+import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.map.ManagementMapInboundPortPlugin;
 import map_reduce_sys.ressource.ComponentRessource;
 import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
 
 
 public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleServiceI{
@@ -138,7 +140,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 			OrderedTuple result =(OrderedTuple) bufferSend.take();
 			
 			this.getOwner().runTask(indexSendExector, map -> {try {
-				((ComponentCalcul)map).send_Tuple(this.sendTupleobp, result);
+				((SendTupleImplementationI)map).send_Tuple(this.sendTupleobp, result);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -166,7 +168,12 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 	@Override
 	public boolean tupleSender(Tuple t) throws Exception {
 		// TODO Auto-generated method stub
-		this.getOwner().runTask(indexCalculExector, map->{	((ComponentCalcul)map).createMapCalculTask(bufferSend,fonction_map,t);});
+		this.getOwner().runTask(indexCalculExector, map->{	try {
+			((createCalculServiceI)map).createMapCalculTask(bufferSend,fonction_map,t);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}});
 		
 		return true;
 	}

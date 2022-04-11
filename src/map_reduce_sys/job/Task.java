@@ -1,8 +1,10 @@
-package map_reduce_sys;
+package map_reduce_sys.job;
 
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
+
+import map_reduce_sys.structure.Tuple;
 
 public class Task implements Runnable {
 	

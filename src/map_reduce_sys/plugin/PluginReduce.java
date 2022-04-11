@@ -10,19 +10,20 @@ import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
-import map_reduce_sys.ComponentCalcul;
-import map_reduce_sys.OrderedTuple;
 import map_reduce_sys.SendTupleInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
-import map_reduce_sys.Tuple;
+import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.map.ManagementMapInboundPortPlugin;
 import map_reduce_sys.reduce.ManagementReduceInboundPortPlugin;
 import map_reduce_sys.ressource.ComponentRessource;
 import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
 
 
 public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupleServiceI{
@@ -52,6 +53,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 
 	
 	public PluginReduce(String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri) {
+		
 		super();
 		this.ManagementInPortUri=uri;
 		this.sendTupleInPortUri=inboundPortReceiveTupleuri;
@@ -64,7 +66,9 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	
 	@Override
 	public void	installOn(ComponentI owner) throws Exception{
+		System.out.println("pluginRd install");
 		super.installOn(owner);
+		System.out.println("pluginRd apres install");
 
 		/*this.addRequiredInterface(SendTupleServiceI.class);
 		this.sendTupleobp=new SendTupleOutboundPort(this.getOwner());
@@ -80,6 +84,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		//ReflectionOutboundPort  rop= new ReflectionOutboundPort(this.getOwner());
 		super.initialise();
 		
+		
 		//connecte with the component reduce to send Tuple
 		
 		this.addOfferedInterface(ManagementI.class);
@@ -91,8 +96,12 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.sendTupleInboundPort.publishPort();
 		
 		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
-		
+		System.out.println("pluginRd ini avant owner " +this.getOwner());
+		System.out.println("nb thread"+ nbThread);
+		 if (this.getOwner().validExecutorServiceURI("ReduceCalculexector_uri"))
+			 System.out.println("valide");
 		indexCalculExector=createNewExecutorService("ReduceCalculexector_uri", nbThread,false);
+		System.out.println("pluginRd ini apres");
 		//indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
 		
 }
@@ -148,7 +157,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 			OrderedTuple t2=(OrderedTuple) bufferReceive.take();
 			
 			this.getOwner().runTask(indexCalculExector,reduce -> {try {
-				((ComponentCalcul)reduce).createReduceCalculTask(bufferReceive, function, t1, t2);
+				((createCalculServiceI)reduce).createReduceCalculTask(bufferReceive, function, t1, t2);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

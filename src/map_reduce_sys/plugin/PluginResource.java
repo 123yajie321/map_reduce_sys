@@ -7,18 +7,21 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
+
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
-import map_reduce_sys.ComponentCalcul;
-import map_reduce_sys.OrderedTuple;
 import map_reduce_sys.SendTupleOutboundPort;
-import map_reduce_sys.Tuple;
+import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.ressource.ComponentRessource;
 import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
 
 
 public class PluginResource extends AbstractPlugin implements ManagementI{
@@ -51,6 +54,7 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	
 	@Override
 	public void	installOn(ComponentI owner) throws Exception{
+		System.out.println("pluginREs install");
 		super.installOn(owner);
 		System.out.println("pluginREs install");
 		this.addRequiredInterface(SendTupleServiceI.class);
@@ -72,8 +76,8 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 		
 		
 		
-		indexCalculExector=createNewExecutorService("Calculexector_uri", nbThread,false);
-		indexSendExector=createNewExecutorService("Sendexector_uri", nbThread,false);
+		indexCalculExector=createNewExecutorService("RessourceCalculexector_uri", nbThread,false);
+		indexSendExector=createNewExecutorService("RessourceSendexector_uri", nbThread,false);
 		
 }
 	@Override
@@ -96,12 +100,17 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 			//calculExecutor.submit(taskCalcul);
 			//this.getOwner().handleRequest(indexCalculExector, res -> {	((ComponentRessource)res).createCalculTask(bufferSend,data_generator);
 			//return null;});
-			this.getOwner().runTask(indexCalculExector, res->{	((ComponentCalcul)res).createResourceCalculTask(bufferSend,data_generator);});
+			this.getOwner().runTask(indexCalculExector, res->{	try {
+				((createCalculServiceI)res).createResourceCalculTask(bufferSend,data_generator);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}});
 			Tuple result =bufferSend.take();
 			
-			
+		
 			this.getOwner().runTask(indexSendExector, res -> {try {
-				((ComponentRessource)res).send_Tuple(this.sendTupleobp, result);
+				((SendTupleImplementationI)res).send_Tuple(this.sendTupleobp, result);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

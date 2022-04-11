@@ -1,4 +1,4 @@
-package map_reduce_sys;
+package map_reduce_sys.componant;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -10,14 +10,17 @@ import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
-import map_reduce_sys.OrderedTuple;
-import map_reduce_sys.Tuple;
+import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.ressource.GestionResourceInboundPort;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
-@RequiredInterfaces(required ={SendTupleServiceI.class})
-public class ComponentCalcul extends AbstractComponent implements SendTupleServiceI,ManagementI {
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
+
+public class ComponentCalcul extends AbstractComponent implements SendTupleImplementationI,createCalculServiceI {
 	
 
 	protected ComponentCalcul(String uri) throws Exception {
@@ -67,29 +70,6 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleServi
 		bufferReceive.add(fonction_reduce.apply(t1,t2));	
 	}
 
-	@Override
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 	
 }

@@ -20,15 +20,12 @@ import fr.sorbonne_u.components.reflection.connectors.ReflectionConnector;
 import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import map_reduce_sys.CVM;
 import map_reduce_sys.CalculServiceOutboundPort;
-import map_reduce_sys.Nature;
-import map_reduce_sys.OrderedTuple;
-import map_reduce_sys.SimpleJob;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.connector.ConnectorMapGestion;
 import map_reduce_sys.connector.ConnectorReduceGestion;
 import map_reduce_sys.connector.ConnectorResourceGestion;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.job.SimpleJob;
 import map_reduce_sys.map.ComponentMap;
 import map_reduce_sys.plugin.PluginManagementMapOut;
 import map_reduce_sys.plugin.PluginManagementReduceOut;
@@ -39,6 +36,9 @@ import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.reduce.ComponentReduce;
 import map_reduce_sys.ressource.ComponentRessource;
+import map_reduce_sys.structure.Nature;
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
 
 @RequiredInterfaces(required ={SendTupleServiceI.class})
 

@@ -1,4 +1,4 @@
-package map_reduce_sys;
+package map_reduce_sys.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package map_reduce_sys;
+package map_reduce_sys.job;
 
 import java.util.concurrent.Callable;
 

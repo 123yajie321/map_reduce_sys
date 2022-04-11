@@ -5,8 +5,8 @@ import java.util.function.Function;
 
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
-import map_reduce_sys.SimpleJob;
-import map_reduce_sys.Tuple;
+import map_reduce_sys.job.SimpleJob;
+import map_reduce_sys.structure.Tuple;
 
 public interface ManagementI  extends OfferedCI,RequiredCI{
 	/*

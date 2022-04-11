@@ -8,9 +8,9 @@ import java.util.function.Function;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.map.ComponentMap;
+import map_reduce_sys.structure.Tuple;
 
 public class GestionReduceInboundPort extends AbstractInboundPort implements ManagementI {
 

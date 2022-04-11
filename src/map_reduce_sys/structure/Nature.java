@@ -1,4 +1,4 @@
-package map_reduce_sys;
+package map_reduce_sys.structure;
 
 public enum Nature {
 	 COMMUTATIVE_ASSOCIATIVE,

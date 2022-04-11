@@ -8,6 +8,7 @@ import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
+import map_reduce_sys.structure.Tuple;
 
 public class SendTupleInboundPort extends AbstractInboundPort implements SendTupleServiceI {
 

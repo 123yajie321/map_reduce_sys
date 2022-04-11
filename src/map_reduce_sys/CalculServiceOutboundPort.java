@@ -6,6 +6,8 @@ import java.util.concurrent.Callable;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import map_reduce_sys.interfaces.CalculServiceI;
+import map_reduce_sys.structure.Tuple;
 
 public class CalculServiceOutboundPort extends AbstractOutboundPort implements CalculServiceI {
 

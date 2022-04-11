@@ -1,7 +1,7 @@
 package map_reduce_sys.interfaces;
 
 import fr.sorbonne_u.components.interfaces.OfferedCI;
-import map_reduce_sys.Tuple;
+import map_reduce_sys.structure.Tuple;
 
 public interface RecieveTupleServiceI extends OfferedCI {
 	

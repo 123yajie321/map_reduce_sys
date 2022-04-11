@@ -10,10 +10,10 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
-import map_reduce_sys.OrderedTuple;
 import map_reduce_sys.SendTupleOutboundPort;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
 @RequiredInterfaces(required ={SendTupleServiceI.class})
 public class ComponentRessource extends AbstractComponent {
 	public static final String RSMOP_URI = "rsmop-uri";

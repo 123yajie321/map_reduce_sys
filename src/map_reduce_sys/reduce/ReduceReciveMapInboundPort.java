@@ -3,10 +3,10 @@ package map_reduce_sys.reduce;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.gestion.ComponentGestion;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.map.ComponentMap;
+import map_reduce_sys.structure.Tuple;
 
 public class ReduceReciveMapInboundPort extends AbstractInboundPort implements RecieveTupleServiceI {
 

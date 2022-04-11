@@ -13,10 +13,10 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import map_reduce_sys.CalculServiceOutboundPort;
-import map_reduce_sys.OrderedTuple;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
 
 @OfferedInterfaces(offered = { RecieveTupleServiceI.class })
 public class ComponentReduce extends AbstractComponent {

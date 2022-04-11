@@ -9,9 +9,9 @@ import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
+import map_reduce_sys.structure.Tuple;
 
 
 public class PluginManagementResourceIn1 extends AbstractPlugin implements ManagementI{

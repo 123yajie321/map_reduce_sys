@@ -10,11 +10,11 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
-import map_reduce_sys.OrderedTuple;
-import map_reduce_sys.Task;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.job.Task;
+import map_reduce_sys.structure.OrderedTuple;
+import map_reduce_sys.structure.Tuple;
 @OfferedInterfaces(offered= {RecieveTupleServiceI.class})
 @RequiredInterfaces(required ={SendTupleServiceI.class})
 public class ComponentMap extends AbstractComponent {

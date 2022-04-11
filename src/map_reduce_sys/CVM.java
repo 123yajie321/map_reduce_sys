@@ -1,24 +1,11 @@
 package map_reduce_sys;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-
 
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.ReflectionInboundPort;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
-import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
-import map_reduce_sys.connector.ConnectorMapGestion;
-import map_reduce_sys.connector.ConnectorMapReduce;
-import map_reduce_sys.connector.ConnectorRessourceMap;
+import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.gestion.ComponentGestion;
-import map_reduce_sys.map.ComponentMap;
-import map_reduce_sys.reduce.ComponentReduce;
-import map_reduce_sys.ressource.ComponentRessource;
+
 
 public class CVM extends AbstractCVM {
 	

@@ -3,8 +3,8 @@ package map_reduce_sys.map;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import map_reduce_sys.Tuple;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.structure.Tuple;
 
 public class MapServiceOutboundPort extends AbstractOutboundPort implements SendTupleServiceI {
 	
