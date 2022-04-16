@@ -10,6 +10,7 @@ import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.map.ComponentMap;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
 public class GestionReduceInboundPort extends AbstractInboundPort implements ManagementI {
@@ -37,7 +38,7 @@ public class GestionReduceInboundPort extends AbstractInboundPort implements Man
 		return false;
 	}
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 	return this.getOwner().handleRequest(r->((ComponentReduce)r).runTaskReduce(function,(int)t.getIndiceData(0)));	
 	}
 

@@ -7,6 +7,7 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
 public class ConnectorMapGestion extends AbstractConnector implements ManagementI{
@@ -26,7 +27,7 @@ public class ConnectorMapGestion extends AbstractConnector implements Management
 	}
 
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}

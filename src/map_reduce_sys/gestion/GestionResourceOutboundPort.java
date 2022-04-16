@@ -8,6 +8,7 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
 public class GestionResourceOutboundPort extends AbstractOutboundPort implements ManagementI {
@@ -39,7 +40,7 @@ public class GestionResourceOutboundPort extends AbstractOutboundPort implements
 	}
 
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}

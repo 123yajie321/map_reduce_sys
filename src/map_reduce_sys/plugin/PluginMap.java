@@ -21,6 +21,7 @@ import map_reduce_sys.map.ManagementMapInboundPortPlugin;
 import map_reduce_sys.ressource.ComponentRessource;
 import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
 
@@ -158,7 +159,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 
 
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}

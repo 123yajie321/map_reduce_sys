@@ -11,6 +11,7 @@ import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.plugin.PluginManagementResourceIn1;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
 
@@ -46,7 +47,7 @@ public class ManagementReduceInboundPortPlugin extends AbstractInboundPort imple
 	}
 
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 	
 			System.out.println("begin Gestion reduce port");
 		return this.getOwner().handleRequest(
@@ -54,7 +55,7 @@ public class ManagementReduceInboundPortPlugin extends AbstractInboundPort imple
 					@Override
 					public Boolean call() throws Exception{
 						return ((PluginReduce)this.getServiceProviderReference()).
-						 runTaskReduce(function, t);	
+						 runTaskReduce(function, t,nature);	
 					}
 				});
 	}

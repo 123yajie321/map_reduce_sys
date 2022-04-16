@@ -22,6 +22,7 @@ import map_reduce_sys.reduce.ManagementReduceInboundPortPlugin;
 import map_reduce_sys.ressource.ComponentRessource;
 import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
 
@@ -148,30 +149,96 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 
 
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 
-        this.dataSize=(int) t.getIndiceData(0);
-		this.fonction_reduce=function;
-		for(int i=0;i<dataSize-1;i++) {
-			OrderedTuple t1=(OrderedTuple) bufferReceive.take();
-			OrderedTuple t2=(OrderedTuple) bufferReceive.take();
-			
-			this.getOwner().runTask(indexCalculExector,reduce -> {try {
-				((createCalculServiceI)reduce).createReduceCalculTask(bufferReceive, function, t1, t2);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}});
-			
-			
-			
-		}
-			Tuple finalResult = bufferReceive.take();
-			int result = (int) finalResult.getIndiceData(0);
-			
-			System.out.println("final result is :  " + result);
-			System.out.println("Component Reduce finished" );
-		return true;
+		switch(nature){
+	    case COMMUTATIVE_ASSOCIATIVE :
+	    {
+	    	System.out.println("mathced commu!!!!!!!!!!!!! ");
+	        this.dataSize=(int) t.getIndiceData(0);
+			this.fonction_reduce=function;
+			for(int i=0;i<dataSize-1;i++) {
+				OrderedTuple t1=(OrderedTuple) bufferReceive.take();
+				OrderedTuple t2=(OrderedTuple) bufferReceive.take();
+				
+				this.getOwner().runTask(indexCalculExector,reduce -> {try {
+					((createCalculServiceI)reduce).createReduceCalculTask(bufferReceive, function, t1, t2);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}});
+				
+				
+				
+			}
+				Tuple finalResult = bufferReceive.take();
+				int result = (int) finalResult.getIndiceData(0);
+				
+				System.out.println("final result is :  " + result);
+				System.out.println("Component Reduce finished" );
+			return true;
+	    	
+	    }
+	       
+	    case ASSOCIATIVE :
+	       
+	       break; 
+	       
+	       
+	    case ITERATIVE :{
+	    	System.out.println("mathced !!!!!!!!!!!!! ");
+		       int currentCalculId=0;
+	
+		        this.dataSize=(int) t.getIndiceData(0);
+				this.fonction_reduce=function;
+				for(int i=0;i<dataSize-1;i++) {
+					OrderedTuple tmp1=(OrderedTuple) bufferReceive.take();
+					while(currentCalculId!=tmp1.getId()) {
+						bufferReceive.add(tmp1);
+						tmp1=(OrderedTuple) bufferReceive.take();
+						
+					}
+					currentCalculId++;
+					System.out.println("currentId !!!!!! "+ currentCalculId);
+					OrderedTuple t1=tmp1;
+					
+					
+					OrderedTuple tmp2=(OrderedTuple) bufferReceive.take();
+					while(currentCalculId!=tmp2.getId()) {
+						bufferReceive.add(tmp2);
+						tmp2=(OrderedTuple) bufferReceive.take();
+						
+					}
+					OrderedTuple t2=tmp2;
+					currentCalculId++;
+							
+					
+					
+					this.getOwner().runTask(indexCalculExector,reduce -> {try {
+						((createCalculServiceI)reduce).createReduceCalculTask(bufferReceive, function, t1, t2);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}});
+					
+					
+					
+				}
+				System.out.println("fin for");
+					Tuple finalResult = bufferReceive.take();
+					int result = (int) finalResult.getIndiceData(0);
+					
+					System.out.println("final result is :  " + result);
+					System.out.println("Component Reduce finished" );
+				return true;
+	    }
+	       
+	}
+		
+		return false;
+		
+		
+       
 	}
 
 

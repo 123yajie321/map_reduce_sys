@@ -10,6 +10,7 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.plugin.PluginManagementResourceIn1;
 import map_reduce_sys.plugin.PluginResource;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
 
@@ -56,7 +57,7 @@ public class ManagementResourceInboundPortPlugin extends AbstractInboundPort imp
 	}
 
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}

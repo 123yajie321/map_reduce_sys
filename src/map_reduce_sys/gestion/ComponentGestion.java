@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -20,6 +22,7 @@ import fr.sorbonne_u.components.reflection.connectors.ReflectionConnector;
 import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import map_reduce_sys.CVM;
 import map_reduce_sys.CalculServiceOutboundPort;
+
 import map_reduce_sys.connector.ConnectorMapGestion;
 import map_reduce_sys.connector.ConnectorReduceGestion;
 import map_reduce_sys.connector.ConnectorResourceGestion;
@@ -50,6 +53,7 @@ public class ComponentGestion extends AbstractComponent {
 	protected GestionMapOutboundPort gmop;
 	protected GestionReduceOutboundPort grdop;
 	protected GestionResourceOutboundPort grsop;
+	protected ThreadPoolExecutor runTaskExecutor;
 	/*
 	 * protected LinkedBlockingQueue<Tuple> bufferRessource; protected
 	 * LinkedBlockingQueue<Tuple> bufferResult; protected LinkedBlockingQueue<Tuple>
@@ -70,6 +74,9 @@ public class ComponentGestion extends AbstractComponent {
 	    this.grsop=new GestionResourceOutboundPort(this);
 	    this.grdop.publishPort();
 	    this.grsop.publishPort();*/
+		int N=3;
+		runTaskExecutor = new ThreadPoolExecutor(N, N, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(20));
+		runTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 	
 	@Override
@@ -123,8 +130,29 @@ public class ComponentGestion extends AbstractComponent {
 			return tuple; 
 				  
 		};
+		
+		
+
+		BiFunction<Tuple, Tuple, Tuple> g_reduce_iteratif = (a,b) -> {
+			OrderedTuple t=(OrderedTuple)b;
+
+			int resInteger =(int)a.getIndiceData(0)-(int)b.getIndiceData(0); 
+			Tuple tuple = new OrderedTuple(1,t.getId());
+			tuple.setIndiceTuple(0, resInteger); 
+			return tuple; 
+				  
+		};
 		Tuple sizeTuple=new Tuple(1);
-		sizeTuple.setIndiceTuple(0, 10);
+		sizeTuple.setIndiceTuple(0, 100);
+		
+		
+		
+		
+		SimpleJob jobAssocCommuJob=new SimpleJob(f_map, g_reduce, data_generator, Nature.COMMUTATIVE_ASSOCIATIVE, sizeTuple);
+		SimpleJob jobIteratif=new SimpleJob(f_map, g_reduce_iteratif, data_generator, Nature.ITERATIVE, sizeTuple);
+		
+		
+		
 		/*this.grsop.runTaskResource(data_generator, sizeTuple);
 		this.gmop.runTaskMap(f_map,sizeTuple);
 		this.grdop.runTaskReduce(g_reduce,sizeTuple);*/
@@ -194,11 +222,48 @@ public class ComponentGestion extends AbstractComponent {
 		this.installPlugin(pluginResOut);
 		this.installPlugin(pluginMapOut);
 		this.installPlugin(pluginReduceOut);
-
 		System.out.println(" install out");
+		
+		
+		Runnable taskRessource = () -> {
+			 try {
+				pluginResOut.getResourceServicePort().runTaskResource(data_generator, sizeTuple);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		};
+		
+		Runnable taskMap = () -> {
+			 try {
+				 pluginMapOut.getResMapServicePort().runTaskMap(f_map, sizeTuple);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		};
+		
+		
+		Runnable taskReduce = () -> {
+			 try {
+				 pluginReduceOut.getReduceServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple,Nature.ITERATIVE);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		};
+		
+		
+		runTaskExecutor.submit(taskRessource);
+		runTaskExecutor.submit(taskMap);
+		runTaskExecutor.submit(taskReduce);
+		/*
 		 pluginResOut.getResourceServicePort().runTaskResource(data_generator, sizeTuple);
 		 pluginMapOut.getResMapServicePort().runTaskMap(f_map, sizeTuple);
 		 pluginReduceOut.getReduceServicePort().runTaskReduce(g_reduce, sizeTuple);
+		 */
+		 
+		 
 		 
 		 ResourcereflectionOutboundPort.doDisconnection();
 		 MapreflectionOutboundPort.doDisconnection();
