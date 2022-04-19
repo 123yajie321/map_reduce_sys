@@ -11,6 +11,7 @@ import map_reduce_sys.gestion.ComponentGestion;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.reduce.ComponentReduce;
+import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
 public class MapGestionInboundPort extends AbstractInboundPort implements ManagementI {
@@ -52,7 +53,7 @@ public class MapGestionInboundPort extends AbstractInboundPort implements Manage
 
 
 	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}

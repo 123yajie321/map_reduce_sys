@@ -2,6 +2,7 @@ package map_reduce_sys.componant;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
@@ -66,8 +67,13 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		bufferSend.add(fonction_map.apply(t));	
 	}
 	
-	public void createReduceCalculTask(BlockingQueue<Tuple>bufferReceive,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,Tuple t1,Tuple t2){
-		bufferReceive.add(fonction_reduce.apply(t1,t2));	
+	
+	@Override
+	public void createReduceCalculTask(PriorityBlockingQueue<OrderedTuple> bufferReceive,
+			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, Tuple t1, Tuple t2) throws Exception {
+		OrderedTuple result= (OrderedTuple) fonction_reduce.apply(t1,t2);
+		bufferReceive.put(result);	
+		System.out.println("result id"+result.getId()+" value"+ result.getIndiceData(0));
 	}
 
 	

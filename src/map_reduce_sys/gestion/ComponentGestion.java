@@ -106,10 +106,36 @@ public class ComponentGestion extends AbstractComponent {
 			return tuple;	
 			
 		};
+		
+		Function<Void, Tuple> matrix_generator = (v)->{
+			
+			int nb_line=2;
+		    int matrix[][]=new int[nb_line][nb_line];
+			
+		    for(int i=0;i<nb_line;i++) {
+		    	 for(int j=0;j<nb_line;j++) {
+		    		matrix[i][j]= (int) (Math.random()*10);
+		    	 }
+		    	
+		    }
+		    
+		    Tuple tuple=new OrderedTuple(1);
+			tuple.setIndiceTuple(0, matrix);
+			return tuple;	
+			
+		};
 				
 		
 
 		Function<Tuple, Tuple> f_map = a -> { 
+			OrderedTuple t=(OrderedTuple)a;
+			Integer res =(Integer)a.getIndiceData(0)*10;
+			Tuple tuple = new OrderedTuple(1,t.getId());
+			tuple.setIndiceTuple(0, res); 
+			return tuple;
+		};
+		
+		Function<Tuple, Tuple> f_map_matrix = a -> { 
 			OrderedTuple t=(OrderedTuple)a;
 			Integer res =(Integer)a.getIndiceData(0)*10;
 			Tuple tuple = new OrderedTuple(1,t.getId());

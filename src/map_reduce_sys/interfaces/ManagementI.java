@@ -16,7 +16,6 @@ public interface ManagementI  extends OfferedCI,RequiredCI{
 	public void SubmitJob(SimpleJob job);*/
 	
 	public boolean runTaskResource(Function<Void, Tuple>function,Tuple t)throws Exception;
-	
 	public boolean runTaskMap(Function<Tuple, Tuple>function,Tuple t)throws Exception;
 	public boolean runTaskReduce(BiFunction<Tuple,Tuple, Tuple>function,Tuple t,Nature nature) throws Exception;
 	
