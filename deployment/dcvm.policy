@@ -1,8 +1,8 @@
 grant {
   permission java.io.FilePermission "./*", "write";
   permission java.io.FilePermission "./jars/*", "read,write";
-  permission java.io.FilePermission "C:/Program Files/Java/jdk1.8.0_321/jre/lib/*", "read";
-  permission java.io.FilePermission "C:/Program Files/Java/jdk1.8.0_321/lib/*", "read";
+  permission java.io.FilePermission "/Library/Java/JavaVirtualMachines/jdk1.8.0_331.jdk/Contents/Home/jre/lib/*", "read";
+  permission java.io.FilePermission "/Library/Java/JavaVirtualMachines/jdk1.8.0_331.jdk/Contents/Home/lib/*", "read";
   permission java.lang.RuntimePermission "accessDeclaredMembers" ;
   permission java.lang.RuntimePermission "getClassLoader" ;
   permission java.util.PropertyPermission "javax.xml.validation.SchemaFactory:http://relaxng.org/ns/structure/1.0", "read,write";

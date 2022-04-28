@@ -1,20 +1,20 @@
 <deployment>
 	<hosts>
 		<host name="localhost"
-			dir="C:\Users\LIU Yajie\git\map_reduce_sys\deployment"/>
+			dir="/Users/yvo/git/map_reduce_sys/deployment"/>
 	</hosts>
 	<cyclicBarrier hostname="localhost" port="55253"/>	
 	<globalRegistry hostname="localhost" port="55252"/>
+	<rmiRegistryPort no="55999"/>
 	<jvms2hostnames>
-		<jvms2hostname jvmuri="gestion" rmiRegistryCreator="true" hostname="localhost" 
-			mainclass="map_reduce_sys/DistributedCVM.java"/>
-		<jvms2hostname jvmuri="resource" rmiRegistryCreator="false" hostname="localhost" 
-			mainclass="map_reduce_sys/DistributedCVM.java"/>
-			
-		<jvms2hostname jvmuri="map" rmiRegistryCreator="false" hostname="localhost" 
-			mainclass="map_reduce_sys/DistributedCVM.java"/>
-		<jvms2hostname jvmuri="reduce" rmiRegistryCreator="false" hostname="localhost" 
-			mainclass="map_reduce_sys/DistributedCVM.java"/>			
+		<jvm2hostname jvmuri="gestion" rmiRegistryCreator="true" hostname="localhost" 
+			mainclass="map_reduce_sys/DistributedCVM"/>
+		<jvm2hostname jvmuri="resource" rmiRegistryCreator="false" hostname="localhost" 
+			mainclass="map_reduce_sys/DistributedCVM"/>
+		<jvm2hostname jvmuri="map" rmiRegistryCreator="false" hostname="localhost" 
+			mainclass="map_reduce_sys/DistributedCVM"/>
+		<jvm2hostname jvmuri="reduce" rmiRegistryCreator="false" hostname="localhost" 
+			mainclass="map_reduce_sys/DistributedCVM"/>			
 	
 	</jvms2hostnames>
 	

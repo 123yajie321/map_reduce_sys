@@ -77,6 +77,9 @@ public class ComponentGestion extends AbstractComponent {
 		int N=3;
 		runTaskExecutor = new ThreadPoolExecutor(N, N, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(20));
 		runTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+		this.getTracer().setTitle("Gestion ");
+		this.getTracer().setRelativePosition(2, 0);
+		this.toggleTracing();
 	}
 	
 	@Override
@@ -197,11 +200,13 @@ public class ComponentGestion extends AbstractComponent {
 		String ResourceSendInboundPort=AbstractPort.generatePortURI();
 		String mapSendInboundPort=AbstractPort.generatePortURI();
 		
-
+		this.traceMessage(
+				"begin resouceReflectOutboundPort" + ".\n");
 		ReflectionOutboundPort ResourcereflectionOutboundPort=new ReflectionOutboundPort(this);
 		ResourcereflectionOutboundPort.publishPort();
 		this.doPortConnection(ResourcereflectionOutboundPort.getPortURI(), CVM.URI_PORT_REFLEXION1, ReflectionConnector.class.getCanonicalName());
-		
+		this.traceMessage(
+				"resource Connection reussi " + ".\n");
 
 		ReflectionOutboundPort MapreflectionOutboundPort=new ReflectionOutboundPort(this);
 		MapreflectionOutboundPort.publishPort();
@@ -214,9 +219,12 @@ public class ComponentGestion extends AbstractComponent {
 		
 		
 		
-		
+		this.traceMessage(
+				"begin Resource plugin" + ".\n");
 		PluginResource pluginResourceIn=new PluginResource(managementResInboundPort, 2,data_generator,ResourceSendInboundPort);
 		pluginResourceIn.setPluginURI("PluginResourceIn");
+		this.traceMessage(
+				"end Resouce plugin " + ".\n");
 		
 		PluginManagementResourceOut pluginResOut=new PluginManagementResourceOut();
 		pluginResOut.setInboundPortUri(managementResInboundPort);

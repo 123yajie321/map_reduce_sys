@@ -1,0 +1,79 @@
+1651176866004|DCVM Cyclic Barrier up and running!
+1651176866312|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176866313|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176866434|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176866434|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176866475|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176866475|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176866735|All connected!
+1651176866737|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176866738|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176866738|DCVM Cyclic Barrier releases 4 sites.
+1651176866742|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176866743|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176866772|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176866772|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176866773|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176866773|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176866773|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176866774|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176866774|DCVM Cyclic Barrier releases 4 sites.
+1651176867424|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176867425|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176867441|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176867441|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176867442|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176867445|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176868053|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176868053|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176868053|DCVM Cyclic Barrier releases 4 sites.
+1651176868062|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176868063|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176868063|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176868063|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176868063|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176868064|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176868067|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176868069|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176868069|DCVM Cyclic Barrier releases 4 sites.
+1651176868071|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176868071|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176868071|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176868071|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176868073|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176868073|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176868074|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176868075|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176868075|DCVM Cyclic Barrier releases 4 sites.
+1651176878083|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176878083|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176878083|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176878083|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176878084|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176878087|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176878089|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176878089|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176878089|DCVM Cyclic Barrier releases 4 sites.
+1651176878103|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176878104|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176878104|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176878105|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176878107|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176878108|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176878108|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176878109|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176878109|DCVM Cyclic Barrier releases 4 sites.
+1651176878114|DCVM Cyclic Barrier accepts: gestion localhost 53424
+1651176878115|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1651176878115|DCVM Cyclic Barrier accepts: resource localhost 53425
+1651176878116|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1651176878120|DCVM Cyclic Barrier accepts: reduce localhost 53427
+1651176878120|DCVM Cyclic Barrier accepts: map localhost 53426
+1651176878120|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1651176878122|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1651176878122|DCVM Cyclic Barrier releases 4 sites.
+1651176878128|DCVMCyclicBarrier.run() finished.
+1651176878128|DCVMCyclicBarrier.run() finished.
+1651176878129|DCVMCyclicBarrier.run() finished.
+1651176878129|DCVMCyclicBarrier.run() finished.
+1651176878129|DCVM Cyclic Barrier shuts down!
