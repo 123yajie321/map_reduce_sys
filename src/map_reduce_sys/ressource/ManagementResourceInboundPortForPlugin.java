@@ -8,13 +8,12 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import map_reduce_sys.interfaces.ManagementI;
-import map_reduce_sys.plugin.PluginManagementResourceIn1;
 import map_reduce_sys.plugin.PluginResource;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
 
-public class ManagementResourceInboundPortPlugin extends AbstractInboundPort implements ManagementI {
+public class ManagementResourceInboundPortForPlugin extends AbstractInboundPort implements ManagementI {
 
 
 	private static final long serialVersionUID = 1L;
@@ -22,12 +21,12 @@ public class ManagementResourceInboundPortPlugin extends AbstractInboundPort imp
 
 
 
-	public ManagementResourceInboundPortPlugin(String uri,String pluginURI,ComponentI owner)
+	public ManagementResourceInboundPortForPlugin(String uri,String pluginURI,ComponentI owner)
 			throws Exception {
 		super(uri,ManagementI.class, owner,pluginURI,null);
 	}
 	
-	public ManagementResourceInboundPortPlugin(String pluginURI,ComponentI owner)
+	public ManagementResourceInboundPortForPlugin(String pluginURI,ComponentI owner)
 			throws Exception {
 		super(ManagementI.class, owner,pluginURI,null);
 	}

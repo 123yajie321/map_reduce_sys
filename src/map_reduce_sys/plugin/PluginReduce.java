@@ -18,10 +18,10 @@ import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
-import map_reduce_sys.map.ManagementMapInboundPortPlugin;
-import map_reduce_sys.reduce.ManagementReduceInboundPortPlugin;
+import map_reduce_sys.map.ManagementMapInboundPortForPlugin;
+import map_reduce_sys.reduce.ManagementReduceInboundPortForPlugin;
 import map_reduce_sys.ressource.ComponentRessource;
-import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
+import map_reduce_sys.ressource.ManagementResourceInboundPortForPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
@@ -32,7 +32,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	private static final long serialVersionUID=1L;
 	
 	//Offere the servive runTaskReduce
-	protected ManagementReduceInboundPortPlugin managementReducePluginInboundPort;
+	protected ManagementReduceInboundPortForPlugin managementReducePluginInboundPort;
 	protected String ManagementInPortUri; 
 	protected int nbThread;
 	protected  int dataSize;
@@ -90,7 +90,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		//connecte with the component reduce to send Tuple
 		
 		this.addOfferedInterface(ManagementI.class);
-		this.managementReducePluginInboundPort = new ManagementReduceInboundPortPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
+		this.managementReducePluginInboundPort = new ManagementReduceInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementReducePluginInboundPort.publishPort();
 		
 		this.addOfferedInterface(SendTupleServiceI.class);

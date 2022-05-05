@@ -18,7 +18,7 @@ import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.ressource.ComponentRessource;
-import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
+import map_reduce_sys.ressource.ManagementResourceInboundPortForPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
@@ -28,7 +28,7 @@ import map_reduce_sys.structure.Tuple;
 public class PluginResource extends AbstractPlugin implements ManagementI{
 	private static final long serialVersionUID=1L;
 	
-	protected ManagementResourceInboundPortPlugin managementPluginInboundPort;
+	protected ManagementResourceInboundPortForPlugin managementPluginInboundPort;
 	protected String ManagementInPortUri; 
 	protected int nbThread;
 	//protected  int resourceSize;
@@ -72,7 +72,7 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 		
 		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendTupleInPortUri, ConnectorSendTuple.class.getCanonicalName());
 		this.addOfferedInterface(ManagementI.class);
-		this.managementPluginInboundPort = new ManagementResourceInboundPortPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
+		this.managementPluginInboundPort = new ManagementResourceInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementPluginInboundPort.publishPort();
 		
 		

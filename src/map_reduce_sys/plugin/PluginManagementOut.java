@@ -3,11 +3,7 @@ package map_reduce_sys.plugin;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.connector.ConnectorGestion;
-import map_reduce_sys.connector.ConnectorMapGestion;
-import map_reduce_sys.connector.ConnectorResourceGestion;
-import map_reduce_sys.gestion.GestionMapOutboundPort;
 import map_reduce_sys.gestion.GestionOutboundPort;
-import map_reduce_sys.gestion.GestionResourceOutboundPort;
 import map_reduce_sys.interfaces.ManagementI;
 
 public class PluginManagementOut  extends AbstractPlugin {

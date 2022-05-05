@@ -17,9 +17,9 @@ import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
-import map_reduce_sys.map.ManagementMapInboundPortPlugin;
+import map_reduce_sys.map.ManagementMapInboundPortForPlugin;
 import map_reduce_sys.ressource.ComponentRessource;
-import map_reduce_sys.ressource.ManagementResourceInboundPortPlugin;
+import map_reduce_sys.ressource.ManagementResourceInboundPortForPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
@@ -30,7 +30,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 	private static final long serialVersionUID=1L;
 	
 	//Offere the servive runTaskMap
-	protected ManagementMapInboundPortPlugin managementMapPluginInboundPort;
+	protected ManagementMapInboundPortForPlugin managementMapPluginInboundPort;
 	protected String ManagementInPortUri; 
 	protected int nbThread;
 	protected  int dataSize;
@@ -83,7 +83,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		//connecte with the component reduce to send Tuple
 		
 		this.addOfferedInterface(ManagementI.class);
-		this.managementMapPluginInboundPort = new ManagementMapInboundPortPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
+		this.managementMapPluginInboundPort = new ManagementMapInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementMapPluginInboundPort.publishPort();
 		System.out.println("map inbound port created "+ManagementInPortUri);
 		
@@ -91,6 +91,8 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		this.sendTupleInboundPort=new ReceiveTupleWithPluginInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
 		this.sendTupleInboundPort.publishPort();
 		
+		System.out.println("Map send  "+sendReduceTupleInboundPortUri+";"+this.sendTupleobp.getPortURI());
+	
 		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		
 		indexCalculExector=createNewExecutorService("MapCalculexector_uri", nbThread,false);
