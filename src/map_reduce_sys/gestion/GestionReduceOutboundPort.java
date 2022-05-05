@@ -29,7 +29,7 @@ public class GestionReduceOutboundPort extends AbstractOutboundPort implements M
 
 
 	@Override
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}

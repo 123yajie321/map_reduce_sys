@@ -2,8 +2,10 @@ package map_reduce_sys.plugin;
 
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
+import map_reduce_sys.connector.ConnectorGestion;
 import map_reduce_sys.connector.ConnectorReduceGestion;
 import map_reduce_sys.connector.ConnectorResourceGestion;
+import map_reduce_sys.gestion.GestionOutboundPort;
 import map_reduce_sys.gestion.GestionReduceOutboundPort;
 import map_reduce_sys.gestion.GestionResourceOutboundPort;
 import map_reduce_sys.interfaces.ManagementI;
@@ -12,7 +14,7 @@ public class PluginManagementReduceOut  extends AbstractPlugin {
 
 	
 	private static final long serialVersionUID = 1L;
-	protected GestionReduceOutboundPort gestionRedOp;
+	protected GestionOutboundPort gestionRedOp;
 	protected String inboundPortUri;
 	
 	@Override
@@ -20,7 +22,7 @@ public class PluginManagementReduceOut  extends AbstractPlugin {
 		super.installOn(owner);
 		
 		this.addRequiredInterface(ManagementI.class);
-		this. gestionRedOp = new GestionReduceOutboundPort(this.getOwner());
+		this. gestionRedOp = new GestionOutboundPort(this.getOwner());
 		this. gestionRedOp.publishPort();
 		System.out.println(" out install");
 	}
@@ -34,7 +36,7 @@ public class PluginManagementReduceOut  extends AbstractPlugin {
 		this.getOwner().doPortConnection(
 				this. gestionRedOp.getPortURI(),
 				this.inboundPortUri, 
-				ConnectorReduceGestion.class.getCanonicalName());
+				ConnectorGestion.class.getCanonicalName());
 		
 		System.out.println(" COnnected");
 		super.initialise();

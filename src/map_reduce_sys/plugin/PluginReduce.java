@@ -11,7 +11,7 @@ import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
-import map_reduce_sys.SendTupleInboundPort;
+import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.connector.ConnectorSendTuple;
@@ -39,26 +39,28 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	protected BiFunction<Tuple,Tuple, Tuple> fonction_reduce;
 	protected BlockingQueue<OrderedTuple>  bufferReceive;
 	protected int indexCalculExector;
-	//protected int indexSendExector;
-	//send tuple to component reduce
-	//protected SendTupleOutboundPort sendTupleobp;
+	protected int indexSendExector;
+	//send tuple to  another component
+	protected SendTupleOutboundPort sendTupleobp;
 	
 	//recevive the tuple from component map
-	protected SendTupleInboundPort sendTupleInboundPort;
+	protected ReceiveTupleWithPluginInboundPort sendTupleInboundPort;
 	//uri of the inboundPort to receive tuple 
 	protected String sendTupleInPortUri;
 	
-	
-	//protected String sendReduceTupleInboundPortUri;
+	//uri of the inboundPort of another Component 
+	// used to do the connection
+	protected String sendReduceTupleInboundPortUri;
 
 	
 
 	
-	public PluginReduce(String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri) {
+	public PluginReduce(String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri,String inboundPortSendTupleUri) {
 		
 		super();
 		this.ManagementInPortUri=uri;
 		this.sendTupleInPortUri=inboundPortReceiveTupleuri;
+		this.sendReduceTupleInboundPortUri=inboundPortSendTupleUri;
 		this.nbThread=nb;
 		this.fonction_reduce=fonction_reduce;
 		bufferReceive=new PriorityBlockingQueue<OrderedTuple>();
@@ -68,13 +70,11 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	
 	@Override
 	public void	installOn(ComponentI owner) throws Exception{
-		System.out.println("pluginRd install");
 		super.installOn(owner);
-		System.out.println("pluginRd apres install");
 
-		/*this.addRequiredInterface(SendTupleServiceI.class);
+		this.addRequiredInterface(SendTupleServiceI.class);
 		this.sendTupleobp=new SendTupleOutboundPort(this.getOwner());
-		this.sendTupleobp.publishPort();*/
+		this.sendTupleobp.publishPort();
 		
 		
 		
@@ -94,24 +94,22 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.managementReducePluginInboundPort.publishPort();
 		
 		this.addOfferedInterface(SendTupleServiceI.class);
-		this.sendTupleInboundPort=new SendTupleInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
+		this.sendTupleInboundPort=new ReceiveTupleWithPluginInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
 		this.sendTupleInboundPort.publishPort();
 		
-		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
+		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		System.out.println("pluginRd ini avant owner " +this.getOwner());
 		System.out.println("nb thread"+ nbThread);
-		 if (this.getOwner().validExecutorServiceURI("ReduceCalculexector_uri"))
-			 System.out.println("valide");
+		
 		indexCalculExector=createNewExecutorService("ReduceCalculexector_uri", nbThread,false);
-		System.out.println("pluginRd ini apres");
-		//indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
+		indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
 		
 }
 	
 	@Override
 	public void			finalise() throws Exception
 	{
-		//this.getOwner().doPortDisconnection(this.sendTupleobp.getPortURI());
+		this.getOwner().doPortDisconnection(this.sendTupleobp.getPortURI());
 	}
 	
 	@Override
@@ -124,9 +122,9 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.sendTupleInboundPort.destroyPort();
 		this.removeOfferedInterface(SendTupleServiceI.class);
 		
-		//this.sendTupleobp.unpublishPort();
-		//this.sendTupleobp.destroyPort();
-		//this.removeRequiredInterface(SendTupleServiceI.class);
+		this.sendTupleobp.unpublishPort();
+		this.sendTupleobp.destroyPort();
+		this.removeRequiredInterface(SendTupleServiceI.class);
 		
 		
 	}
@@ -134,7 +132,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 
 
 	@Override
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
 	
 		return false;
 	}
@@ -165,7 +163,6 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 				this.getOwner().runTask(indexCalculExector,reduce -> {try {
 					((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}});
 				
@@ -177,6 +174,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 				
 				System.out.println("final result is :  " + result);
 				System.out.println("Component Reduce finished" );
+				this.sendTupleobp.tupleSender(finalResult);
 			return true;
 	    	
 	    }
@@ -242,6 +240,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 				
 				System.out.println("final result is :  " + result);
 				System.out.println("Component Reduce finished" );
+				this.sendTupleobp.tupleSender(finalResult);
 			return true;
 	    	
 	       
@@ -288,6 +287,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 					int result = (int) finalResult.getIndiceData(0);
 					System.out.println("final result is :  " + result);
 					System.out.println("Component Reduce finished" );
+					this.sendTupleobp.tupleSender(finalResult);
 				return true;
 	    }
 	       

@@ -22,11 +22,10 @@ public class OrderedTuple extends Tuple implements Comparable<OrderedTuple> {
 		 
 	  }
 	  
+	   
 	  public OrderedTuple (int dimention,int id){
 		    super(dimention);
 		    this.id=id;
-		  
-		 
 	  }
 	  
 	  public OrderedTuple (int dimention,int id,int rangeMin){

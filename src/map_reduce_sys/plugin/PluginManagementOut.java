@@ -10,11 +10,11 @@ import map_reduce_sys.gestion.GestionOutboundPort;
 import map_reduce_sys.gestion.GestionResourceOutboundPort;
 import map_reduce_sys.interfaces.ManagementI;
 
-public class PluginManagementMapOut  extends AbstractPlugin {
+public class PluginManagementOut  extends AbstractPlugin {
 
 	
 	private static final long serialVersionUID = 1L;
-	protected GestionOutboundPort gestionMapOp;
+	protected GestionOutboundPort gestionOp;
 	protected String inboundPortUri;
 	
 	@Override
@@ -22,8 +22,8 @@ public class PluginManagementMapOut  extends AbstractPlugin {
 		super.installOn(owner);
 		
 		this.addRequiredInterface(ManagementI.class);
-		this.gestionMapOp = new GestionOutboundPort(this.getOwner());
-		this.gestionMapOp.publishPort();
+		this.gestionOp = new GestionOutboundPort(this.getOwner());
+		this.gestionOp.publishPort();
 		System.out.println(" out install");
 	}
 	
@@ -35,7 +35,7 @@ public class PluginManagementMapOut  extends AbstractPlugin {
 	public void initialise() throws Exception{
 		System.out.println("uri inbound port: "+inboundPortUri);
 		this.getOwner().doPortConnection(
-				this.gestionMapOp.getPortURI(),
+				this.gestionOp.getPortURI(),
 				this.inboundPortUri, 
 				ConnectorGestion.class.getCanonicalName());
 		
@@ -47,20 +47,20 @@ public class PluginManagementMapOut  extends AbstractPlugin {
 	
 	@Override
 	public void finalise() throws Exception {		
-		this.getOwner().doPortDisconnection(gestionMapOp.getPortURI());
+		this.getOwner().doPortDisconnection(gestionOp.getPortURI());
 		
 	}
 	
 	@Override
 	public void uninstall() throws Exception {
-		this.gestionMapOp.unpublishPort();
-		this.gestionMapOp.destroyPort();
+		this.gestionOp.unpublishPort();
+		this.gestionOp.destroyPort();
 		this.removeRequiredInterface(ManagementI.class);
 	}
 	
 	
-	public ManagementI getResMapServicePort() {
-		return this.gestionMapOp;
+	public ManagementI getServicePort() {
+		return this.gestionOp;
 	}
 	
 	

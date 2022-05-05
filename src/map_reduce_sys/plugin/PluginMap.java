@@ -9,7 +9,7 @@ import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
-import map_reduce_sys.SendTupleInboundPort;
+import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.connector.ConnectorSendTuple;
@@ -42,7 +42,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 	protected SendTupleOutboundPort sendTupleobp;
 	
 	//recevive the tuple from component resource
-	protected SendTupleInboundPort sendTupleInboundPort;
+	protected ReceiveTupleWithPluginInboundPort sendTupleInboundPort;
 	protected String sendTupleInPortUri;
 	
 	//uri of the inboundPort of Component reduce
@@ -88,7 +88,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		System.out.println("map inbound port created "+ManagementInPortUri);
 		
 		this.addOfferedInterface(SendTupleServiceI.class);
-		this.sendTupleInboundPort=new SendTupleInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
+		this.sendTupleInboundPort=new ReceiveTupleWithPluginInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
 		this.sendTupleInboundPort.publishPort();
 		
 		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
@@ -124,7 +124,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 
 
 	@Override
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
 	
 		return false;
 	}
@@ -168,11 +168,11 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 	//receive tuple from component resource and submit the task to component map
 	@Override
 	public boolean tupleSender(Tuple t) throws Exception {
-		// TODO Auto-generated method stub
+		
 		this.getOwner().runTask(indexCalculExector, map->{	try {
 			((createCalculServiceI)map).createMapCalculTask(bufferSend,fonction_map,t);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}});
 		

@@ -12,6 +12,9 @@ public class CVM extends AbstractCVM {
 	public static final String URI_PORT_REFLEXION1="COMPONENT1";
 	public static final String URI_PORT_REFLEXION2="COMPONENT2";
 	public static final String URI_PORT_REFLEXION3="COMPONENT3";
+	public static final String URI_PORT_REFLEXION4="COMPONENT4";
+	public static final String URI_PORT_REFLEXION5="COMPONENT5";
+	public static final String URI_PORT_REFLEXION6="COMPONENT6";
 	
 	public CVM() throws Exception {
 		// TODO Auto-generated constructor stub
@@ -140,6 +143,9 @@ public class CVM extends AbstractCVM {
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION1});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION2});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION3});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION4});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION5});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION6});
 		super.deploy();
 	
 	}

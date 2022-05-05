@@ -10,14 +10,13 @@ import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 
-public class ConnectorMapGestion extends AbstractConnector implements ManagementI{
+public class ConnectorGestion extends AbstractConnector implements ManagementI{
 
 	
 
 	@Override
 	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		 return ((ManagementI)this.offering).runTaskResource(function,t);
 	}
 
 	@Override
@@ -28,8 +27,7 @@ public class ConnectorMapGestion extends AbstractConnector implements Management
 
 	@Override
 	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		return ((ManagementI)this.offering).runTaskReduce(function, t,nature);
 	}
 
 

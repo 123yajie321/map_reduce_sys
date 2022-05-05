@@ -29,7 +29,7 @@ public class GestionResourceOutboundPort extends AbstractOutboundPort implements
 	
 
 	@Override
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
 		return ((ManagementI)this.getConnector()).runTaskResource(function, t);
 	}
 

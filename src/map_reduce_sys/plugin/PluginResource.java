@@ -31,8 +31,8 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	protected ManagementResourceInboundPortPlugin managementPluginInboundPort;
 	protected String ManagementInPortUri; 
 	protected int nbThread;
-	protected  int resourceSize;
-	protected Function<Void, Tuple> data_generator;
+	//protected  int resourceSize;
+	protected Function<Integer, Tuple> data_generator;
 	protected LinkedBlockingQueue<Tuple> bufferSend;
 	protected int indexCalculExector;
 	protected int indexSendExector;
@@ -42,7 +42,7 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	
 
 	
-	public PluginResource(String uri,int nb,Function<Void, Tuple> data_generator,String sendTupleInPortUri) {
+	public PluginResource(String uri,int nb,Function<Integer, Tuple> data_generator,String sendTupleInPortUri) {
 		super();
 		this.ManagementInPortUri=uri;
 		this.sendTupleInPortUri=sendTupleInPortUri;
@@ -91,22 +91,26 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 
 
 	@Override
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
 		//return ((ManagementI)this.getOwner()).runTaskResource(function, t);
-	
-		this.resourceSize=(int) t.getIndiceData(0);
+	  
+		int tupleIdMax=(int) t.getIndiceData(0);
+		int tupleIdMin=(int) t.getIndiceData(1);
+		int currentTupleId=tupleIdMin;
 		this.data_generator=function;
-		for(int i=0;i<resourceSize;i++) {
+		for(int i=tupleIdMin;i<tupleIdMax;i++) {
 		
 			//calculExecutor.submit(taskCalcul);
 			//this.getOwner().handleRequest(indexCalculExector, res -> {	((ComponentRessource)res).createCalculTask(bufferSend,data_generator);
 			//return null;});
+			int tupleId=currentTupleId;
 			this.getOwner().runTask(indexCalculExector, res->{	try {
-				((createCalculServiceI)res).createResourceCalculTask(bufferSend,data_generator);
+				((createCalculServiceI)res).createResourceCalculTask(bufferSend,data_generator,tupleId);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}});
+			currentTupleId++;
 			Tuple result =bufferSend.take();
 			
 		

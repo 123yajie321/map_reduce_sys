@@ -47,22 +47,17 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		super.shutdown();
 	}
 	
-	public void createResourceCalculTask(BlockingQueue<Tuple>bufferSend,Function<Void, Tuple> function) {
+	@Override
+	public void createResourceCalculTask(BlockingQueue<Tuple>bufferSend,Function<Integer, Tuple> function,int tupleId) {
 		
-		Void v = null;
-		OrderedTuple t1=(OrderedTuple) function.apply(v);
+		OrderedTuple t1=(OrderedTuple) function.apply(tupleId);
 		bufferSend.add(t1);
 	
 
 }
 	
-	public void send_Tuple(SendTupleOutboundPort port, Tuple result) throws Exception {
-		   
-		port.tupleSender(result);
-		System.out.println("Component Send  :"+result.getIndiceData( 0)+" id:"+((OrderedTuple) result).getId()); 
-		   
-	   }
 	
+	@Override
 	public void createMapCalculTask(BlockingQueue<Tuple>bufferSend,Function<Tuple, Tuple> fonction_map,Tuple t){
 		bufferSend.add(fonction_map.apply(t));	
 	}
@@ -75,6 +70,14 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		bufferReceive.put(result);	
 		System.out.println("result id"+result.getId()+" value"+ result.getIndiceData(0));
 	}
+	
+
+	public void send_Tuple(SendTupleOutboundPort port, Tuple result) throws Exception {
+		   
+		port.tupleSender(result);
+		System.out.println("Component Send  :"+result.getIndiceData( 0)+" id:"+((OrderedTuple) result).getId()); 
+		   
+	   }
 
 	
 	

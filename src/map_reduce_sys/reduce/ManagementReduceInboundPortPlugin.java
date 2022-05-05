@@ -36,7 +36,7 @@ public class ManagementReduceInboundPortPlugin extends AbstractInboundPort imple
 	
 	
 	
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
 		return false;
 		//System.out.println("fin Gestion resource port");
 }

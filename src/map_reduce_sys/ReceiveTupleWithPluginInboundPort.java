@@ -10,16 +10,16 @@ import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.structure.Tuple;
 
-public class SendTupleInboundPort extends AbstractInboundPort implements SendTupleServiceI {
+public class ReceiveTupleWithPluginInboundPort extends AbstractInboundPort implements SendTupleServiceI {
 
 	
 
-	public SendTupleInboundPort(String uri,String pluginURI,ComponentI owner)
+	public ReceiveTupleWithPluginInboundPort(String uri,String pluginURI,ComponentI owner)
 			throws Exception {
 		super(uri,ManagementI.class, owner,pluginURI,null);
 	}
 	
-	public SendTupleInboundPort(String pluginURI,ComponentI owner)
+	public ReceiveTupleWithPluginInboundPort(String pluginURI,ComponentI owner)
 			throws Exception {
 		super(ManagementI.class, owner,pluginURI,null);
 	}

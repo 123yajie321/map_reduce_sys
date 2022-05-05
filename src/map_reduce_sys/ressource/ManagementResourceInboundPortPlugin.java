@@ -35,7 +35,7 @@ public class ManagementResourceInboundPortPlugin extends AbstractInboundPort imp
 	
 	
 	
-	public boolean runTaskResource(Function<Void, Tuple> function, Tuple t) throws Exception {
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
 		System.out.println("begin Gestion resource port");
 		return this.getOwner().handleRequest(
 				new AbstractComponent.AbstractService<Boolean>(this.getPluginURI()) {
