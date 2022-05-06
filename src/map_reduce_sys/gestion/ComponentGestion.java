@@ -69,7 +69,7 @@ public class ComponentGestion extends AbstractComponent {
 	    this.grsop=new GestionResourceOutboundPort(this);
 	    this.grdop.publishPort();
 	    this.grsop.publishPort();*/
-		int N=5;
+		int N=7;
 		
 		runTaskExecutor = new ThreadPoolExecutor(N, N, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(20));
 		runTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
@@ -173,7 +173,7 @@ public class ComponentGestion extends AbstractComponent {
 		
 		Tuple sizeTuple2=new Tuple(2);
 		sizeTuple2.setIndiceTuple(0, 100);
-		sizeTuple2.setIndiceTuple(1, 51);
+		sizeTuple2.setIndiceTuple(1, 50);
 		
 		
 		
@@ -242,6 +242,7 @@ public class ComponentGestion extends AbstractComponent {
 		String ResourceSendInboundPort2=AbstractPort.generatePortURI();
 		String mapSendInboundPort2=AbstractPort.generatePortURI();
 		String ReduceSendReduceInboundPort=AbstractPort.generatePortURI();
+		String ReduceSendReduceInboundPort2=AbstractPort.generatePortURI();
 		
 		
 		/*
@@ -290,17 +291,36 @@ public class ComponentGestion extends AbstractComponent {
 		pluginid++;
 		cpopMap.createPluginMap(managementMapInboundPort, 2, f_map, ResourceSendInboundPort, mapSendInboundPort, pluginid);
 		pluginid++;
-		cpopReduce.createPluginReduce(managementReduceInboundPort, 2,g_reduce,mapSendInboundPort,ReduceSendReduceInboundPort, pluginid);
-		pluginid++;
-		cpopReduce.createPluginReduce(managementReduceInboundPort3, 2,g_reduce,ReduceSendReduceInboundPort,gestionReceiveresultInPort.getPortURI(), pluginid);
+		
+		
+		ArrayList<String>reduceReceiveInPortList=new ArrayList<String>();
+		reduceReceiveInPortList.add(mapSendInboundPort);
+		
+		ArrayList<String>reduceReceiveInPortList2=new ArrayList<String>();
+		reduceReceiveInPortList2.add(mapSendInboundPort2);
+		
+		ArrayList<String>reduceReceiveInPortList3=new ArrayList<String>();
+		reduceReceiveInPortList3.add(ReduceSendReduceInboundPort);
+		reduceReceiveInPortList3.add(ReduceSendReduceInboundPort2);
+		
+		Tuple pluginReduceinfo=createTuplePluginInfo(7, managementReduceInboundPort, 2,g_reduce,reduceReceiveInPortList,ReduceSendReduceInboundPort, pluginid);
+		cpopReduce.createPluginReduce(pluginReduceinfo);
 		pluginid++;
 		
-		cpopResource.createPluginResource(managementResInboundPort2, 2, data_generator, ResourceSendInboundPort2, pluginid);
-		pluginid++;
-		cpopMap.createPluginMap(managementMapInboundPort2, 2, f_map, ResourceSendInboundPort2, mapSendInboundPort2, pluginid);
+		
+		cpopResource2.createPluginResource(managementResInboundPort2, 2, data_generator, ResourceSendInboundPort2, pluginid);
 		pluginid++;
 		
-		cpopReduce.createPluginReduce(managementReduceInboundPort2, 2,g_reduce,mapSendInboundPort2,ReduceSendReduceInboundPort, pluginid);
+		cpopMap2.createPluginMap(managementMapInboundPort2, 2, f_map, ResourceSendInboundPort2, mapSendInboundPort2, pluginid);
+		pluginid++;
+		
+		
+		Tuple pluginReduceinfo2=createTuplePluginInfo(7, managementReduceInboundPort2, 2,g_reduce,reduceReceiveInPortList2,ReduceSendReduceInboundPort2, pluginid);
+		cpopReduce2.createPluginReduce(pluginReduceinfo2);
+		pluginid++;
+		
+		Tuple pluginReduceinfo3=createTuplePluginInfo(7, managementReduceInboundPort3, 2,g_reduce,reduceReceiveInPortList3,gestionReceiveresultInPort.getPortURI(), pluginid);
+		cpopReduce3.createPluginReduce(pluginReduceinfo3);
 		pluginid++;
 		
 		
@@ -313,7 +333,7 @@ public class ComponentGestion extends AbstractComponent {
 		this.installPlugin(pluginReduceOut2);
 		this.installPlugin(pluginReduceOut3);
 		
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		
 		pluginReduceOut.doPortConnection();
 		pluginReduceOut2.doPortConnection();
@@ -424,15 +444,20 @@ public class ComponentGestion extends AbstractComponent {
 		
 		Runnable taskReduce2 = () -> {
 			 try {
-				 pluginReduceOut2.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple,Nature.ITERATIVE);
+				 pluginReduceOut2.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple2,Nature.ITERATIVE);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		};
+		
+		Tuple sizeTuple3=new Tuple(2);
+		sizeTuple3.setIndiceTuple(0, 100);
+		sizeTuple3.setIndiceTuple(1, 99);
+		
 		Runnable taskReduce3 = () -> {
 			 try {
-				 pluginReduceOut3.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple,Nature.ITERATIVE);
+				 pluginReduceOut3.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple3,Nature.ITERATIVE);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -583,6 +608,19 @@ public class ComponentGestion extends AbstractComponent {
 		return pluginOut;
 		
 	}
+	
+	 public Tuple createTuplePluginInfo(int size, Object ...arg) {
+		 Tuple tupleinfo=new Tuple(size);
+		 int indice=0;
+		 for(Object info:arg) {
+			 tupleinfo.setIndiceTuple(indice, info);
+			 indice++;
+		 }
+		return tupleinfo;
+		 
+		 
+		 
+	 }
 	
 	
 	

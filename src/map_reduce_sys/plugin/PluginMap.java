@@ -185,6 +185,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 
 	@Override
 	public void DoPluginPortConnection() throws Exception {
+		System.out.println("Map send   inport"+sendReduceTupleInboundPortUri);
 		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		
 	}

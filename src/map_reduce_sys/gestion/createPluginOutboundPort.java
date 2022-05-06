@@ -47,6 +47,12 @@ public class createPluginOutboundPort extends AbstractOutboundPort implements cr
 	}
 
 	@Override
+	public void createPluginReduce(Tuple pluginInfo) throws Exception {
+		((createPluginI)this.getConnector()).createPluginReduce(pluginInfo);
+		
+	}
+
+/*	@Override
 	public void createPluginReduce(String managementReduceInboundPort, int nb,
 			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, String ReduceReceiveTupleinboundPorturi,
 			String sendResultinboundPortUri, int pluginId) throws Exception {
@@ -54,7 +60,7 @@ public class createPluginOutboundPort extends AbstractOutboundPort implements cr
 		
 	}
 	
-	
+	*/
 	
 
 	

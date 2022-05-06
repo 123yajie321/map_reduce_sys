@@ -1,5 +1,6 @@
 package map_reduce_sys.plugin;
 
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -43,10 +44,15 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	//send tuple to  another component
 	protected SendTupleOutboundPort sendTupleobp;
 	
+	
+	protected ArrayList<String>receiveTupleInPortUriList;
+	protected ArrayList<ReceiveTupleWithPluginInboundPort>receiveTupleInPortList;
 	//recevive the tuple from component map
-	protected ReceiveTupleWithPluginInboundPort sendTupleInboundPort;
+	//protected ReceiveTupleWithPluginInboundPort receiveTupleInboundPort;
+	//protected ReceiveTupleWithPluginInboundPort receiveTupleInboundPort2;
 	//uri of the inboundPort to receive tuple 
-	protected String sendTupleInPortUri;
+	//protected String receiveTupleInPortUri;
+	//protected String receiveTupleInPortUri2;
 	
 	//uri of the inboundPort of another Component 
 	// used to do the connection
@@ -55,15 +61,36 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	
 
 	
-	public PluginReduce(String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri,String inboundPortSendTupleUri) {
+	public PluginReduce(/*String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri,String inboundPortSendTupleUri*/Tuple pluginInfo) {
 
 		super();
-		this.ManagementInPortUri=uri;
-		this.sendTupleInPortUri=inboundPortReceiveTupleuri;
+		
+		/*this.ManagementInPortUri=uri;
+		this.receiveTupleInPortUri=inboundPortReceiveTupleuri;
 		this.sendReduceTupleInboundPortUri=inboundPortSendTupleUri;
 		this.nbThread=nb;
 		this.fonction_reduce=fonction_reduce;
+		bufferReceive=new PriorityBlockingQueue<OrderedTuple>();*/
+		
+		this.ManagementInPortUri=(String) pluginInfo.getIndiceData(0);
+		//this.receiveTupleInPortUri=(String) pluginInfo.getIndiceData(1);
+		
+		this.nbThread=(int) pluginInfo.getIndiceData(1);
+		this.fonction_reduce=(BiFunction<Tuple, Tuple, Tuple>) pluginInfo.getIndiceData(2);
+		
+		this.receiveTupleInPortUriList=(ArrayList<String>) pluginInfo.getIndiceData(3);
+		this.sendReduceTupleInboundPortUri=(String) pluginInfo.getIndiceData(4);
+		
+		
+		
+		
+		
+		//this.receiveTupleInPortUri2=(String) pluginInfo.getIndiceData(5);
+		
 		bufferReceive=new PriorityBlockingQueue<OrderedTuple>();
+		this.receiveTupleInPortList=new ArrayList<ReceiveTupleWithPluginInboundPort>();
+		
+		
 	}
 	
 	
@@ -94,8 +121,19 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.managementReducePluginInboundPort.publishPort();
 		
 		this.addOfferedInterface(SendTupleServiceI.class);
-		this.sendTupleInboundPort=new ReceiveTupleWithPluginInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
-		this.sendTupleInboundPort.publishPort();
+		/*this.receiveTupleInboundPort=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri,this.getPluginURI(),this.getOwner() );
+		this.receiveTupleInboundPort.publishPort();
+		this.receiveTupleInboundPort2=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri2,this.getPluginURI(),this.getOwner() );
+		this.receiveTupleInboundPort2.publishPort();*/
+		
+		for(String uri:receiveTupleInPortUriList) {
+			System.out.println("reduce receive in port "+uri);
+			ReceiveTupleWithPluginInboundPort inboundPort=new ReceiveTupleWithPluginInboundPort(uri,this.getPluginURI(),this.getOwner() ); 
+			inboundPort.publishPort();
+			receiveTupleInPortList.add(inboundPort);
+			
+		}
+		
 		
 		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		
@@ -117,8 +155,15 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.managementReducePluginInboundPort.destroyPort();
 		this.removeOfferedInterface(ManagementI.class);
 		
-		this.sendTupleInboundPort.unpublishPort();
-		this.sendTupleInboundPort.destroyPort();
+		for(ReceiveTupleWithPluginInboundPort port:receiveTupleInPortList) {
+			port.unpublishPort();
+			port.destroyPort();
+		}
+//		
+//		this.receiveTupleInboundPort.unpublishPort();
+//		this.receiveTupleInboundPort.destroyPort();
+//		this.receiveTupleInboundPort2.unpublishPort();
+//		this.receiveTupleInboundPort2.destroyPort();
 		this.removeOfferedInterface(SendTupleServiceI.class);
 		
 		this.sendTupleobp.unpublishPort();
@@ -149,12 +194,17 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	@Override
 	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 
+		this.dataSize=(int) t.getIndiceData(0)-(int)t.getIndiceData(1);
+		this.fonction_reduce=function;
+		int currentCalculId=(int) t.getIndiceData(1);
+		
+		
+		
 		switch(nature){
 	    case COMMUTATIVE_ASSOCIATIVE :
 	    {
 	    	
-	        this.dataSize=(int) t.getIndiceData(0);
-			this.fonction_reduce=function;
+	        
 			for(int i=0;i<dataSize-1;i++) {
 				OrderedTuple t1=(OrderedTuple) bufferReceive.take();
 				OrderedTuple t2=(OrderedTuple) bufferReceive.take();
@@ -181,10 +231,6 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	    case ASSOCIATIVE :
 	    {
 	    	this.bufferReceive=new LinkedBlockingQueue<>();
-	    	
-
-	        this.dataSize=(int) t.getIndiceData(0);
-			this.fonction_reduce=function;
 			OrderedTuple tmp1=null;
 			OrderedTuple tmp2=null;
 			for(int i=0;i<dataSize-1;i++) {
@@ -247,10 +293,10 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	       
 	    }  
 	    case ITERATIVE :{
+	    	System.out.println("Component Rduce run task " + this.getOwner() );
 		    
-			        int currentCalculId=0;
-			        this.dataSize=(int) t.getIndiceData(0);
-					this.fonction_reduce=function;
+			      
+			        
 					for(int i=0;i<dataSize-1;i++) {
 						OrderedTuple tmp1=(OrderedTuple) bufferReceive.take();
 						while(currentCalculId!=tmp1.getId()) {
@@ -311,6 +357,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 
 	@Override
 	public void DoPluginPortConnection() throws Exception {
+		System.out.println("Component reduce send inbound  :" +sendReduceTupleInboundPortUri);
 		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		
 	}

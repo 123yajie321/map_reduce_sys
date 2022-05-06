@@ -67,21 +67,37 @@ public class CreatePluginInboundPort extends AbstractInboundPort implements crea
 
 
 	@Override
-	public void createPluginReduce(String managementReduceInboundPort, int nb,
-			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, String ReduceReceiveTupleinboundPorturi,
-			String sendResultinboundPortUri, int pluginId) throws Exception {
-		
+	public void createPluginReduce(Tuple pluginInfo) throws Exception {
 		this.getOwner().runTask( c-> {
-				try {
-					((ComponentCalcul)c).createPluginReduce(managementReduceInboundPort, nb, fonction_reduce, ReduceReceiveTupleinboundPorturi, sendResultinboundPortUri, pluginId);
+			try {
+				((ComponentCalcul)c).createPluginReduce(pluginInfo);			
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				
-		});		
+				e.printStackTrace();
+			}
+		
+	});		
 		
 	}
+
+
+
+//	@Override
+//	public void createPluginReduce(String managementReduceInboundPort, int nb,
+//			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, String ReduceReceiveTupleinboundPorturi,
+//			String sendResultinboundPortUri, int pluginId) throws Exception {
+//		
+//		this.getOwner().runTask( c-> {
+//				try {
+//					((ComponentCalcul)c).createPluginReduce(managementReduceInboundPort, nb, fonction_reduce, ReduceReceiveTupleinboundPorturi, sendResultinboundPortUri, pluginId);
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				
+//		});		
+//		
+//	}
 
 
 

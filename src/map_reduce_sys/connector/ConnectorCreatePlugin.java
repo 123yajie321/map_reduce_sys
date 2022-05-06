@@ -31,11 +31,11 @@ public class ConnectorCreatePlugin extends AbstractConnector implements createPl
 	}
 
 	@Override
-	public void createPluginReduce(String managementReduceInboundPort, int nb,
+	public void createPluginReduce(/*String managementReduceInboundPort, int nb,
 			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, String ReduceReceiveTupleinboundPorturi,
-			String sendResultinboundPortUri, int pluginId) throws Exception {
-		((createPluginI)this.offering).createPluginReduce(managementReduceInboundPort, nb, fonction_reduce, ReduceReceiveTupleinboundPorturi, sendResultinboundPortUri, pluginId);
-		
+			String sendResultinboundPortUri, int pluginId*/Tuple pluginInfo) throws Exception {
+		//((createPluginI)this.offering).createPluginReduce(managementReduceInboundPort, nb, fonction_reduce, ReduceReceiveTupleinboundPorturi, sendResultinboundPortUri, pluginId);
+		((createPluginI)this.offering).createPluginReduce(pluginInfo);
 	}
 	
 

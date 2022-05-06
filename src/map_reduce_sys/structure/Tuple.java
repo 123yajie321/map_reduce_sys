@@ -30,6 +30,11 @@ public class Tuple implements Serializable {
     	  tuple[indice] = o;
       }
       
+      public int getDimention() {
+    	  
+    	  return this.dimention;
+      }
+      
       
       
 
