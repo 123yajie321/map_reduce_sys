@@ -56,7 +56,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 
 	
 	public PluginReduce(String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri,String inboundPortSendTupleUri) {
-		
+
 		super();
 		this.ManagementInPortUri=uri;
 		this.sendTupleInPortUri=inboundPortReceiveTupleuri;
@@ -97,9 +97,8 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.sendTupleInboundPort=new ReceiveTupleWithPluginInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
 		this.sendTupleInboundPort.publishPort();
 		
-		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
-		System.out.println("pluginRd ini avant owner " +this.getOwner());
-		System.out.println("nb thread"+ nbThread);
+		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
+		
 		
 		indexCalculExector=createNewExecutorService("ReduceCalculexector_uri", nbThread,false);
 		indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
@@ -305,6 +304,14 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		System.out.println("Component reduce receive  :" +((OrderedTuple) t).getId());
 		return true;
 		
+		
+	}
+
+
+
+	@Override
+	public void DoPluginPortConnection() throws Exception {
+		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		
 	}
 

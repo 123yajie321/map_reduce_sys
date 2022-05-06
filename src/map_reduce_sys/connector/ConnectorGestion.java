@@ -30,6 +30,36 @@ public class ConnectorGestion extends AbstractConnector implements ManagementI{
 		return ((ManagementI)this.offering).runTaskReduce(function, t,nature);
 	}
 
+	@Override
+	public void DoPluginPortConnection() throws Exception {
+		((ManagementI)this.offering).DoPluginPortConnection();
+		
+	}
+
+	/*@Override
+	public void createPluginResource(String managementResourceInboundPort, int nb,
+			Function<Integer, Tuple> data_generator, String mapReceiveTupleinboundPorturi, int pluginId)
+			throws Exception {
+		((ManagementI)this.offering).createPluginResource(managementResourceInboundPort, nb, data_generator, mapReceiveTupleinboundPorturi, pluginId);
+		
+	}
+
+	@Override
+	public void createPluginMap(String managementMapInboundPort, int nb, Function<Tuple, Tuple> fonction_map,
+			String mapReceiveTupleinboundPorturi, String ReduceReceiveTupleinboundPortUri, int pluginId)
+			throws Exception {
+		((ManagementI)this.offering).createPluginMap(managementMapInboundPort, nb, fonction_map, mapReceiveTupleinboundPorturi, ReduceReceiveTupleinboundPortUri, pluginId);
+		
+	}
+
+	@Override
+	public void createPluginReduce(String managementReduceInboundPort, int nb,
+			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, String ReduceReceiveTupleinboundPorturi,
+			String sendResultinboundPortUri, int pluginId) throws Exception {
+		((ManagementI)this.offering).createPluginReduce(managementReduceInboundPort, nb, fonction_reduce, ReduceReceiveTupleinboundPorturi, sendResultinboundPortUri, pluginId);
+		
+	}*/
+
 
 
 	

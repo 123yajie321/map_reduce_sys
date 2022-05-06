@@ -42,8 +42,8 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 	protected SendTupleOutboundPort sendTupleobp;
 	
 	//recevive the tuple from component resource
-	protected ReceiveTupleWithPluginInboundPort sendTupleInboundPort;
-	protected String sendTupleInPortUri;
+	protected ReceiveTupleWithPluginInboundPort ReceiveTupleInboundPort;
+	protected String receiveTupleInPortUri;
 	
 	//uri of the inboundPort of Component reduce
 	// used to do the connection
@@ -55,7 +55,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 	public PluginMap(String uri,int nb,Function<Tuple, Tuple> fonction_map,String inboundPortReceiveTupleuri,String inboundPortSendReduceUri) {
 		super();
 		this.ManagementInPortUri=uri;
-		this.sendTupleInPortUri=inboundPortReceiveTupleuri;
+		this.receiveTupleInPortUri=inboundPortReceiveTupleuri;
 		this.sendReduceTupleInboundPortUri=inboundPortSendReduceUri;
 		this.nbThread=nb;
 		this.fonction_map=fonction_map;
@@ -85,15 +85,15 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		this.addOfferedInterface(ManagementI.class);
 		this.managementMapPluginInboundPort = new ManagementMapInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementMapPluginInboundPort.publishPort();
-		System.out.println("map inbound port created "+ManagementInPortUri);
+		System.out.println("map man inbound port created "+ManagementInPortUri);
 		
 		this.addOfferedInterface(SendTupleServiceI.class);
-		this.sendTupleInboundPort=new ReceiveTupleWithPluginInboundPort(sendTupleInPortUri,this.getPluginURI(),this.getOwner() );
-		this.sendTupleInboundPort.publishPort();
-		
-		System.out.println("Map send  "+sendReduceTupleInboundPortUri+";"+this.sendTupleobp.getPortURI());
+		this.ReceiveTupleInboundPort=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri,this.getPluginURI(),this.getOwner() );
+		this.ReceiveTupleInboundPort.publishPort();
+		System.out.println("map receive inbound port created "+receiveTupleInPortUri);
+		//System.out.println("Map send  "+sendReduceTupleInboundPortUri+";"+this.sendTupleobp.getPortURI());
 	
-		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
+		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		
 		indexCalculExector=createNewExecutorService("MapCalculexector_uri", nbThread,false);
 		indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
@@ -112,8 +112,8 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		this.managementMapPluginInboundPort.destroyPort();
 		this.removeOfferedInterface(ManagementI.class);
 		
-		this.sendTupleInboundPort.unpublishPort();
-		this.sendTupleInboundPort.destroyPort();
+		this.ReceiveTupleInboundPort.unpublishPort();
+		this.ReceiveTupleInboundPort.destroyPort();
 		this.removeOfferedInterface(SendTupleServiceI.class);
 		
 		this.sendTupleobp.unpublishPort();
@@ -179,6 +179,14 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		}});
 		
 		return true;
+	}
+
+
+
+	@Override
+	public void DoPluginPortConnection() throws Exception {
+		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
+		
 	}
 
 

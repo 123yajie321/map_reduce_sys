@@ -16,7 +16,7 @@ public class PluginManagementOut  extends AbstractPlugin {
 	@Override
 	public void	installOn(ComponentI owner) throws Exception{
 		super.installOn(owner);
-		
+	
 		this.addRequiredInterface(ManagementI.class);
 		this.gestionOp = new GestionOutboundPort(this.getOwner());
 		this.gestionOp.publishPort();
@@ -29,17 +29,21 @@ public class PluginManagementOut  extends AbstractPlugin {
 	
 	@Override
 	public void initialise() throws Exception{
+		
+		super.initialise();
+		//doPortConnection();
+	}
+	
+
+	public void doPortConnection() throws Exception {
 		System.out.println("uri inbound port: "+inboundPortUri);
 		this.getOwner().doPortConnection(
 				this.gestionOp.getPortURI(),
 				this.inboundPortUri, 
 				ConnectorGestion.class.getCanonicalName());
 		
-		System.out.println(" COnnected");
-		super.initialise();
+		System.out.println(" Managenment COnnected");
 	}
-	
-
 	
 	@Override
 	public void finalise() throws Exception {		

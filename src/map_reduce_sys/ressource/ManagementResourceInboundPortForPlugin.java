@@ -8,6 +8,7 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginResource;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
@@ -61,6 +62,22 @@ public class ManagementResourceInboundPortForPlugin extends AbstractInboundPort 
 		return false;
 	}
 	
+	@Override
+	public void DoPluginPortConnection() throws Exception {
+		
+		System.out.println("ma res owner:"+this.getOwner());
+		this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+					@Override
+					public Void call() throws Exception{
+						 ((PluginResource)this.getServiceProviderReference()).
+						 DoPluginPortConnection();
+						return null;
+						
+					}
+				});
+		
+	}
 
 	
 

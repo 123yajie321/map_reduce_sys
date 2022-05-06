@@ -61,6 +61,21 @@ public class ManagementMapInboundPortForPlugin extends AbstractInboundPort imple
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public void DoPluginPortConnection() throws Exception {
+		this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+					@Override
+					public Void call() throws Exception{
+						 ((PluginMap)this.getServiceProviderReference()).
+						 DoPluginPortConnection();
+						return null;
+						
+					}
+				});
+		
+	}
 	
 
 	

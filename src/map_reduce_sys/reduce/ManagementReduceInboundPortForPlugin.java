@@ -59,6 +59,21 @@ public class ManagementReduceInboundPortForPlugin extends AbstractInboundPort im
 				});
 	}
 	
+	@Override
+	public void DoPluginPortConnection() throws Exception {
+		this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+					@Override
+					public Void call() throws Exception{
+						 ((PluginReduce)this.getServiceProviderReference()).
+						 DoPluginPortConnection();
+						return null;
+						
+					}
+				});
+		
+	}
+	
 
 	
 

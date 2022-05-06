@@ -55,9 +55,8 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	
 	@Override
 	public void	installOn(ComponentI owner) throws Exception{
-		System.out.println("pluginREs install");
+		
 		super.installOn(owner);
-		System.out.println("pluginREs install");
 		this.addRequiredInterface(SendTupleServiceI.class);
 		this.sendTupleobp=new SendTupleOutboundPort(this.getOwner());
 		this.sendTupleobp.publishPort();
@@ -70,12 +69,10 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 		//ReflectionOutboundPort  rop= new ReflectionOutboundPort(this.getOwner());
 		super.initialise();
 		
-		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendTupleInPortUri, ConnectorSendTuple.class.getCanonicalName());
+		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendTupleInPortUri, ConnectorSendTuple.class.getCanonicalName());
 		this.addOfferedInterface(ManagementI.class);
 		this.managementPluginInboundPort = new ManagementResourceInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementPluginInboundPort.publishPort();
-		
-		
 		
 		indexCalculExector=createNewExecutorService("RessourceCalculexector_uri", nbThread,false);
 		indexSendExector=createNewExecutorService("RessourceSendexector_uri", nbThread,false);
@@ -176,6 +173,18 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
+
+	@Override
+	public void DoPluginPortConnection() throws Exception {
+		System.out.println("Res sendTuple Map Inuri:"+sendTupleInPortUri);
+		this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendTupleInPortUri, ConnectorSendTuple.class.getCanonicalName());
+		
+	}
+
+
+
 
 
 
