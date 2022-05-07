@@ -1,8 +1,7 @@
 package map_reduce_sys.gestion;
 
 import java.util.ArrayList;
-
-
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +57,8 @@ public class ComponentGestion extends AbstractComponent {
 	
 	
 	protected SimpleJob job;
-
+	long startTime ;
+	long endTime;
 
 	
 	protected ComponentGestion() throws Exception {
@@ -69,7 +69,7 @@ public class ComponentGestion extends AbstractComponent {
 	    this.grsop=new GestionResourceOutboundPort(this);
 	    this.grdop.publishPort();
 	    this.grsop.publishPort();*/
-		int N=7;
+		int N=5;
 		
 		runTaskExecutor = new ThreadPoolExecutor(N, N, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(20));
 		runTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
@@ -102,6 +102,7 @@ public class ComponentGestion extends AbstractComponent {
 			int number=5;
 			Tuple tuple=new OrderedTuple(1,id);
 			tuple.setIndiceTuple(0, number);
+			
 			return tuple;	
 			
 		};
@@ -130,7 +131,8 @@ public class ComponentGestion extends AbstractComponent {
 			OrderedTuple t=(OrderedTuple)a;
 			Integer res =(Integer)a.getIndiceData(0)*10;
 			Tuple tuple = new OrderedTuple(1,t.getId());
-			tuple.setIndiceTuple(0, res); 
+			tuple.setIndiceTuple(0, res);
+			
 			return tuple;
 		};
 		
@@ -164,6 +166,7 @@ public class ComponentGestion extends AbstractComponent {
 			int resInteger =(int)a.getIndiceData(0)-(int)b.getIndiceData(0); 
 			Tuple tuple = new OrderedTuple(1,t.getId());
 			tuple.setIndiceTuple(0, resInteger); 
+			
 			return tuple; 
 				  
 		};
@@ -174,7 +177,9 @@ public class ComponentGestion extends AbstractComponent {
 		Tuple sizeTuple2=new Tuple(2);
 		sizeTuple2.setIndiceTuple(0, 100);
 		sizeTuple2.setIndiceTuple(1, 50);
-		
+		Tuple sizeTuple3=new Tuple(2);
+		sizeTuple3.setIndiceTuple(0, 100);
+		sizeTuple3.setIndiceTuple(1, 0);
 		
 		
 		
@@ -194,34 +199,26 @@ public class ComponentGestion extends AbstractComponent {
 		//vesion avec plugin
 		
 		//receive the  final result from component reduce 
-		
+		 startTime=System.currentTimeMillis();
+		System.out.println(startTime);
 		
 		createPluginOutboundPort cpopReduce=new createPluginOutboundPort(this);
-		createPluginOutboundPort cpopReduce2=new createPluginOutboundPort(this);
-		createPluginOutboundPort cpopReduce3=new createPluginOutboundPort(this);
 		createPluginOutboundPort cpopMap=new createPluginOutboundPort(this);
 		createPluginOutboundPort cpopResource=new createPluginOutboundPort(this);
 		createPluginOutboundPort cpopMap2=new createPluginOutboundPort(this);
 		createPluginOutboundPort cpopResource2=new createPluginOutboundPort(this);
 		cpopReduce.publishPort();
-		cpopReduce2.publishPort();
-		cpopReduce3.publishPort();
 		cpopMap.publishPort();
 		cpopResource.publishPort();
 		cpopMap2.publishPort();
 		cpopResource2.publishPort();
-		
-		
-		
-		
 		
 		doPortConnection(cpopResource.getPortURI(),CVM.URI_PORT_CREATEPLUGIN1, ConnectorCreatePlugin.class.getCanonicalName());
 		doPortConnection(cpopMap.getPortURI(), CVM.URI_PORT_CREATEPLUGIN2, ConnectorCreatePlugin.class.getCanonicalName());
 		doPortConnection(cpopReduce.getPortURI(), CVM.URI_PORT_CREATEPLUGIN3, ConnectorCreatePlugin.class.getCanonicalName());
 		doPortConnection(cpopResource2.getPortURI(),CVM.URI_PORT_CREATEPLUGIN4, ConnectorCreatePlugin.class.getCanonicalName());
 		doPortConnection(cpopMap2.getPortURI(), CVM.URI_PORT_CREATEPLUGIN5, ConnectorCreatePlugin.class.getCanonicalName());
-		doPortConnection(cpopReduce2.getPortURI(), CVM.URI_PORT_CREATEPLUGIN6, ConnectorCreatePlugin.class.getCanonicalName());
-		doPortConnection(cpopReduce3.getPortURI(), CVM.URI_PORT_CREATEPLUGIN7, ConnectorCreatePlugin.class.getCanonicalName());
+	
 		
 
 		ReceiveTupleInboundPort gestionReceiveresultInPort=new ReceiveTupleInboundPort(this);
@@ -230,8 +227,6 @@ public class ComponentGestion extends AbstractComponent {
 		String managementResInboundPort =AbstractPort.generatePortURI();
 		String managementMapInboundPort=AbstractPort.generatePortURI();
 		String managementReduceInboundPort=AbstractPort.generatePortURI();
-		String managementReduceInboundPort2=AbstractPort.generatePortURI();
-		String managementReduceInboundPort3=AbstractPort.generatePortURI();
 		String managementResInboundPort2 =AbstractPort.generatePortURI();
 		String managementMapInboundPort2=AbstractPort.generatePortURI();
 		
@@ -241,8 +236,7 @@ public class ComponentGestion extends AbstractComponent {
 		String mapSendInboundPort=AbstractPort.generatePortURI();
 		String ResourceSendInboundPort2=AbstractPort.generatePortURI();
 		String mapSendInboundPort2=AbstractPort.generatePortURI();
-		String ReduceSendReduceInboundPort=AbstractPort.generatePortURI();
-		String ReduceSendReduceInboundPort2=AbstractPort.generatePortURI();
+		
 		
 		
 		/*
@@ -258,8 +252,7 @@ public class ComponentGestion extends AbstractComponent {
 		PluginManagementOut pluginReduceOut=createPluginManagementOut(managementReduceInboundPort);
 		PluginManagementOut pluginResOut2=createPluginManagementOut(managementResInboundPort2);
 		PluginManagementOut pluginMapOut2=createPluginManagementOut(managementMapInboundPort2);
-		PluginManagementOut pluginReduceOut2=createPluginManagementOut(managementReduceInboundPort2);
-		PluginManagementOut pluginReduceOut3=createPluginManagementOut(managementReduceInboundPort3);
+		
 		
 		/*	
 		PluginResource pluginResourceIn=new PluginResource(managementResInboundPort, 2,data_generator,ResourceSendInboundPort);
@@ -295,15 +288,9 @@ public class ComponentGestion extends AbstractComponent {
 		
 		ArrayList<String>reduceReceiveInPortList=new ArrayList<String>();
 		reduceReceiveInPortList.add(mapSendInboundPort);
+		reduceReceiveInPortList.add(mapSendInboundPort2);
 		
-		ArrayList<String>reduceReceiveInPortList2=new ArrayList<String>();
-		reduceReceiveInPortList2.add(mapSendInboundPort2);
-		
-		ArrayList<String>reduceReceiveInPortList3=new ArrayList<String>();
-		reduceReceiveInPortList3.add(ReduceSendReduceInboundPort);
-		reduceReceiveInPortList3.add(ReduceSendReduceInboundPort2);
-		
-		Tuple pluginReduceinfo=createTuplePluginInfo(7, managementReduceInboundPort, 2,g_reduce,reduceReceiveInPortList,ReduceSendReduceInboundPort, pluginid);
+		Tuple pluginReduceinfo=createTuplePluginInfo(7, managementReduceInboundPort, 2,g_reduce,reduceReceiveInPortList,gestionReceiveresultInPort.getPortURI(), pluginid);
 		cpopReduce.createPluginReduce(pluginReduceinfo);
 		pluginid++;
 		
@@ -314,30 +301,16 @@ public class ComponentGestion extends AbstractComponent {
 		cpopMap2.createPluginMap(managementMapInboundPort2, 2, f_map, ResourceSendInboundPort2, mapSendInboundPort2, pluginid);
 		pluginid++;
 		
-		
-		Tuple pluginReduceinfo2=createTuplePluginInfo(7, managementReduceInboundPort2, 2,g_reduce,reduceReceiveInPortList2,ReduceSendReduceInboundPort2, pluginid);
-		cpopReduce2.createPluginReduce(pluginReduceinfo2);
-		pluginid++;
-		
-		Tuple pluginReduceinfo3=createTuplePluginInfo(7, managementReduceInboundPort3, 2,g_reduce,reduceReceiveInPortList3,gestionReceiveresultInPort.getPortURI(), pluginid);
-		cpopReduce3.createPluginReduce(pluginReduceinfo3);
-		pluginid++;
-		
-		
-		
 		this.installPlugin(pluginResOut);
 		this.installPlugin(pluginResOut2);
 		this.installPlugin(pluginMapOut);
 		this.installPlugin(pluginMapOut2);
 		this.installPlugin(pluginReduceOut);
-		this.installPlugin(pluginReduceOut2);
-		this.installPlugin(pluginReduceOut3);
 		
-		Thread.sleep(3000);
 		
+		Thread.sleep(1000);
+	
 		pluginReduceOut.doPortConnection();
-		pluginReduceOut2.doPortConnection();
-		pluginReduceOut3.doPortConnection();
 		pluginMapOut.doPortConnection();
 		pluginResOut.doPortConnection();
 		pluginMapOut2.doPortConnection();
@@ -389,24 +362,9 @@ public class ComponentGestion extends AbstractComponent {
 				e.printStackTrace();
 			}
 		};
-		Runnable taskReduceConnect2 = () -> {
-			 try {
-				pluginReduceOut2.getServicePort().DoPluginPortConnection();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		};
-		Runnable taskReduceConnect3 = () -> {
-			 try {
-				pluginReduceOut3.getServicePort().DoPluginPortConnection();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		};
+	
 	
 		runTaskExecutor.submit(taskReduceConnect);
-		runTaskExecutor.submit(taskReduceConnect3);
-		runTaskExecutor.submit(taskReduceConnect2);
 		runTaskExecutor.submit(taskMapConnect);
 		runTaskExecutor.submit(taskResourceConnect);
 		runTaskExecutor.submit(taskMapConnect2);
@@ -433,31 +391,10 @@ public class ComponentGestion extends AbstractComponent {
 		};
 		
 		
+		
 		Runnable taskReduce = () -> {
 			 try {
-				 pluginReduceOut.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple,Nature.ITERATIVE);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		};
-		
-		Runnable taskReduce2 = () -> {
-			 try {
-				 pluginReduceOut2.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple2,Nature.ITERATIVE);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		};
-		
-		Tuple sizeTuple3=new Tuple(2);
-		sizeTuple3.setIndiceTuple(0, 100);
-		sizeTuple3.setIndiceTuple(1, 99);
-		
-		Runnable taskReduce3 = () -> {
-			 try {
-				 pluginReduceOut3.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple3,Nature.ITERATIVE);
+				 pluginReduceOut.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple3,Nature.ITERATIVE);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -465,6 +402,7 @@ public class ComponentGestion extends AbstractComponent {
 		};
 		
 		
+	
 		
 		Runnable taskRessource2 = () -> {
 			 try {
@@ -489,8 +427,6 @@ public class ComponentGestion extends AbstractComponent {
 		runTaskExecutor.submit(taskReduce);
 		runTaskExecutor.submit(taskRessource2);
 		runTaskExecutor.submit(taskMap2);
-		runTaskExecutor.submit(taskReduce2);
-		runTaskExecutor.submit(taskReduce3);
 		
 		
 		/*
@@ -561,11 +497,6 @@ public class ComponentGestion extends AbstractComponent {
 	 * this.bufferResultMap.put(t); return true; }
 	 */
 	
-	
-
-	
-	
-	
 	@Override
 	public synchronized void finalise() throws Exception {		
 		/*
@@ -585,6 +516,8 @@ public class ComponentGestion extends AbstractComponent {
 
 	public boolean recieve_Tuple(Tuple t) {
 		System.out.println("Task finished, the final result is : "+t.getIndiceData(0));
+		long endTime=System.currentTimeMillis();
+		System.out.println("Executetime "+(endTime-startTime)+"ms");   
 		return true;
 	}
 	
@@ -618,10 +551,10 @@ public class ComponentGestion extends AbstractComponent {
 		 }
 		return tupleinfo;
 		 
-		 
-		 
 	 }
 	
+	
+	 
 	
 	
 	

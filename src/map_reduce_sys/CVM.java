@@ -22,8 +22,7 @@ public class CVM extends AbstractCVM {
 	public static final String URI_PORT_CREATEPLUGIN3="CREATEPLUGINPORT3";
 	public static final String URI_PORT_CREATEPLUGIN4="CREATEPLUGINPORT4";
 	public static final String URI_PORT_CREATEPLUGIN5="CREATEPLUGINPORT5";
-	public static final String URI_PORT_CREATEPLUGIN6="CREATEPLUGINPORT6";
-	public static final String URI_PORT_CREATEPLUGIN7="CREATEPLUGINPORT7";
+	
 	
 	public CVM() throws Exception {
 		// TODO Auto-generated constructor stub
@@ -154,8 +153,7 @@ public class CVM extends AbstractCVM {
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN3});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN4});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN5});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN6});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN7});
+		
 		super.deploy();
 	
 	}
@@ -165,7 +163,7 @@ public class CVM extends AbstractCVM {
 		
 		try {
 			CVM c = new CVM();
-			c.startStandardLifeCycle(10000L);
+			c.startStandardLifeCycle(20000L);
 			System.exit(0);
 		} catch (Exception e) {
 		
