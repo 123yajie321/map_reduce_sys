@@ -171,14 +171,15 @@ public class ComponentGestion extends AbstractComponent {
 				  
 		};
 		Tuple sizeTuple=new Tuple(2);
-		sizeTuple.setIndiceTuple(0, 50);
+		sizeTuple.setIndiceTuple(0, 15000);
 		sizeTuple.setIndiceTuple(1, 0);
 		
 		Tuple sizeTuple2=new Tuple(2);
-		sizeTuple2.setIndiceTuple(0, 100);
-		sizeTuple2.setIndiceTuple(1, 50);
+		sizeTuple2.setIndiceTuple(0, 30000);
+		sizeTuple2.setIndiceTuple(1, 15000);
 		Tuple sizeTuple3=new Tuple(2);
-		sizeTuple3.setIndiceTuple(0, 100);
+		
+		sizeTuple3.setIndiceTuple(0, 30000);
 		sizeTuple3.setIndiceTuple(1, 0);
 		
 		
@@ -394,7 +395,7 @@ public class ComponentGestion extends AbstractComponent {
 		
 		Runnable taskReduce = () -> {
 			 try {
-				 pluginReduceOut.getServicePort().runTaskReduce(g_reduce_iteratif, sizeTuple3,Nature.ITERATIVE);
+				 pluginReduceOut.getServicePort().runTaskReduce(g_reduce, sizeTuple3,Nature.ITERATIVE);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -483,6 +484,7 @@ public class ComponentGestion extends AbstractComponent {
 		
 		
 	}
+		
 	
 	public SimpleJob getSimpleJob() {
 		return this.job;

@@ -71,7 +71,7 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 	@Override
 	public void createMapCalculTask(BlockingQueue<Tuple>bufferSend,Function<Tuple, Tuple> fonction_map,Tuple t) throws Exception{
 		bufferSend.add(fonction_map.apply(t));	
-		Thread.sleep(generateRandomNumber());
+		Thread.sleep(1L);
 	}
 	
 	
@@ -81,7 +81,7 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		OrderedTuple result= (OrderedTuple) fonction_reduce.apply(t1,t2);
 		bufferReceive.put(result);	
 		System.out.println("result id"+result.getId()+" value"+ result.getIndiceData(0));
-		Thread.sleep(generateRandomNumber());
+		Thread.sleep(1L);
 	}
 	
 
@@ -118,21 +118,21 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		
 	}
 	
-	 public  static int generateRandomNumber(){
+	 /*public  static long generateRandomNumber(){
 
 		 Random random = new Random();
 		 float pointeur = 0;
-		 int randomNumber;
+		 long randomNumber;
 
 		 pointeur = random.nextFloat();
 
 		 if (pointeur < 0.5) {
 
-		 randomNumber = 0+ (random.nextInt() * (5 - 0));
+		 randomNumber = 0L+ (random.nextLong() * (5L - 0L));
 
 		 } else {
 
-			 randomNumber = 5 + (random.nextInt() * (10 - 5));
+			 randomNumber = 5L + (random.nextLong() * (10L - 5L));
 
 		 }
 
@@ -140,7 +140,7 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		 	return randomNumber;
 
 		 }
-	 
+	 */
 
 	
 	
