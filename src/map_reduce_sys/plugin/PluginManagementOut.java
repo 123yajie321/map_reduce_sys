@@ -35,7 +35,7 @@ public class PluginManagementOut  extends AbstractPlugin {
 	}
 	
 
-	public void doPortConnection() throws Exception {
+	public void doManagementConnection() throws Exception {
 		System.out.println("uri inbound port: "+inboundPortUri);
 		this.getOwner().doPortConnection(
 				this.gestionOp.getPortURI(),

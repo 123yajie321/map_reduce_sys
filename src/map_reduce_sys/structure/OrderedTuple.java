@@ -1,13 +1,8 @@
 package map_reduce_sys.structure;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 
 public class OrderedTuple extends Tuple implements Comparable<OrderedTuple> {
-	
-	
 	
 	  private static final long serialVersionUID = 1L;
 	  private static int TupleId=0;
@@ -53,6 +48,18 @@ public class OrderedTuple extends Tuple implements Comparable<OrderedTuple> {
 	   return this.rangeMin;
    }
 
+   
+ public void setRangeMin(int rangemin) {
+	   
+	    this.rangeMin=rangemin;
+   }
+ 
+ public void setId(int id) {
+	   
+	    this.id=id;
+}
+   
+   
 @Override
 public int compareTo(OrderedTuple o) {
 	

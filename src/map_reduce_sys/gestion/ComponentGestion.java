@@ -53,9 +53,6 @@ public class ComponentGestion extends AbstractComponent {
 	 * LinkedBlockingQueue<Tuple> bufferResult; protected LinkedBlockingQueue<Tuple>
 	 * bufferResultMap;
 	 */
-	
-	
-	
 	protected SimpleJob job;
 	long startTime ;
 	long endTime;
@@ -202,7 +199,7 @@ public class ComponentGestion extends AbstractComponent {
 		//receive the  final result from component reduce 
 		 startTime=System.currentTimeMillis();
 		System.out.println(startTime);
-		
+		/*
 		createPluginOutboundPort cpopReduce=new createPluginOutboundPort(this);
 		createPluginOutboundPort cpopMap=new createPluginOutboundPort(this);
 		createPluginOutboundPort cpopResource=new createPluginOutboundPort(this);
@@ -219,17 +216,29 @@ public class ComponentGestion extends AbstractComponent {
 		doPortConnection(cpopReduce.getPortURI(), CVM.URI_PORT_CREATEPLUGIN3, ConnectorCreatePlugin.class.getCanonicalName());
 		doPortConnection(cpopResource2.getPortURI(),CVM.URI_PORT_CREATEPLUGIN4, ConnectorCreatePlugin.class.getCanonicalName());
 		doPortConnection(cpopMap2.getPortURI(), CVM.URI_PORT_CREATEPLUGIN5, ConnectorCreatePlugin.class.getCanonicalName());
-	
+		 */
+		
+		ArrayList<createPluginOutboundPort>CreatePluginconnectionsOP=createConnectionForinstallPlugins(CVM.URI_PORT_CREATEPLUGIN1
+				,CVM.URI_PORT_CREATEPLUGIN2,CVM.URI_PORT_CREATEPLUGIN3,CVM.URI_PORT_CREATEPLUGIN4,CVM.URI_PORT_CREATEPLUGIN5);
 		
 
 		ReceiveTupleInboundPort gestionReceiveresultInPort=new ReceiveTupleInboundPort(this);
 		gestionReceiveresultInPort.publishPort();
 		
+		
+		/*
 		String managementResInboundPort =AbstractPort.generatePortURI();
 		String managementMapInboundPort=AbstractPort.generatePortURI();
 		String managementReduceInboundPort=AbstractPort.generatePortURI();
 		String managementResInboundPort2 =AbstractPort.generatePortURI();
 		String managementMapInboundPort2=AbstractPort.generatePortURI();
+		*/
+		ArrayList<String> managementInboundPortUriList=new ArrayList<>();
+		for(int i=0;i<5;i++) {
+			String portUri=AbstractPort.generatePortURI();
+			managementInboundPortUriList.add(portUri);
+		}
+		ArrayList<PluginManagementOut> pluginsManagementOut=createPluginsManagementOut(managementInboundPortUriList);
 		
 		
 		
@@ -311,11 +320,11 @@ public class ComponentGestion extends AbstractComponent {
 		
 		Thread.sleep(1000);
 	
-		pluginReduceOut.doPortConnection();
-		pluginMapOut.doPortConnection();
-		pluginResOut.doPortConnection();
-		pluginMapOut2.doPortConnection();
-		pluginResOut2.doPortConnection();
+		pluginReduceOut.doManagementConnection();
+		pluginMapOut.doManagementConnection();
+		pluginResOut.doManagementConnection();
+		pluginMapOut2.doManagementConnection();
+		pluginResOut2.doManagementConnection();
 		
 		
 		
@@ -533,6 +542,39 @@ public class ComponentGestion extends AbstractComponent {
 		return reflectionOutboundPort;
 		
 	}
+	
+	
+	public ArrayList<createPluginOutboundPort> createConnectionForinstallPlugins(String ...portUris) throws Exception{
+		ArrayList<createPluginOutboundPort>portList=new ArrayList<>();
+		for(String uri:portUris) {
+			createPluginOutboundPort port=new createPluginOutboundPort(this);
+			port.publishPort();
+			doPortConnection(port.getPortURI(),uri, ConnectorCreatePlugin.class.getCanonicalName());
+			portList.add(port);
+		}
+		
+		
+		return portList;
+		
+		
+	}
+	
+	public ArrayList<PluginManagementOut> createPluginsManagementOut(ArrayList<String> inboundPortUris) throws Exception {
+		
+		ArrayList<PluginManagementOut>pluginOutList=new ArrayList<>();
+		for(String inboundPortUri:inboundPortUris) {
+			PluginManagementOut pluginOut=new PluginManagementOut();
+			pluginOut.setInboundPortUri(inboundPortUri);
+			pluginOut.setPluginURI("PluginOut"+pluginid);
+			pluginid++;
+			pluginOutList.add(pluginOut);
+		}
+			
+		return pluginOutList;
+	}
+	
+	
+	
 	
 	public PluginManagementOut createPluginManagementOut(String inboundPortUri) throws Exception {
 		

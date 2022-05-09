@@ -12,11 +12,11 @@ public  class SimpleJob  {
 	protected Nature nature;
 	protected Function <Tuple,Tuple> function_map;
 	protected BiFunction <Tuple,Tuple,Tuple>function_reduce;
-	protected Function<Void, Tuple> data_generator;
+	protected Function<Integer, Tuple> data_generator;
 	protected Tuple data_size  ;
 	
 	
-	public SimpleJob(Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Function<Void, Tuple> s,Nature nature,Tuple size) {
+	public SimpleJob(Function<Integer, Tuple> s,Function <Tuple,Tuple> f,BiFunction < Tuple,Tuple,Tuple> g,Nature nature,Tuple size) {
 	
 		this.function_map=f;
 		this.function_reduce=g;
@@ -27,11 +27,11 @@ public  class SimpleJob  {
 	}
 		
 	
-	public Function <Tuple,Tuple> getF() {
+	public Function <Tuple,Tuple> getFunctionMap() {
 		return function_map;
 	}
 	
-	public BiFunction < Tuple,Tuple,Tuple> getG() {
+	public BiFunction < Tuple,Tuple,Tuple> getFunctionReduce() {
 		return function_reduce;
 	}
 	
@@ -39,7 +39,7 @@ public  class SimpleJob  {
 	public Nature getNature() {
 			
 			return nature;
-		}
+	}
 
 	
 	
