@@ -20,7 +20,6 @@ import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.plugin.PluginResource;
-import map_reduce_sys.ressource.GestionResourceInboundPort;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;

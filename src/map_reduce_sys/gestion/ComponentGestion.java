@@ -19,21 +19,19 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.reflection.connectors.ReflectionConnector;
 import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
-import map_reduce_sys.CVM;
+
 import map_reduce_sys.CalculServiceOutboundPort;
+import map_reduce_sys.DistributedCVM;
 import map_reduce_sys.ReceiveTupleInboundPort;
 import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.connector.ConnectorCreatePlugin;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.job.SimpleJob;
-import map_reduce_sys.map.ComponentMap;
 import map_reduce_sys.plugin.PluginManagementOut;
 import map_reduce_sys.plugin.PluginResource;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
-import map_reduce_sys.reduce.ComponentReduce;
-import map_reduce_sys.ressource.ComponentRessource;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
@@ -168,16 +166,15 @@ public class ComponentGestion extends AbstractComponent {
 				  
 		};
 		Tuple sizeTuple=new Tuple(2);
-		sizeTuple.setIndiceTuple(0, 15000);
+		sizeTuple.setIndiceTuple(0, 100);
 		sizeTuple.setIndiceTuple(1, 0);
 		
-		Tuple sizeTuple2=new Tuple(2);
-		sizeTuple2.setIndiceTuple(0, 30000);
-		sizeTuple2.setIndiceTuple(1, 15000);
-		Tuple sizeTuple3=new Tuple(2);
-		
-		sizeTuple3.setIndiceTuple(0, 30000);
-		sizeTuple3.setIndiceTuple(1, 0);
+//		Tuple sizeTuple2=new Tuple(2);
+//		sizeTuple2.setIndiceTuple(0, 30000);
+//		sizeTuple2.setIndiceTuple(1, 15000);
+//		Tuple sizeTuple3=new Tuple(2);	
+	//	sizeTuple3.setIndiceTuple(0, 30000);
+		//sizeTuple3.setIndiceTuple(1, 0);
 		
 		
 		
@@ -218,8 +215,8 @@ public class ComponentGestion extends AbstractComponent {
 		doPortConnection(cpopMap2.getPortURI(), CVM.URI_PORT_CREATEPLUGIN5, ConnectorCreatePlugin.class.getCanonicalName());
 		 */
 		
-		ArrayList<createPluginOutboundPort>CreatePluginconnectionsOP=createConnectionForinstallPlugins(CVM.URI_PORT_CREATEPLUGIN1
-				,CVM.URI_PORT_CREATEPLUGIN2,CVM.URI_PORT_CREATEPLUGIN3,CVM.URI_PORT_CREATEPLUGIN4,CVM.URI_PORT_CREATEPLUGIN5);
+		ArrayList<createPluginOutboundPort>CreatePluginconnectionsOP=createConnectionForinstallPlugins(DistributedCVM.URI_PORT_CREATEPLUGIN1
+				,DistributedCVM.URI_PORT_CREATEPLUGIN2,DistributedCVM.URI_PORT_CREATEPLUGIN3);
 		
 
 		ReceiveTupleInboundPort gestionReceiveresultInPort=new ReceiveTupleInboundPort(this);
@@ -234,7 +231,7 @@ public class ComponentGestion extends AbstractComponent {
 		String managementMapInboundPort2=AbstractPort.generatePortURI();
 		*/
 		ArrayList<String> managementInboundPortUriList=new ArrayList<>();
-		for(int i=0;i<5;i++) {
+		for(int i=0;i<3;i++) {
 			String portUri=AbstractPort.generatePortURI();
 			managementInboundPortUriList.add(portUri);
 		}
@@ -244,8 +241,8 @@ public class ComponentGestion extends AbstractComponent {
 		
 		String ResourceSendInboundPort=AbstractPort.generatePortURI();
 		String mapSendInboundPort=AbstractPort.generatePortURI();
-		String ResourceSendInboundPort2=AbstractPort.generatePortURI();
-		String mapSendInboundPort2=AbstractPort.generatePortURI();
+		//String ResourceSendInboundPort2=AbstractPort.generatePortURI();
+		//String mapSendInboundPort2=AbstractPort.generatePortURI();
 		
 		
 		
@@ -255,14 +252,14 @@ public class ComponentGestion extends AbstractComponent {
 		ReflectionOutboundPort ReducereflectionOutboundPort=connectWithComponentCalcul( CVM.URI_PORT_REFLEXION3);
 		ReflectionOutboundPort ResourcereflectionOutboundPort2=connectWithComponentCalcul( CVM.URI_PORT_REFLEXION4);
 		ReflectionOutboundPort MapreflectionOutboundPort2=connectWithComponentCalcul( CVM.URI_PORT_REFLEXION5);
-		*/
+		
 		
 		PluginManagementOut pluginResOut=createPluginManagementOut(managementResInboundPort);
 		PluginManagementOut pluginMapOut=createPluginManagementOut(managementMapInboundPort);
 		PluginManagementOut pluginReduceOut=createPluginManagementOut(managementReduceInboundPort);
 		PluginManagementOut pluginResOut2=createPluginManagementOut(managementResInboundPort2);
 		PluginManagementOut pluginMapOut2=createPluginManagementOut(managementMapInboundPort2);
-		
+		*/
 		
 		/*	
 		PluginResource pluginResourceIn=new PluginResource(managementResInboundPort, 2,data_generator,ResourceSendInboundPort);
@@ -290,44 +287,68 @@ public class ComponentGestion extends AbstractComponent {
 		 * ResourcereflectionOutboundPort2.installPlugin(pluginResourceIn2);
 		 * MapreflectionOutboundPort2.installPlugin(pluginMapIn2);
 		 */
-		cpopResource.createPluginResource(managementResInboundPort, 2, data_generator, ResourceSendInboundPort, pluginid);
+		CreatePluginconnectionsOP.get(0).createPluginResource(managementInboundPortUriList.get(0), 2, data_generator, ResourceSendInboundPort, pluginid);
 		pluginid++;
-		cpopMap.createPluginMap(managementMapInboundPort, 2, f_map, ResourceSendInboundPort, mapSendInboundPort, pluginid);
+		CreatePluginconnectionsOP.get(1).createPluginMap(managementInboundPortUriList.get(1), 2, f_map, ResourceSendInboundPort, mapSendInboundPort, pluginid);
 		pluginid++;
 		
 		
 		ArrayList<String>reduceReceiveInPortList=new ArrayList<String>();
 		reduceReceiveInPortList.add(mapSendInboundPort);
-		reduceReceiveInPortList.add(mapSendInboundPort2);
+		//reduceReceiveInPortList.add(mapSendInboundPort2);
 		
-		Tuple pluginReduceinfo=createTuplePluginInfo(7, managementReduceInboundPort, 2,g_reduce,reduceReceiveInPortList,gestionReceiveresultInPort.getPortURI(), pluginid);
-		cpopReduce.createPluginReduce(pluginReduceinfo);
+		Tuple pluginReduceinfo=createTuplePluginInfo(7, managementInboundPortUriList.get(2), 2,g_reduce,reduceReceiveInPortList,gestionReceiveresultInPort.getPortURI(), pluginid);
+		CreatePluginconnectionsOP.get(2).createPluginReduce(pluginReduceinfo);
 		pluginid++;
 		
-		
+		/*
 		cpopResource2.createPluginResource(managementResInboundPort2, 2, data_generator, ResourceSendInboundPort2, pluginid);
 		pluginid++;
 		
 		cpopMap2.createPluginMap(managementMapInboundPort2, 2, f_map, ResourceSendInboundPort2, mapSendInboundPort2, pluginid);
-		pluginid++;
+		pluginid++;*/
 		
+		for(PluginManagementOut plugin:pluginsManagementOut) {
+			
+			this.installPlugin(plugin);
+		}
+		/*
 		this.installPlugin(pluginResOut);
 		this.installPlugin(pluginResOut2);
 		this.installPlugin(pluginMapOut);
 		this.installPlugin(pluginMapOut2);
 		this.installPlugin(pluginReduceOut);
-		
+		*/
 		
 		Thread.sleep(1000);
+		
+		
+		for(PluginManagementOut plugin:pluginsManagementOut) {
+			
+			plugin.doManagementConnection();
+		}
 	
-		pluginReduceOut.doManagementConnection();
+		/*pluginReduceOut.doManagementConnection();
 		pluginMapOut.doManagementConnection();
-		pluginResOut.doManagementConnection();
-		pluginMapOut2.doManagementConnection();
-		pluginResOut2.doManagementConnection();
+		pluginResOut.doManagementConnection();*/
+		//pluginMapOut2.doManagementConnection();
+		//pluginResOut2.doManagementConnection();
 		
+		for(PluginManagementOut plugin:pluginsManagementOut) {
+			
+
+			Runnable taskConnect = () -> {
+				 try {
+					plugin.getServicePort().DoPluginPortConnection();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			};
+			runTaskExecutor.submit(taskConnect);
+			
+		}
 		
-		
+		/*
 
 		Runnable taskResourceConnect = () -> {
 			 try {
@@ -380,12 +401,12 @@ public class ComponentGestion extends AbstractComponent {
 		runTaskExecutor.submit(taskMapConnect2);
 		runTaskExecutor.submit(taskResourceConnect2);
 		
-		
+	*/	
 		
 		
 		Runnable taskRessource = () -> {
 			 try {
-				pluginResOut.getServicePort().runTaskResource(data_generator, sizeTuple);
+				 pluginsManagementOut.get(0).getServicePort().runTaskResource(data_generator, sizeTuple);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -393,7 +414,7 @@ public class ComponentGestion extends AbstractComponent {
 		
 		Runnable taskMap = () -> {
 			 try {
-				 pluginMapOut.getServicePort().runTaskMap(f_map, sizeTuple);
+				 pluginsManagementOut.get(1).getServicePort().runTaskMap(f_map, sizeTuple);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -404,7 +425,7 @@ public class ComponentGestion extends AbstractComponent {
 		
 		Runnable taskReduce = () -> {
 			 try {
-				 pluginReduceOut.getServicePort().runTaskReduce(g_reduce, sizeTuple3,Nature.ITERATIVE);
+				 pluginsManagementOut.get(2).getServicePort().runTaskReduce(g_reduce, sizeTuple,Nature.ITERATIVE);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -412,7 +433,7 @@ public class ComponentGestion extends AbstractComponent {
 		};
 		
 		
-	
+	/*
 		
 		Runnable taskRessource2 = () -> {
 			 try {
@@ -430,13 +451,13 @@ public class ComponentGestion extends AbstractComponent {
 				e.printStackTrace();
 			}
 		};
-		
+		*/
 		
 		runTaskExecutor.submit(taskRessource);
 		runTaskExecutor.submit(taskMap);
 		runTaskExecutor.submit(taskReduce);
-		runTaskExecutor.submit(taskRessource2);
-		runTaskExecutor.submit(taskMap2);
+		//runTaskExecutor.submit(taskRessource2);
+		//runTaskExecutor.submit(taskMap2);
 		
 		
 		/*

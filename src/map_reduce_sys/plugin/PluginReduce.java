@@ -21,7 +21,6 @@ import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.map.ManagementMapInboundPortForPlugin;
 import map_reduce_sys.reduce.ManagementReduceInboundPortForPlugin;
-import map_reduce_sys.ressource.ComponentRessource;
 import map_reduce_sys.ressource.ManagementResourceInboundPortForPlugin;
 import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 import map_reduce_sys.structure.Nature;

@@ -16,13 +16,13 @@ public class CVM extends AbstractCVM {
 	public static final String URI_PORT_REFLEXION5="COMPONENT5";
 	public static final String URI_PORT_REFLEXION6="COMPONENT6";
 	
-	
+	/*
 	public static final String URI_PORT_CREATEPLUGIN1="CREATEPLUGINPORT1";
 	public static final String URI_PORT_CREATEPLUGIN2="CREATEPLUGINPORT2";
 	public static final String URI_PORT_CREATEPLUGIN3="CREATEPLUGINPORT3";
 	public static final String URI_PORT_CREATEPLUGIN4="CREATEPLUGINPORT4";
 	public static final String URI_PORT_CREATEPLUGIN5="CREATEPLUGINPORT5";
-	
+	*/
 	
 	public CVM() throws Exception {
 		// TODO Auto-generated constructor stub
@@ -146,14 +146,14 @@ public class CVM extends AbstractCVM {
 		this.doPortConnection(uriRessource, ComponentRessource.RSMOP_URI, ComponentMap.MRRIP_URI, ConnectorRessourceMap.class.getCanonicalName());
 		this.doPortConnection(uriMap,ComponentMap.MSROP_URI,ComponentReduce.RRMIP_URI,ConnectorMapReduce.class.getCanonicalName() );
 	   */
-		
+		/*
 		AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN1});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN2});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN3});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN4});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN5});
-		
+		//AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN4});
+		//AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN5});
+		*/
 		super.deploy();
 	
 	}

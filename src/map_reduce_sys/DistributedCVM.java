@@ -16,6 +16,11 @@ public class DistributedCVM extends AbstractDistributedCVM{
 	public static final String MAP_JVM_URI="map";
 	public static final String REDUCE_JVM_URI="reduce";
 	
+	public static final String URI_PORT_CREATEPLUGIN1="CREATEPLUGINPORT1";
+	public static final String URI_PORT_CREATEPLUGIN2="CREATEPLUGINPORT2";
+	public static final String URI_PORT_CREATEPLUGIN3="CREATEPLUGINPORT3";
+	
+	
 	
 	public DistributedCVM(String [] args) throws Exception {
 		
@@ -27,11 +32,11 @@ public class DistributedCVM extends AbstractDistributedCVM{
 		if(AbstractDistributedCVM.getThisJVMURI().equals(GESTION_JVM_URI)) {
 			AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
 		}else if (AbstractDistributedCVM.getThisJVMURI().equals(RESOURCE_JVM_URI)) {
-			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION1});
+			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN1});
 		}else if (AbstractDistributedCVM.getThisJVMURI().equals(MAP_JVM_URI)) {
-			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION2});
+			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN2});
 		}else if (AbstractDistributedCVM.getThisJVMURI().equals(REDUCE_JVM_URI)) {
-			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION3});
+			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN3});
 		}else {
 			System.out.println("Unknow JVM URI : " + AbstractDistributedCVM.getThisJVMURI());
 		}
