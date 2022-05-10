@@ -146,14 +146,14 @@ public class CVM extends AbstractCVM {
 		this.doPortConnection(uriRessource, ComponentRessource.RSMOP_URI, ComponentMap.MRRIP_URI, ConnectorRessourceMap.class.getCanonicalName());
 		this.doPortConnection(uriMap,ComponentMap.MSROP_URI,ComponentReduce.RRMIP_URI,ConnectorMapReduce.class.getCanonicalName() );
 	   */
-		/*
+		
 		AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN1});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN2});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN3});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {DistributedCVM.URI_PORT_CREATEPLUGIN1});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {DistributedCVM.URI_PORT_CREATEPLUGIN2});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {DistributedCVM.URI_PORT_CREATEPLUGIN3});
 		//AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN4});
 		//AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN5});
-		*/
+		System.out.println("created");
 		super.deploy();
 	
 	}
@@ -163,7 +163,7 @@ public class CVM extends AbstractCVM {
 		
 		try {
 			CVM c = new CVM();
-			c.startStandardLifeCycle(30000L);
+			c.startStandardLifeCycle(10000L);
 			System.exit(0);
 		} catch (Exception e) {
 		

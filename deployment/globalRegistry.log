@@ -1,35 +1,17 @@
-1651176866366|Global registry up and running!
-1651176867184|Global registry accepted the 1th connection.
-1651176867186|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-7023ff81-2f70-4d54-8afd-c6382fe47b6e rmi=localhost
-1651176867359|Global registry accepted the 2th connection.
-1651176867359|GlobalRegistry processing put COMPONENT3 rmi=localhost
-1651176867374|Global registry accepted the 3th connection.
-1651176867374|GlobalRegistry processing put COMPONENT1 rmi=localhost
-1651176867375|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-c7d7308f-9bb6-4e28-a75a-1fb8e6757378 rmi=localhost
-1651176867379|Global registry accepted the 4th connection.
-1651176867379|All (4) connected!
-1651176867379|GlobalRegistry processing put COMPONENT2 rmi=localhost
-1651176867394|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-5e382e98-e02c-4cfe-b29f-c12a882bfd1f rmi=localhost
-1651176867403|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-354a8669-21eb-476b-9083-4317f7ea9dbd rmi=localhost
-1651176867419|GlobalRegistry processing put reduce-dcc rmi=localhost
-1651176867438|GlobalRegistry processing put map-dcc rmi=localhost
-1651176867438|GlobalRegistry processing put resource-dcc rmi=localhost
-1651176868044|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-84a3dbfb-cf7f-4c1a-a79e-9de89296eb35 rmi=localhost
-1651176868052|GlobalRegistry processing put gestion-dcc rmi=localhost
-1651176878091|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-84a3dbfb-cf7f-4c1a-a79e-9de89296eb35
-1651176878093|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-5e382e98-e02c-4cfe-b29f-c12a882bfd1f
-1651176878093|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-c7d7308f-9bb6-4e28-a75a-1fb8e6757378
-1651176878094|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-354a8669-21eb-476b-9083-4317f7ea9dbd
-1651176878095|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-7023ff81-2f70-4d54-8afd-c6382fe47b6e
-1651176878098|GlobalRegistry processing remove COMPONENT1
-1651176878099|GlobalRegistry processing remove COMPONENT3
-1651176878099|GlobalRegistry processing remove COMPONENT2
-1651176878110|GlobalRegistry processing remove gestion-dcc
-1651176878112|GlobalRegistry processing remove resource-dcc
-1651176878113|GlobalRegistry processing remove map-dcc
-1651176878113|GlobalRegistry processing remove reduce-dcc
-1651176878125|GlobalRegistry processing shutdown
-1651176878126|GlobalRegistry processing shutdown
-1651176878126|GlobalRegistry processing shutdown
-1651176878126|GlobalRegistry processing shutdown
-1651176878132|Global registry shuts down!
+1652191637752|Global registry up and running!
+1652191640086|Global registry accepted the 1th connection.
+1652191640086|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-2b102106-e3e3-4d3a-97c0-fb65bc9b4c8b rmi=localhost
+1652191640154|Global registry accepted the 2th connection.
+1652191640155|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-98b52c80-d981-443b-ae7d-f53c2a0107f2 rmi=localhost
+1652191640159|Global registry accepted the 3th connection.
+1652191640159|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-4823608c-9119-42da-9011-d48dee0faa18 rmi=localhost
+1652191640174|Global registry accepted the 4th connection.
+1652191640174|All (4) connected!
+1652191640176|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-34a4df63-abc5-4ec9-9f7d-936eb092d6d0 rmi=localhost
+1652191640354|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionCI-c876e820-c293-4209-8bd6-17c9dd58ba9b rmi=localhost
+1652191640402|GlobalRegistry processing put gestion-dcc rmi=localhost
+1652191640502|GlobalRegistry processing null
+1652191640519|GlobalRegistry processing null
+1652191640523|GlobalRegistry processing null
+1652192834661|GlobalRegistry processing null
+1652192834662|Global registry shuts down!

@@ -14,7 +14,7 @@ public class CreatePluginInboundPort extends AbstractInboundPort implements crea
 
 	public CreatePluginInboundPort(ComponentI owner) throws Exception {
 		super(createPluginI.class, owner);
-		assert owner instanceof ComponentGestion;
+
 
 	}
 

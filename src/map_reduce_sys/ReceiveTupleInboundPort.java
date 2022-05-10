@@ -17,12 +17,12 @@ public class ReceiveTupleInboundPort extends AbstractInboundPort implements Send
 
 	public ReceiveTupleInboundPort(String uri,ComponentI owner)
 			throws Exception {
-		super(uri,ManagementI.class, owner);
+		super(uri,SendTupleServiceI.class, owner);
 	}
 	
 	public ReceiveTupleInboundPort(ComponentI owner)
 			throws Exception {
-		super(ManagementI.class, owner);
+		super(SendTupleServiceI.class, owner);
 	}
 
 	@Override
