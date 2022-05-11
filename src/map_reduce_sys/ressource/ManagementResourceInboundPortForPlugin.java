@@ -65,7 +65,7 @@ public class ManagementResourceInboundPortForPlugin extends AbstractInboundPort 
 	@Override
 	public void DoPluginPortConnection() throws Exception {
 		
-		System.out.println("ma res owner:"+this.getOwner());
+		System.out.println("plugin resource conncet begin:");
 		this.getOwner().handleRequest(
 				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
 					@Override

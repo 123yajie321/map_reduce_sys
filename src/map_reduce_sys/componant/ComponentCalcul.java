@@ -14,7 +14,6 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import map_reduce_sys.SendTupleOutboundPort;
-import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
@@ -22,7 +21,6 @@ import map_reduce_sys.interfaces.createPluginI;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.plugin.PluginResource;
-import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
 @OfferedInterfaces(offered ={createPluginI.class})

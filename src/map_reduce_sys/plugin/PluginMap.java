@@ -1,25 +1,18 @@
 package map_reduce_sys.plugin;
 
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import fr.sorbonne_u.components.AbstractComponent.ExecutorServiceFactory;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
-import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
 import map_reduce_sys.map.ManagementMapInboundPortForPlugin;
-import map_reduce_sys.ressource.ManagementResourceInboundPortForPlugin;
-import map_reduce_sys.ressource.RessourceSendMapOutboundPort;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;

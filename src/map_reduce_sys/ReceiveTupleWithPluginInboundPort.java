@@ -12,16 +12,16 @@ import map_reduce_sys.structure.Tuple;
 
 public class ReceiveTupleWithPluginInboundPort extends AbstractInboundPort implements SendTupleServiceI {
 
-	
+	private static final long serialVersionUID = 1L;
 
 	public ReceiveTupleWithPluginInboundPort(String uri,String pluginURI,ComponentI owner)
 			throws Exception {
-		super(uri,ManagementI.class, owner,pluginURI,null);
+		super(uri,SendTupleServiceI.class, owner,pluginURI,null);
 	}
 	
 	public ReceiveTupleWithPluginInboundPort(String pluginURI,ComponentI owner)
 			throws Exception {
-		super(ManagementI.class, owner,pluginURI,null);
+		super(SendTupleServiceI.class, owner,pluginURI,null);
 	}
 
 	@Override
@@ -36,11 +36,10 @@ public class ReceiveTupleWithPluginInboundPort extends AbstractInboundPort imple
 							return ((PluginMap)this.getServiceProviderReference()).tupleSender(t);
 							
 						}
-						else {
+						else  {
 							return ((PluginReduce)this.getServiceProviderReference()).tupleSender(t);
 						
 						}
-						
 						
 					}
 				});

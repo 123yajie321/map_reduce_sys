@@ -20,7 +20,7 @@ public class PluginManagementOut  extends AbstractPlugin {
 		this.addRequiredInterface(ManagementI.class);
 		this.gestionOp = new GestionOutboundPort(this.getOwner());
 		this.gestionOp.publishPort();
-		System.out.println(" out install");
+		System.out.println(" plugin management out installed");
 	}
 	
 	public void setInboundPortUri(String uri) throws Exception {
@@ -42,7 +42,7 @@ public class PluginManagementOut  extends AbstractPlugin {
 				this.inboundPortUri, 
 				ConnectorGestion.class.getCanonicalName());
 		
-		System.out.println(" Managenment COnnected");
+		System.out.println(" Managenment Connected");
 	}
 	
 	@Override

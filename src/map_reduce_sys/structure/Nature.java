@@ -1,6 +1,8 @@
 package map_reduce_sys.structure;
 
-public enum Nature {
+import java.io.Serializable;
+
+public enum Nature implements Serializable {
 	 COMMUTATIVE_ASSOCIATIVE,
 	 ASSOCIATIVE,
 	 ITERATIVE

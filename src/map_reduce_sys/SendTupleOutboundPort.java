@@ -11,9 +11,6 @@ public class SendTupleOutboundPort extends AbstractOutboundPort implements SendT
 	
 	private static final long serialVersionUID = 1L;
 
-
-
-
 	public SendTupleOutboundPort( ComponentI owner)
 			throws Exception {
 		super(SendTupleServiceI.class, owner);
