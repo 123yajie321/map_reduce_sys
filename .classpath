@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="javassist.jar"/>
 	<classpathentry kind="lib" path="deployment/jars/BCM4Java-13042022.jar"/>
 	<classpathentry kind="lib" path="deployment/jars/jing.jar"/>
+	<classpathentry kind="lib" path="deployment/jars/map_reduce.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

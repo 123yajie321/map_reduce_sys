@@ -72,6 +72,9 @@ public class ComponentGestion extends AbstractComponent {
 		startTime=System.currentTimeMillis();
 		System.out.println(startTime);
 		
+		this.traceMessage("startTime");
+
+		
 		ArrayList<createPluginOutboundPort>CreatePluginconnectionsOP=createConnectionForinstallPlugins(DistributedCVM.URI_PORT_CREATEPLUGIN1
 				,DistributedCVM.URI_PORT_CREATEPLUGIN2,DistributedCVM.URI_PORT_CREATEPLUGIN3);
 			
@@ -89,6 +92,8 @@ public class ComponentGestion extends AbstractComponent {
 		//String ResourceSendInboundPort2=AbstractPort.generatePortURI();
 		//String mapSendInboundPort2=AbstractPort.generatePortURI();
 		
+		this.traceMessage("begin create Plugin");
+
 		CreatePluginconnectionsOP.get(0).createPluginResource(managementInboundPortUriList.get(0), 2, jobAssocCommuJob.getDataGenerator(), ResourceSendInboundPort, pluginid);
 		pluginid++;
 		CreatePluginconnectionsOP.get(1).createPluginMap(managementInboundPortUriList.get(1), 2, jobAssocCommuJob.getFunctionMap(), ResourceSendInboundPort, mapSendInboundPort, pluginid);
