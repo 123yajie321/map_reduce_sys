@@ -1,11 +1,12 @@
 package map_reduce_sys.gestion;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import map_reduce_sys.interfaces.BiFunction;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.structure.Nature;

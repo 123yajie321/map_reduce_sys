@@ -1,13 +1,11 @@
 package map_reduce_sys.gestion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.AbstractPort;
@@ -21,6 +19,9 @@ import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import map_reduce_sys.DistributedCVM;
 import map_reduce_sys.ReceiveTupleInboundPort;
 import map_reduce_sys.connector.ConnectorCreatePlugin;
+import map_reduce_sys.interfaces.BiFunction;
+import map_reduce_sys.interfaces.Function;
+import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createPluginI;
 import map_reduce_sys.job.Job;
@@ -29,8 +30,8 @@ import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
 
-@RequiredInterfaces(required ={createPluginI.class})
-@OfferedInterfaces(offered ={SendTupleServiceI.class,createPluginI.class})
+@RequiredInterfaces(required ={createPluginI.class,ManagementI.class})
+@OfferedInterfaces(offered ={SendTupleServiceI.class})
 
 public class ComponentGestion extends AbstractComponent {
 
@@ -63,8 +64,9 @@ public class ComponentGestion extends AbstractComponent {
 	@Override
 	public synchronized void execute() throws Exception {
 		super.execute();
-		Job jobAssocCommuJob=createJob(Nature.COMMUTATIVE_ASSOCIATIVE, 1, 100);
-		Job jobIteratif=createJob(Nature.ITERATIVE, 1, 100);
+		Job jobAssocCommuJob=createJob(Nature.COMMUTATIVE_ASSOCIATIVE, 1, 10000);
+		Job jobAssoc=createJob(Nature.ASSOCIATIVE, 1, 10);
+		Job jobIteratif=createJob(Nature.ITERATIVE, 1, 10000);
 		
 		//vesion avec plugin
 		
@@ -93,6 +95,11 @@ public class ComponentGestion extends AbstractComponent {
 		//String mapSendInboundPort2=AbstractPort.generatePortURI();
 		
 		this.traceMessage("begin create Plugin");
+		
+		if(jobAssocCommuJob.getDataGenerator() instanceof Serializable) {
+
+			this.traceMessage("OK!!!!");
+		}
 
 		CreatePluginconnectionsOP.get(0).createPluginResource(managementInboundPortUriList.get(0), 2, jobAssocCommuJob.getDataGenerator(), ResourceSendInboundPort, pluginid);
 		pluginid++;
@@ -103,7 +110,7 @@ public class ComponentGestion extends AbstractComponent {
 		reduceReceiveInPortList.add(mapSendInboundPort);
 		//reduceReceiveInPortList.add(mapSendInboundPort2);
 		
-		Tuple pluginReduceinfo=createTuplePluginInfo(7, managementInboundPortUriList.get(2), 2,jobAssocCommuJob.getFunctionReduce(),reduceReceiveInPortList,receiveResultInboundPort.getPortURI(), pluginid);
+		Tuple pluginReduceinfo=createTuplePluginInfo(7, managementInboundPortUriList.get(2), 3,jobAssocCommuJob.getFunctionReduce(),reduceReceiveInPortList,receiveResultInboundPort.getPortURI(), pluginid);
 		CreatePluginconnectionsOP.get(2).createPluginReduce(pluginReduceinfo);
 		pluginid++;
 		
@@ -121,7 +128,7 @@ public class ComponentGestion extends AbstractComponent {
 		}
 		
 		
-		Thread.sleep(1000);
+		Thread.sleep(100);
 		
 		this.traceMessage("debug2");
 		for(PluginManagementOut plugin:pluginsManagementOut) {
@@ -280,7 +287,7 @@ public class ComponentGestion extends AbstractComponent {
 	}
 
 	public boolean recieve_Tuple(Tuple t) {
-		System.out.println("Task finished, the final result is : "+t.getIndiceData(0));
+		//System.out.println("Task finished, the final result is : "+t.getIndiceData(0));
 		long endTime=System.currentTimeMillis();
 		System.out.println("Executetime "+(endTime-startTime)+"ms");   
 		return true;
@@ -376,10 +383,13 @@ public class ComponentGestion extends AbstractComponent {
 			return tuple;	
 		};
 		
-		Function<Void, Tuple> matrix_generator = (v)->{
+	
+		
+		
+		Function<Integer, Tuple> matrix_generator = (v)->{
 			
 			int nb_line=2;
-		    int matrix[][]=new int[nb_line][nb_line];
+		    int [][]matrix=new int[nb_line][nb_line];
 			
 		    for(int i=0;i<nb_line;i++) {
 		    	 for(int j=0;j<nb_line;j++) {
@@ -404,13 +414,62 @@ public class ComponentGestion extends AbstractComponent {
 		};
 		
 		Function<Tuple, Tuple> f_map_matrix = a -> { 
-			OrderedTuple t=(OrderedTuple)a;
-			Integer res =(Integer)a.getIndiceData(0)*10;
-			Tuple tuple = new OrderedTuple(1,t.getId());
-			tuple.setIndiceTuple(0, res); 
+			OrderedTuple matrixTuple=(OrderedTuple)a;
+			int[][] matrixOrginal=(int[][]) matrixTuple.getIndiceData(0);
+			int[][] matrixResult= (int[][]) matrixTuple.getIndiceData(0);
+			for(int i=0;i<matrixResult.length;i++) {
+				for(int j=0;j<matrixResult[0].length;j++) {
+					matrixResult[i][j]=(matrixOrginal[i][j])*2;
+				}
+			}
+			
+			Tuple tuple = new OrderedTuple(1,matrixTuple.getId());
+			tuple.setIndiceTuple(0, matrixResult); 
 			return tuple;
 		};
 		
+		BiFunction<Tuple, Tuple, Tuple> g_reduce_matrix = (a,b) -> {
+			
+			OrderedTuple resultTuple;
+			OrderedTuple matrixTuple1=(OrderedTuple)a;
+			OrderedTuple matrixTuple2=(OrderedTuple)b;
+			int[][] matrix1=(int[][]) a.getIndiceData(0);
+			int[][] matrix2=(int[][]) b.getIndiceData(0);
+			int[][] matrixResult=new int[matrix1.length][matrix2[0].length];
+			for(int i=0;i<matrixResult.length;i++) {
+				for(int j=0;j<matrixResult[0].length;j++) {
+					int sum=0;
+					for(int k=0;k<matrix2.length;k++) {
+						sum+=matrix1[i][k]*matrix2[k][j];
+					}
+					matrixResult[i][j]=sum;
+				}
+			}
+			if(matrixTuple1.getId()<matrixTuple2.getId()) {
+						//if the MinRange of tuple1 isn't initialed
+					if(matrixTuple1.getRangeMin()<0) {
+						resultTuple=new OrderedTuple(1, matrixTuple2.getId(), matrixTuple1.getId());
+					}else {
+						resultTuple=new OrderedTuple(1, matrixTuple2.getId(), matrixTuple1.getRangeMin());
+					}	
+			}else {
+				
+				if(matrixTuple2.getRangeMin()<0) {
+					resultTuple=new OrderedTuple(1, matrixTuple1.getId(), matrixTuple2.getId());
+				}else {
+					resultTuple=new OrderedTuple(1, matrixTuple1.getId(), matrixTuple2.getRangeMin());
+				}	
+			}
+			resultTuple.setIndiceTuple(0, matrixResult);
+			System.out.println("tuple1 id:  "+matrixTuple1.getId()+" min range: "+matrixTuple1.getRangeMin()+"\n"+
+					"tuple2 id:  "+matrixTuple2.getId()+" min range: "+matrixTuple2.getRangeMin()+"\n"+
+					"resultTuple id:  "+resultTuple.getId()+" min range: "+resultTuple.getRangeMin()
+			
+					);
+			
+			return resultTuple; 
+				  
+		};
 		
 		
 		
@@ -445,6 +504,12 @@ public class ComponentGestion extends AbstractComponent {
 			job=new Job(data_generator,f_map,g_reduce,n, sizeTuple);
 
 			break;
+			
+		case ASSOCIATIVE:
+			job=new Job(matrix_generator,f_map_matrix,g_reduce_matrix,n, sizeTuple);
+			break;
+	
+			
 		case ITERATIVE:
 			job=new Job(data_generator,f_map,g_reduce_iteratif,n, sizeTuple);
 			break;

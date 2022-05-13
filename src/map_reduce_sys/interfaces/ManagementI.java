@@ -1,14 +1,8 @@
 package map_reduce_sys.interfaces;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
-import map_reduce_sys.job.Job;
-import map_reduce_sys.plugin.PluginMap;
-import map_reduce_sys.plugin.PluginReduce;
-import map_reduce_sys.plugin.PluginResource;
+
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 

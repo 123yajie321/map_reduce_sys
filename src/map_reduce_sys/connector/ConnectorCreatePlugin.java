@@ -1,9 +1,10 @@
 package map_reduce_sys.connector;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+
+
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
 import map_reduce_sys.interfaces.SendTupleServiceI;

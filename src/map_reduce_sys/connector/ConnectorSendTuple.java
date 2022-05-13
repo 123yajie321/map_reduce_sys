@@ -8,8 +8,8 @@ import map_reduce_sys.structure.Tuple;
 public class ConnectorSendTuple extends AbstractConnector implements SendTupleServiceI {
 
 	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
-		return ((SendTupleServiceI)this.offering).tupleSender(t);
+	public void tupleSender(Tuple t) throws Exception {
+		 ((SendTupleServiceI)this.offering).tupleSender(t);
 	}
 
 }

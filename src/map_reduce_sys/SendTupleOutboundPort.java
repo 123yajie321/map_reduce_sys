@@ -26,9 +26,9 @@ public class SendTupleOutboundPort extends AbstractOutboundPort implements SendT
 	
 
 	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
+	public void  tupleSender(Tuple t) throws Exception {
 		// TODO Auto-generated method stub
-		return ((SendTupleServiceI)this.getConnector()).tupleSender(t);
+		 ((SendTupleServiceI)this.getConnector()).tupleSender(t);
 	}
 
 	

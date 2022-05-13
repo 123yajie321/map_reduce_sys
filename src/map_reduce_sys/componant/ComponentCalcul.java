@@ -6,14 +6,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import map_reduce_sys.SendTupleOutboundPort;
+import map_reduce_sys.interfaces.BiFunction;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
@@ -70,24 +70,27 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 	@Override
 	public void createMapCalculTask(BlockingQueue<Tuple>bufferSend,Function<Tuple, Tuple> fonction_map,Tuple t) throws Exception{
 		bufferSend.add(fonction_map.apply(t));	
-		Thread.sleep(1L);
+		//Thread.sleep(1L);
 	}
 	
 	
 	@Override
-	public void createReduceCalculTask(PriorityBlockingQueue<OrderedTuple> bufferReceive,
+	public void createReduceCalculTask(BlockingQueue<OrderedTuple> bufferReceive,
 			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, Tuple t1, Tuple t2) throws Exception {
 		OrderedTuple result= (OrderedTuple) fonction_reduce.apply(t1,t2);
+		System.out.println("result id"+result.getId()+" min range !!"+ result.getRangeMin());
 		bufferReceive.put(result);	
-		System.out.println("result id"+result.getId()+" value"+ result.getIndiceData(0));
-		Thread.sleep(1L);
+		
+		//System.out.println("result id :"+result.getId());
+		//Thread.sleep(1L);
 	}
 	
 
 	public void send_Tuple(SendTupleOutboundPort port, Tuple result) throws Exception {
 		   
 		port.tupleSender(result);
-		System.out.println("Component Send  :"+result.getIndiceData( 0)+" id:"+((OrderedTuple) result).getId()); 
+		//System.out.println("Component Send  :"+result.getIndiceData( 0)+" id:"+((OrderedTuple) result).getId()); 
+		System.out.println("Component Send  tuple id: "+((OrderedTuple) result).getId()); 
 		  
 	   }
 
@@ -95,7 +98,7 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		PluginResource pluginResourceIn=new PluginResource(managementResourceInboundPort, nb,data_generator,mapReceiveTupleinboundPorturi);
 		pluginResourceIn.setPluginURI("PluginResourceIn"+pluginId);
 		this.installPlugin(pluginResourceIn);
-		System.out.println("Component res installed"); 
+		System.out.println("Component res plugin installed"); 
 		
 	}
 	
@@ -104,16 +107,16 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		PluginMap pluginMapIn=new PluginMap(managementMapInboundPort, nb,fonction_map,mapReceiveTupleinboundPorturi,ReduceReceiveTupleinboundPortUri);
 		pluginMapIn.setPluginURI("pluginMapIn"+pluginId);
 		this.installPlugin(pluginMapIn);
-		System.out.println("Component map installed"); 
+		System.out.println("Component map plugin installed"); 
 	}
 	
 	
 	public void createPluginReduce(/*String managementReduceInboundPort,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String ReduceReceiveTupleinboundPorturi,String sendResultinboundPortUri,int pluginId*/ Tuple pluginInfo) throws Exception {
 		
 		PluginReduce pluginReduceIn=new PluginReduce(pluginInfo);
-		pluginReduceIn.setPluginURI("pluginReduceIn"+pluginInfo.getIndiceData(pluginInfo.getDimention()-1));
+		pluginReduceIn.setPluginURI("pluginReduceIn"+pluginInfo.getIndiceData(pluginInfo.getDimension()-1));
 		this.installPlugin(pluginReduceIn);
-		System.out.println("Component reduce installed"); 
+		System.out.println("Component reduce plugin installed"); 
 		
 	}
 	

@@ -1,9 +1,9 @@
 package map_reduce_sys.job;
 
 import java.util.ArrayList;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
+import map_reduce_sys.interfaces.BiFunction;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
 

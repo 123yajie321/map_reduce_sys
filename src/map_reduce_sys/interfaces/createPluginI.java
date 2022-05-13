@@ -1,8 +1,5 @@
 package map_reduce_sys.interfaces;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import map_reduce_sys.structure.Tuple;

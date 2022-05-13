@@ -25,19 +25,29 @@ public class ReceiveTupleWithPluginInboundPort extends AbstractInboundPort imple
 	}
 
 	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
-		return this.getOwner().handleRequest(
-				new AbstractComponent.AbstractService<Boolean>(this.getPluginURI()) {
+	public void tupleSender(Tuple t) throws Exception {
+		 this.getOwner().runTask(
+				new AbstractComponent.AbstractTask(this.getPluginURI()) {				
 					@Override
-					public Boolean call() throws Exception{
+					public void run() {
 						
-						if (this.getServiceProviderReference() instanceof PluginMap)
+						if (this.getTaskProviderReference() instanceof PluginMap)
 						{
-							return ((PluginMap)this.getServiceProviderReference()).tupleSender(t);
+							    try {
+									((PluginMap)this.getTaskProviderReference()).tupleSender(t);
+								} catch (Exception e) {
+								
+									e.printStackTrace();
+								}
 							
 						}
 						else  {
-							return ((PluginReduce)this.getServiceProviderReference()).tupleSender(t);
+							 try {
+								((PluginReduce)this.getTaskProviderReference()).tupleSender(t);
+							} catch (Exception e) {
+							
+								e.printStackTrace();
+							}
 						
 						}
 						

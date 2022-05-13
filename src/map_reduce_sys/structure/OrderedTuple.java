@@ -13,6 +13,7 @@ public class OrderedTuple extends Tuple implements Comparable<OrderedTuple> {
 	  public OrderedTuple (int dimention){
 		    super(dimention);
 		    this.id=TupleId;
+		    this.rangeMin=-100;
 		    TupleId++;
 		 
 	  }
@@ -21,6 +22,8 @@ public class OrderedTuple extends Tuple implements Comparable<OrderedTuple> {
 	  public OrderedTuple (int dimention,int id){
 		    super(dimention);
 		    this.id=id;
+		    this.rangeMin=-100;
+		    
 	  }
 	  
 	  public OrderedTuple (int dimention,int id,int rangeMin){
@@ -34,6 +37,7 @@ public class OrderedTuple extends Tuple implements Comparable<OrderedTuple> {
 	  public OrderedTuple (int dimention,Object[]data){
 		  super(dimention,data);
 		  this.id=TupleId;
+		  this.rangeMin=-100;
 		    TupleId++;
 		  
 	  }

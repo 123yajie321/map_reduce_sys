@@ -23,8 +23,8 @@ public class ReceiveTupleInboundPort extends AbstractInboundPort implements Send
 	}
 
 	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
-		return this.getOwner().handleRequest(m->((ComponentGestion)m).recieve_Tuple(t));
+	public void tupleSender(Tuple t) throws Exception {
+		 this.getOwner().handleRequest(m->((ComponentGestion)m).recieve_Tuple(t));
 	}
 
 }

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.connector.ConnectorSendTuple;
+import map_reduce_sys.interfaces.BiFunction;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.interfaces.createCalculServiceI;
@@ -72,13 +72,9 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.receiveTupleInPortUriList=(ArrayList<String>) pluginInfo.getIndiceData(3);
 		this.sendReduceTupleInboundPortUri=(String) pluginInfo.getIndiceData(4);
 		
-		
-		
-		
-		
 		//this.receiveTupleInPortUri2=(String) pluginInfo.getIndiceData(5);
 		
-		bufferReceive=new PriorityBlockingQueue<OrderedTuple>();
+		//bufferReceive=new PriorityBlockingQueue<OrderedTuple>();
 		this.receiveTupleInPortList=new ArrayList<ReceiveTupleWithPluginInboundPort>();
 		
 		
@@ -150,11 +146,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 			port.unpublishPort();
 			port.destroyPort();
 		}
-//		
-//		this.receiveTupleInboundPort.unpublishPort();
-//		this.receiveTupleInboundPort.destroyPort();
-//		this.receiveTupleInboundPort2.unpublishPort();
-//		this.receiveTupleInboundPort2.destroyPort();
+
 		this.removeOfferedInterface(SendTupleServiceI.class);
 		
 		this.sendTupleobp.unpublishPort();
@@ -194,14 +186,14 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		switch(nature){
 	    case COMMUTATIVE_ASSOCIATIVE :
 	    {
-	    	
+	    	bufferReceive=new LinkedBlockingQueue<>();
 	        
 			for(int i=0;i<dataSize-1;i++) {
 				OrderedTuple t1=(OrderedTuple) bufferReceive.take();
 				OrderedTuple t2=(OrderedTuple) bufferReceive.take();
 				
 				this.getOwner().runTask(indexCalculExector,reduce -> {try {
-					((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
+					((createCalculServiceI)reduce).createReduceCalculTask((LinkedBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}});
@@ -239,10 +231,10 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 						
 				if(t1.getId()<t2.getId()) {
 						if((t1.getId()+1)==t2.getId()||(t1.getId()+1)==t2.getRangeMin()) {
+							 			System.out.println("entre: "+i);
 								this.getOwner().runTask(indexCalculExector,reduce -> {try {
-									((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
+									((createCalculServiceI)reduce).createReduceCalculTask((BlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}});
 								
@@ -255,9 +247,8 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 					
 						if((t2.getId()+1)==t1.getId()||(t2.getId()+1)==t1.getRangeMin()) {
 							this.getOwner().runTask(indexCalculExector,reduce -> {try {
-								((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t2, t1);
+								((createCalculServiceI)reduce).createReduceCalculTask((BlockingQueue<OrderedTuple>) bufferReceive, function, t2, t1);
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}});
 							
@@ -271,12 +262,18 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 				
 				
 			}
-				Tuple finalResult = bufferReceive.take();
-				int result = (int) finalResult.getIndiceData(0);
+					
+			OrderedTuple finalResult = bufferReceive.take();
+			while (finalResult.getId()!=(dataSize-1)||finalResult.getRangeMin()!=0) {
+				OrderedTuple tmp=finalResult;
+				bufferReceive.put(tmp);
+				finalResult=bufferReceive.take();
 				
-				System.out.println("final result is :  " + result);
-				System.out.println("Component Reduce finished" );
-				this.sendTupleobp.tupleSender(finalResult);
+			}
+			//int result = (int) finalResult.getIndiceData(0);
+			System.out.println("final result id is :  " + finalResult.getId());
+			System.out.println("Component Reduce finished" );
+			this.sendTupleobp.tupleSender(finalResult);
 			return true;
 	    	
 	       
@@ -285,7 +282,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	    }  
 	    case ITERATIVE :{
 	    	System.out.println("Component Rduce run task " + this.getOwner() );
-		    
+            bufferReceive=new PriorityBlockingQueue<>();
 			      
 			        
 					for(int i=0;i<dataSize-1;i++) {
@@ -307,7 +304,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 						OrderedTuple t2=tmp2;
 						this.getOwner().runTask(indexCalculExector,reduce -> {
 							try {
-							((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
+							((createCalculServiceI)reduce).createReduceCalculTask((BlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
 							
 						} 
 							catch (Exception e) {
@@ -320,8 +317,8 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 				}
 			
 					Tuple finalResult = bufferReceive.take();
-					int result = (int) finalResult.getIndiceData(0);
-					System.out.println("final result is :  " + result);
+					//int result = (int) finalResult.getIndiceData(0);
+					//System.out.println("final result is :  " + result);
 					System.out.println("Component Reduce finished" );
 					this.sendTupleobp.tupleSender(finalResult);
 				return true;
@@ -336,11 +333,9 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 
 	//receive tuple from component map and put the tuple to bufferReceive
 	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
+	public void tupleSender(Tuple t) throws Exception {
 		bufferReceive.put((OrderedTuple) t);
 		System.out.println("Component reduce receive  :" +((OrderedTuple) t).getId());
-		return true;
-		
 		
 	}
 

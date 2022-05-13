@@ -1,12 +1,13 @@
 package map_reduce_sys.plugin;
 
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.connector.ConnectorSendTuple;
+import map_reduce_sys.interfaces.BiFunction;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
@@ -73,7 +74,7 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	public void uninstall() throws Exception {
 		this.managementPluginInboundPort.unpublishPort();
 		this.managementPluginInboundPort.destroyPort();
-		this.removeRequiredInterface(ManagementI.class);
+		this.removeOfferedInterface(ManagementI.class);
 	}
 
 

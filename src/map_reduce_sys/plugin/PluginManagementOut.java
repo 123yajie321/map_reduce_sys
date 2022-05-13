@@ -17,7 +17,6 @@ public class PluginManagementOut  extends AbstractPlugin {
 	public void	installOn(ComponentI owner) throws Exception{
 		super.installOn(owner);
 	
-		this.addRequiredInterface(ManagementI.class);
 		this.gestionOp = new GestionOutboundPort(this.getOwner());
 		this.gestionOp.publishPort();
 		System.out.println(" plugin management out installed");
@@ -55,7 +54,6 @@ public class PluginManagementOut  extends AbstractPlugin {
 	public void uninstall() throws Exception {
 		this.gestionOp.unpublishPort();
 		this.gestionOp.destroyPort();
-		this.removeRequiredInterface(ManagementI.class);
 	}
 	
 	

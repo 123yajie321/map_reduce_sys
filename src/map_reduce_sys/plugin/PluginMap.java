@@ -1,13 +1,13 @@
 package map_reduce_sys.plugin;
 
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.connector.ConnectorSendTuple;
+import map_reduce_sys.interfaces.BiFunction;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
@@ -161,7 +161,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 
 	//receive tuple from component resource and submit the task to component map
 	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
+	public void tupleSender(Tuple t) throws Exception {
 		
 		this.getOwner().runTask(indexCalculExector, map->{	try {
 			((createCalculServiceI)map).createMapCalculTask(bufferSend,fonction_map,t);
@@ -170,7 +170,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 			e.printStackTrace();
 		}});
 		
-		return true;
+
 	}
 
 

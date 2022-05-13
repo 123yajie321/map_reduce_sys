@@ -9,15 +9,15 @@ public class Tuple implements Serializable {
 	
 	  private static final long serialVersionUID = 1L;
 	  private Object[] tuple;
-	  private int dimention; 
+	  private int dimension; 
 	  
 
-	  public Tuple (int dimention){
-		  	this.dimention=dimention;
-		  	tuple=new Object [dimention]; 
+	  public Tuple (int dimension){
+		  	this.dimension=dimension;
+		  	tuple=new Object [dimension]; 
 	  }
-	  public Tuple (int dimention,Object[]data){
-		  	this.dimention=dimention;
+	  public Tuple (int dimension,Object[]data){
+		  	this.dimension=dimension;
 		  	tuple=data ;
 	  }
 	  
@@ -30,9 +30,9 @@ public class Tuple implements Serializable {
     	  tuple[indice] = o;
       }
       
-      public int getDimention() {
+      public int getDimension() {
     	  
-    	  return this.dimention;
+    	  return this.dimension;
       }
       
       

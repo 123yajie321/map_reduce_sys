@@ -1,10 +1,9 @@
 package map_reduce_sys.componant;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import map_reduce_sys.gestion.ComponentGestion;
+import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.createPluginI;
 import map_reduce_sys.structure.Tuple;
 

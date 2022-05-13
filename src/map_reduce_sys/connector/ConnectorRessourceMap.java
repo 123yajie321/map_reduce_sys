@@ -9,8 +9,8 @@ public class ConnectorRessourceMap extends AbstractConnector implements SendTupl
 	
 	
 	@Override
-	public boolean tupleSender(Tuple t) throws Exception {
-		return ((RecieveTupleServiceI)this.offering).tupleReciever(t);
+	public void tupleSender(Tuple t) throws Exception {
+		 ((RecieveTupleServiceI)this.offering).tupleReciever(t);
 	}
 	
 	
