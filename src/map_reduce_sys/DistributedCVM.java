@@ -32,11 +32,11 @@ public class DistributedCVM extends AbstractDistributedCVM{
 		if(AbstractDistributedCVM.getThisJVMURI().equals(GESTION_JVM_URI)) {
 			AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
 		}else if (AbstractDistributedCVM.getThisJVMURI().equals(RESOURCE_JVM_URI)) {
-			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN1});
+			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION1});
 		}else if (AbstractDistributedCVM.getThisJVMURI().equals(MAP_JVM_URI)) {
-			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN2});
+			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION2});
 		}else if (AbstractDistributedCVM.getThisJVMURI().equals(REDUCE_JVM_URI)) {
-			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN3});
+			AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION3});
 		}else {
 			System.out.println("Unknow JVM URI : " + AbstractDistributedCVM.getThisJVMURI());
 		}

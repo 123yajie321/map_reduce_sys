@@ -2,6 +2,7 @@ package map_reduce_sys.componant;
 
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -23,14 +24,14 @@ import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.plugin.PluginResource;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
-@OfferedInterfaces(offered ={createPluginI.class})
+//@OfferedInterfaces(offered ={createPluginI.class})
 public class ComponentCalcul extends AbstractComponent implements SendTupleImplementationI,createCalculServiceI {
-	protected CreatePluginInboundPort cpip;
+	//protected CreatePluginInboundPort cpip;
 
 	protected ComponentCalcul(String uri) throws Exception {
-		super(2, 0);
-		cpip=new CreatePluginInboundPort(uri,this);
-		cpip.publishPort();
+		super(uri,3, 0);
+		//cpip=new CreatePluginInboundPort(uri,this);
+	//	cpip.publishPort();
 		
 	}
 	
@@ -41,21 +42,8 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 	}
 	
 	
-	@Override
-	public synchronized void finalise() throws Exception {		
-		super.finalise();
-	}
 	
-	@Override
-	public synchronized void shutdown() throws ComponentShutdownException {
-		try {
-			cpip.unpublishPort();
-		} catch (Exception e) {
-		
-			e.printStackTrace();
-		}
-		super.shutdown();
-	}
+	
 	
 	@Override
 	public void createResourceCalculTask(BlockingQueue<Tuple>bufferSend,Function<Integer, Tuple> function,int tupleId) {

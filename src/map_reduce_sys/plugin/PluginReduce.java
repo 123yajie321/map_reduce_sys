@@ -2,8 +2,12 @@ package map_reduce_sys.plugin;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
+
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
@@ -108,10 +112,6 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.managementReducePluginInboundPort.publishPort();
 		
 		this.addOfferedInterface(SendTupleServiceI.class);
-		/*this.receiveTupleInboundPort=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri,this.getPluginURI(),this.getOwner() );
-		this.receiveTupleInboundPort.publishPort();
-		this.receiveTupleInboundPort2=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri2,this.getPluginURI(),this.getOwner() );
-		this.receiveTupleInboundPort2.publishPort();*/
 		
 		for(String uri:receiveTupleInPortUriList) {
 			System.out.println("reduce receive in port "+uri);
@@ -123,8 +123,6 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		
 		
 		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
-		
-		
 		indexCalculExector=createNewExecutorService("ReduceCalculexector_uri", nbThread,false);
 		indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
 		
@@ -147,13 +145,11 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 			port.destroyPort();
 		}
 
-		this.removeOfferedInterface(SendTupleServiceI.class);
 		
 		this.sendTupleobp.unpublishPort();
 		this.sendTupleobp.destroyPort();
 		this.removeRequiredInterface(SendTupleServiceI.class);
-		
-		
+		this.removeOfferedInterface(SendTupleServiceI.class);
 	}
 
 
@@ -178,6 +174,8 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t,Nature nature) throws Exception {
 
 		this.dataSize=(int) t.getIndiceData(0)-(int)t.getIndiceData(1);
+		
+		
 		this.fonction_reduce=function;
 		int currentCalculId=(int) t.getIndiceData(1);
 		
@@ -202,9 +200,9 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 				
 			}
 				Tuple finalResult = bufferReceive.take();
-				int result = (int) finalResult.getIndiceData(0);
+				//int result = (int) finalResult.getIndiceData(0);
 				
-				System.out.println("final result is :  " + result);
+			//	System.out.println("final result is :  " + result);
 				System.out.println("Component Reduce finished" );
 				this.sendTupleobp.tupleSender(finalResult);
 			return true;
@@ -213,50 +211,51 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	       
 	    case ASSOCIATIVE :
 	    {
-	    	this.bufferReceive=new LinkedBlockingQueue<>();
+	    	this.bufferReceive=new PriorityBlockingQueue<OrderedTuple>();
 			OrderedTuple tmp1=null;
 			OrderedTuple tmp2=null;
+			
 			for(int i=0;i<dataSize-1;i++) {
-				
-				if(i==0) {
-					 tmp1=(OrderedTuple) bufferReceive.take();
-					 tmp2=(OrderedTuple) bufferReceive.take();
-				}else {
-					tmp1=tmp2;
-					tmp2=bufferReceive.take();
+				boolean LastCoupleMatched=false;
+				boolean fistEntre=true;
+				while (!LastCoupleMatched) {
+					if(fistEntre) {
+						 tmp1=(OrderedTuple) bufferReceive.take();
+						 tmp2=(OrderedTuple) bufferReceive.take();
+					}else {
+						tmp2=tmp1;
+						tmp1=bufferReceive.take();
+					}
+					fistEntre=false;
+					
+					if((tmp1.getId()+1)==tmp2.getId()||(tmp1.getId()+1)==tmp2.getRangeMin()||
+							(tmp2.getId()+1)==tmp1.getId()||(tmp2.getId()+1)==tmp1.getRangeMin()) {
+							LastCoupleMatched=true;
+						
+					}else {
+						bufferReceive.put(tmp2);
+					}
+						
+						
 				}
-				
 				OrderedTuple t1=tmp1;
 				OrderedTuple t2=tmp2;
-						
+				
 				if(t1.getId()<t2.getId()) {
-						if((t1.getId()+1)==t2.getId()||(t1.getId()+1)==t2.getRangeMin()) {
-							 			System.out.println("entre: "+i);
-								this.getOwner().runTask(indexCalculExector,reduce -> {try {
-									((createCalculServiceI)reduce).createReduceCalculTask((BlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}});
-								
-						}else {
-								bufferReceive.put(t1);
-								continue;
-						}
+
+					this.getOwner().runTask(indexCalculExector,reduce -> {try {
+						((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}});
 					
 				}else {
-					
-						if((t2.getId()+1)==t1.getId()||(t2.getId()+1)==t1.getRangeMin()) {
-							this.getOwner().runTask(indexCalculExector,reduce -> {try {
-								((createCalculServiceI)reduce).createReduceCalculTask((BlockingQueue<OrderedTuple>) bufferReceive, function, t2, t1);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}});
-							
-						}else {
-								bufferReceive.put(t1);
-								continue;
-						}
-					
+
+					this.getOwner().runTask(indexCalculExector,reduce -> {try {
+						((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t2, t1);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}});
 				}
 				
 				
@@ -264,12 +263,12 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 			}
 					
 			OrderedTuple finalResult = bufferReceive.take();
-			while (finalResult.getId()!=(dataSize-1)||finalResult.getRangeMin()!=0) {
+			/*while (finalResult.getId()!=(dataSize-1)||finalResult.getRangeMin()!=0) {
 				OrderedTuple tmp=finalResult;
 				bufferReceive.put(tmp);
 				finalResult=bufferReceive.take();
 				
-			}
+			}*/
 			//int result = (int) finalResult.getIndiceData(0);
 			System.out.println("final result id is :  " + finalResult.getId());
 			System.out.println("Component Reduce finished" );
