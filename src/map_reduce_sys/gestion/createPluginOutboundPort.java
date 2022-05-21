@@ -2,6 +2,7 @@ package map_reduce_sys.gestion;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.SendTupleServiceI;
@@ -43,13 +44,9 @@ public class createPluginOutboundPort extends AbstractOutboundPort implements cr
 		
 	}
 
-	@Override
-	public void createPluginReduce(Tuple pluginInfo) throws Exception {
-		((createPluginI)this.getConnector()).createPluginReduce(pluginInfo);
-		
-	}
+	
 
-/*	@Override
+	@Override
 	public void createPluginReduce(String managementReduceInboundPort, int nb,
 			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, String ReduceReceiveTupleinboundPorturi,
 			String sendResultinboundPortUri, int pluginId) throws Exception {
@@ -57,7 +54,7 @@ public class createPluginOutboundPort extends AbstractOutboundPort implements cr
 		
 	}
 	
-	*/
+	
 	
 
 	

@@ -4,6 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
+import map_reduce_sys.ManagementInboundPortForPlugin;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.BiFunction;
@@ -20,7 +21,7 @@ import map_reduce_sys.structure.Tuple;
 public class PluginResource extends AbstractPlugin implements ManagementI{
 	private static final long serialVersionUID=1L;
 	
-	protected ManagementResourceInboundPortForPlugin managementPluginInboundPort;
+	protected ManagementInboundPortForPlugin managementPluginInboundPort;
 	protected String ManagementInPortUri; 
 	protected int nbThread;
 	//protected  int resourceSize;
@@ -57,13 +58,10 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	
 	@Override
 	public void initialise() throws Exception{
-		//this.addRequiredInterface(ReflectionCI.class);
-		//ReflectionOutboundPort  rop= new ReflectionOutboundPort(this.getOwner());
-		super.initialise();
 		
-		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendTupleInPortUri, ConnectorSendTuple.class.getCanonicalName());
+		super.initialise();
 		this.addOfferedInterface(ManagementI.class);
-		this.managementPluginInboundPort = new ManagementResourceInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
+		this.managementPluginInboundPort = new ManagementInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementPluginInboundPort.publishPort();
 		
 		indexCalculExector=createNewExecutorService("RessourceCalculexector_uri", nbThread,false);
@@ -81,7 +79,6 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 
 	@Override
 	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
-		//return ((ManagementI)this.getOwner()).runTaskResource(function, t);
 	  
 		int tupleIdMax=(int) t.getIndiceData(0);
 		int tupleIdMin=(int) t.getIndiceData(1);
@@ -113,21 +110,6 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 			
 		}
 		//Thread.sleep(100);
-	
-		/*Tuple fin= new Tuple(1); 
-		fin.setIndiceTuple(0, true); 
-		
-		Runnable task=()->{
-			try {
-				send_Tuple(fin);
-				System.out.println("Component Ressource Send ressource :"+fin.getIndiceData( 0)); 
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-			}
-		};
-		SendExecutor.submit(task);*/
-		
 	
 		//calculExecutor.shutdown();
 		//SendExecutor.shutdown();

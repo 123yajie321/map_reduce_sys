@@ -39,16 +39,9 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	//protected int indexSendExector;
 	//send tuple to  another component
 	protected SendTupleOutboundPort sendTupleobp;
+	protected ReceiveTupleWithPluginInboundPort ReceiveTupleInboundPort;
+	protected String receiveTupleInPortUri;
 	
-	
-	protected ArrayList<String>receiveTupleInPortUriList;
-	protected ArrayList<ReceiveTupleWithPluginInboundPort>receiveTupleInPortList;
-	//recevive the tuple from component map
-	//protected ReceiveTupleWithPluginInboundPort receiveTupleInboundPort;
-	//protected ReceiveTupleWithPluginInboundPort receiveTupleInboundPort2;
-	//uri of the inboundPort to receive tuple 
-	//protected String receiveTupleInPortUri;
-	//protected String receiveTupleInPortUri2;
 	
 	//uri of the inboundPort of another Component 
 	// used to do the connection
@@ -57,30 +50,17 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	
 
 	
-	public PluginReduce(/*String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri,String inboundPortSendTupleUri*/Tuple pluginInfo) {
+	public PluginReduce(String uri,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String inboundPortReceiveTupleuri,String inboundPortSendTupleUri) {
 
 		super();
 		
-		/*this.ManagementInPortUri=uri;
+		this.ManagementInPortUri=uri;
 		this.receiveTupleInPortUri=inboundPortReceiveTupleuri;
 		this.sendReduceTupleInboundPortUri=inboundPortSendTupleUri;
 		this.nbThread=nb;
 		this.fonction_reduce=fonction_reduce;
-		bufferReceive=new PriorityBlockingQueue<OrderedTuple>();*/
+		bufferReceive=new PriorityBlockingQueue<OrderedTuple>();
 		
-		this.ManagementInPortUri=(String) pluginInfo.getIndiceData(0);
-		//this.receiveTupleInPortUri=(String) pluginInfo.getIndiceData(1);
-		
-		this.nbThread=(int) pluginInfo.getIndiceData(1);
-		this.fonction_reduce=(BiFunction<Tuple, Tuple, Tuple>) pluginInfo.getIndiceData(2);
-		
-		this.receiveTupleInPortUriList=(ArrayList<String>) pluginInfo.getIndiceData(3);
-		this.sendReduceTupleInboundPortUri=(String) pluginInfo.getIndiceData(4);
-		
-		//this.receiveTupleInPortUri2=(String) pluginInfo.getIndiceData(5);
-		
-		//bufferReceive=new PriorityBlockingQueue<OrderedTuple>();
-		this.receiveTupleInPortList=new ArrayList<ReceiveTupleWithPluginInboundPort>();
 		
 		
 	}
@@ -114,18 +94,11 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		
 		this.addOfferedInterface(SendTupleServiceI.class);
 		
-		for(String uri:receiveTupleInPortUriList) {
-			System.out.println("reduce receive in port "+uri);
-			ReceiveTupleWithPluginInboundPort inboundPort=new ReceiveTupleWithPluginInboundPort(uri,this.getPluginURI(),this.getOwner() ); 
-			inboundPort.publishPort();
-			receiveTupleInPortList.add(inboundPort);
-			
-		}
+		this.ReceiveTupleInboundPort=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri,this.getPluginURI(),this.getOwner() );
+		this.ReceiveTupleInboundPort.publishPort();
 		
-		
-		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		indexCalculExector=createNewExecutorService("ReduceCalculexector_uri", nbThread,false);
-		//indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
+		
 		
 }
 	
@@ -141,16 +114,15 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		this.managementReducePluginInboundPort.destroyPort();
 		this.removeOfferedInterface(ManagementI.class);
 		
-		for(ReceiveTupleWithPluginInboundPort port:receiveTupleInPortList) {
-			port.unpublishPort();
-			port.destroyPort();
-		}
+		this.ReceiveTupleInboundPort.unpublishPort();
+		this.ReceiveTupleInboundPort.destroyPort();
+		this.removeOfferedInterface(SendTupleServiceI.class);
 
 		
 		this.sendTupleobp.unpublishPort();
 		this.sendTupleobp.destroyPort();
 		this.removeRequiredInterface(SendTupleServiceI.class);
-		this.removeOfferedInterface(SendTupleServiceI.class);
+		
 	}
 
 

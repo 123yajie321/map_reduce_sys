@@ -99,10 +99,10 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 	}
 	
 	
-	public void createPluginReduce(/*String managementReduceInboundPort,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String ReduceReceiveTupleinboundPorturi,String sendResultinboundPortUri,int pluginId*/ Tuple pluginInfo) throws Exception {
+	public void createPluginReduce(String managementReduceInboundPort,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String ReduceReceiveTupleinboundPorturi,String sendResultinboundPortUri,int pluginId) throws Exception {
 		
-		PluginReduce pluginReduceIn=new PluginReduce(pluginInfo);
-		pluginReduceIn.setPluginURI("pluginReduceIn"+pluginInfo.getIndiceData(pluginInfo.getDimension()-1));
+		PluginReduce pluginReduceIn=new PluginReduce(managementReduceInboundPort,nb,fonction_reduce,ReduceReceiveTupleinboundPorturi,sendResultinboundPortUri);
+		pluginReduceIn.setPluginURI("pluginReduceIn"+pluginId);
 		this.installPlugin(pluginReduceIn);
 		System.out.println("Component reduce plugin installed"); 
 		

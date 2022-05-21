@@ -3,6 +3,7 @@ package map_reduce_sys.componant;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
+import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.createPluginI;
 import map_reduce_sys.structure.Tuple;
@@ -66,10 +67,10 @@ public class CreatePluginInboundPort extends AbstractInboundPort implements crea
 
 
 	@Override
-	public void createPluginReduce(Tuple pluginInfo) throws Exception {
+	public void createPluginReduce(String managementReduceInboundPort,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String ReduceReceiveTupleinboundPorturi,String sendResultinboundPortUri,int pluginId) throws Exception {
 		this.getOwner().runTask( c-> {
 			try {
-				((ComponentCalcul)c).createPluginReduce(pluginInfo);			
+				((ComponentCalcul)c).createPluginReduce(managementReduceInboundPort,nb,fonction_reduce,ReduceReceiveTupleinboundPorturi,sendResultinboundPortUri,pluginId);			
 				} catch (Exception e) {
 				
 				e.printStackTrace();

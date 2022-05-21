@@ -4,6 +4,7 @@ package map_reduce_sys.connector;
 
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
+import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.ManagementI;
 import map_reduce_sys.interfaces.RecieveTupleServiceI;
@@ -31,12 +32,16 @@ public class ConnectorCreatePlugin extends AbstractConnector implements createPl
 		
 	}
 
+	
+
 	@Override
-	public void createPluginReduce(/*String managementReduceInboundPort, int nb,
+	public void createPluginReduce(String managementReduceInboundPort, int nb,
 			BiFunction<Tuple, Tuple, Tuple> fonction_reduce, String ReduceReceiveTupleinboundPorturi,
-			String sendResultinboundPortUri, int pluginId*/Tuple pluginInfo) throws Exception {
-		//((createPluginI)this.offering).createPluginReduce(managementReduceInboundPort, nb, fonction_reduce, ReduceReceiveTupleinboundPorturi, sendResultinboundPortUri, pluginId);
-		((createPluginI)this.offering).createPluginReduce(pluginInfo);
+			String sendResultinboundPortUri, int pluginId) throws Exception {
+		((createPluginI)this.offering).createPluginReduce(managementReduceInboundPort,nb,fonction_reduce,ReduceReceiveTupleinboundPorturi,sendResultinboundPortUri,pluginId);
+		
+		// TODO Auto-generated method stub
+		
 	}
 	
 

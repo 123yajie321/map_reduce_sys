@@ -84,10 +84,6 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		this.ReceiveTupleInboundPort=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri,this.getPluginURI(),this.getOwner() );
 		this.ReceiveTupleInboundPort.publishPort();
 		System.out.println("map receive inbound port created "+receiveTupleInPortUri);
-		//System.out.println("Map send  "+sendReduceTupleInboundPortUri+";"+this.sendTupleobp.getPortURI());
-	
-		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
-		
 		indexCalculExector=createNewExecutorService("MapCalculexector_uri", nbThread,false);
 		indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
 		
