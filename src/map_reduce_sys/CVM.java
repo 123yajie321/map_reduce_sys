@@ -25,7 +25,7 @@ public class CVM extends AbstractCVM {
 	*/
 	
 	public CVM() throws Exception {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	
@@ -34,11 +34,11 @@ public class CVM extends AbstractCVM {
 		
 		
 		AbstractComponent.createComponent(ComponentGestion.class.getCanonicalName(), new Object[] {});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {DistributedCVM.URI_PORT_REFLEXION1});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {DistributedCVM.URI_PORT_REFLEXION2});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {DistributedCVM.URI_PORT_REFLEXION3});
-		//AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN4});
-		//AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_CREATEPLUGIN5});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION1});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION2});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION3});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION4});
+		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION5});
 		System.out.println("created");
 		super.deploy();
 	

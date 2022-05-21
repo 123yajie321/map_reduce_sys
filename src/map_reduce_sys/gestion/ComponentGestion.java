@@ -69,7 +69,7 @@ public class ComponentGestion extends AbstractComponent {
 	public synchronized void execute() throws Exception {
 		super.execute();
 		Job jobAssocCommuJob=createJob(Nature.COMMUTATIVE_ASSOCIATIVE, 1, 10000);
-		Job jobAssoc=createJob(Nature.ASSOCIATIVE, 1, 50000);
+		Job jobAssoc=createJob(Nature.ASSOCIATIVE, 2, 50000);
 		Job jobIteratif=createJob(Nature.ITERATIVE, 1, 10000);
 		
 		//vesion avec plugin
@@ -89,10 +89,10 @@ public class ComponentGestion extends AbstractComponent {
 		 */
 		
 		System.out.println("out port before");
-		ArrayList<ReflectionOutboundPort>listReflectionOutboundPort=connectWithComponentCalcul(DistributedCVM.URI_PORT_REFLEXION1,DistributedCVM.URI_PORT_REFLEXION2,DistributedCVM.URI_PORT_REFLEXION3);
+		ArrayList<ReflectionOutboundPort>listReflectionOutboundPort=connectWithComponentCalcul(DistributedCVM.URI_PORT_REFLEXION1,DistributedCVM.URI_PORT_REFLEXION2,DistributedCVM.URI_PORT_REFLEXION3,DistributedCVM.URI_PORT_REFLEXION4,DistributedCVM.URI_PORT_REFLEXION5);
 		System.out.println("out port created");
 		ArrayList<String> managementInboundPortUriList=new ArrayList<>();
-		for(int i=0;i<3;i++) {
+		for(int i=0;i<5;i++) {
 			String portUri=AbstractPort.generatePortURI();
 			managementInboundPortUriList.add(portUri);
 		}
@@ -102,7 +102,7 @@ public class ComponentGestion extends AbstractComponent {
 		
 		String ResourceSendInboundPort=AbstractPort.generatePortURI();
 		String mapSendInboundPort=AbstractPort.generatePortURI();
-		//String ResourceSendInboundPort2=AbstractPort.generatePortURI();
+		String ResourceSendInboundPort2=AbstractPort.generatePortURI();
 		//String mapSendInboundPort2=AbstractPort.generatePortURI();
 		
 		this.traceMessage("begin create Plugin");
@@ -126,9 +126,19 @@ public class ComponentGestion extends AbstractComponent {
 		PluginReduce pluginReduce=createPluginReduce(pluginReduceinfo);
 		pluginid++;
 		
+		PluginResource pluginResource2=createPluginResource(managementInboundPortUriList.get(3), 3, jobAssoc.getDataGenerator(), ResourceSendInboundPort2, pluginid);
+		pluginid++;
+		PluginMap pluginMap2=createPluginMap(managementInboundPortUriList.get(4), 1, jobAssoc.getFunctionMap(), ResourceSendInboundPort2, mapSendInboundPort, pluginid);
+		pluginid++;
+		
+		
 		listReflectionOutboundPort.get(0).installPlugin(pluginResource);
 		listReflectionOutboundPort.get(1).installPlugin(pluginMap);
 		listReflectionOutboundPort.get(2).installPlugin(pluginReduce);
+		listReflectionOutboundPort.get(3).installPlugin(pluginResource2);
+		listReflectionOutboundPort.get(4).installPlugin(pluginMap2);
+		
+		
 		/*
 		CreatePluginconnectionsOP.get(0).createPluginResource(managementInboundPortUriList.get(0), 2, jobAssocCommuJob.getDataGenerator(), ResourceSendInboundPort, pluginid);
 		pluginid++;
@@ -199,7 +209,6 @@ public class ComponentGestion extends AbstractComponent {
 		};
 		
 		
-		
 		Runnable taskReduce = () -> {
 			 try {
 				 pluginsManagementOut.get(2).getServicePort().runTaskReduce(jobAssoc.getFunctionReduce(), (Tuple) jobAssoc.getDataSize().getIndiceData(0),jobIteratif.getNature());
@@ -208,6 +217,26 @@ public class ComponentGestion extends AbstractComponent {
 				e.printStackTrace();
 			}
 		};
+		
+
+		Runnable taskRessource2 = () -> {
+			 try {
+				 pluginsManagementOut.get(3).getServicePort().runTaskResource(jobAssoc.getDataGenerator(), (Tuple) jobAssoc.getDataSize().getIndiceData(1));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		};
+		
+		Runnable taskMap2 = () -> {
+			 try {
+				 pluginsManagementOut.get(4).getServicePort().runTaskMap(jobAssoc.getFunctionMap(), (Tuple) jobAssoc.getDataSize().getIndiceData(1));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		};
+		
+		
 		for(ReflectionOutboundPort port:listReflectionOutboundPort) {
 			port.doDisconnection();
 			port.unpublishPort();
@@ -238,8 +267,8 @@ public class ComponentGestion extends AbstractComponent {
 		runTaskExecutor.submit(taskRessource);
 		runTaskExecutor.submit(taskMap);
 		runTaskExecutor.submit(taskReduce);
-		//runTaskExecutor.submit(taskRessource2);
-		//runTaskExecutor.submit(taskMap2);
+		runTaskExecutor.submit(taskRessource2);
+		runTaskExecutor.submit(taskMap2);
 		
 		
 		/*

@@ -35,10 +35,7 @@ public class ManagementMapInboundPortForPlugin extends AbstractInboundPort imple
 	
 	
 	
-	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
-		return false;
-		//System.out.println("fin Gestion resource port");
-}
+
 
 	@Override
 	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {
@@ -57,11 +54,7 @@ public class ManagementMapInboundPortForPlugin extends AbstractInboundPort imple
 
 	
 
-	@Override
-	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t, Nature nature) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
 	@Override
 	public void DoPluginPortConnection() throws Exception {
@@ -77,6 +70,16 @@ public class ManagementMapInboundPortForPlugin extends AbstractInboundPort imple
 				});
 		
 	}
+	
+	@Override
+	public boolean runTaskReduce(BiFunction<Tuple, Tuple, Tuple> function, Tuple t, Nature nature) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean runTaskResource(Function<Integer, Tuple> function, Tuple t) throws Exception {
+		return false;
+   }
 	
 
 	

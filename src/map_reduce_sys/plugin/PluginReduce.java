@@ -10,6 +10,7 @@ import javax.swing.text.StyledEditorKit.BoldAction;
 
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
+import map_reduce_sys.ManagementInboundPortForPlugin;
 import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.connector.ConnectorSendTuple;
@@ -28,14 +29,14 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 	private static final long serialVersionUID=1L;
 	
 	//Offere the servive runTaskReduce
-	protected ManagementReduceInboundPortForPlugin managementReducePluginInboundPort;
+	protected ManagementInboundPortForPlugin managementReducePluginInboundPort;
 	protected String ManagementInPortUri; 
 	protected int nbThread;
 	protected  int dataSize;
 	protected BiFunction<Tuple,Tuple, Tuple> fonction_reduce;
 	protected BlockingQueue<OrderedTuple>  bufferReceive;
 	protected int indexCalculExector;
-	protected int indexSendExector;
+	//protected int indexSendExector;
 	//send tuple to  another component
 	protected SendTupleOutboundPort sendTupleobp;
 	
@@ -108,7 +109,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		//connecte with the component reduce to send Tuple
 		
 		this.addOfferedInterface(ManagementI.class);
-		this.managementReducePluginInboundPort = new ManagementReduceInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
+		this.managementReducePluginInboundPort = new ManagementInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementReducePluginInboundPort.publishPort();
 		
 		this.addOfferedInterface(SendTupleServiceI.class);
@@ -124,7 +125,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI,SendTupl
 		
 		//this.getOwner().doPortConnection(this.sendTupleobp.getPortURI(),sendReduceTupleInboundPortUri, ConnectorSendTuple.class.getCanonicalName());
 		indexCalculExector=createNewExecutorService("ReduceCalculexector_uri", nbThread,false);
-		indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
+		//indexSendExector=createNewExecutorService("MapSendexector_uri", nbThread,false);
 		
 }
 	

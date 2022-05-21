@@ -3,6 +3,7 @@ package map_reduce_sys.plugin;
 import java.util.concurrent.LinkedBlockingQueue;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
+import map_reduce_sys.ManagementInboundPortForPlugin;
 import map_reduce_sys.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.connector.ConnectorSendTuple;
@@ -22,7 +23,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 	private static final long serialVersionUID=1L;
 	
 	//Offere the servive runTaskMap
-	protected ManagementMapInboundPortForPlugin managementMapPluginInboundPort;
+	protected ManagementInboundPortForPlugin managementMapPluginInboundPort;
 	protected String ManagementInPortUri; 
 	protected int nbThread;
 	protected  int dataSize;
@@ -75,7 +76,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 		//connecte with the component reduce to send Tuple
 		
 		this.addOfferedInterface(ManagementI.class);
-		this.managementMapPluginInboundPort = new ManagementMapInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
+		this.managementMapPluginInboundPort = new ManagementInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementMapPluginInboundPort.publishPort();
 		System.out.println("map man inbound port created "+ManagementInPortUri);
 		
@@ -127,11 +128,14 @@ public class PluginMap extends AbstractPlugin implements ManagementI,SendTupleSe
 
 	@Override
 	public boolean runTaskMap(Function<Tuple, Tuple> function, Tuple t) throws Exception {
-	
-        this.dataSize=(int) t.getIndiceData(0);
+	     
+       
+        int tupleIdMax=(int) t.getIndiceData(0);
+		int tupleIdMin=(int) t.getIndiceData(1);
+        
 		this.fonction_map=function;
 	
-		for(int i=0;i<dataSize;i++) {
+		for(int i=tupleIdMin;i<tupleIdMax;i++) {
 			OrderedTuple result =(OrderedTuple) bufferSend.take();
 			
 			this.getOwner().runTask(indexSendExector, map -> {try {

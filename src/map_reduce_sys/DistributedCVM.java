@@ -10,6 +10,8 @@ public class DistributedCVM extends AbstractDistributedCVM{
 	public static final String URI_PORT_REFLEXION1="COMPONENT1";
 	public static final String URI_PORT_REFLEXION2="COMPONENT2";
 	public static final String URI_PORT_REFLEXION3="COMPONENT3";
+	public static final String URI_PORT_REFLEXION4="COMPONENT4";
+	public static final String URI_PORT_REFLEXION5="COMPONENT5";
 	
 	public static final String GESTION_JVM_URI="gestion";
 	public static final String RESOURCE_JVM_URI="resource";

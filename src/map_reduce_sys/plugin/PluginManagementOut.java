@@ -30,7 +30,6 @@ public class PluginManagementOut  extends AbstractPlugin {
 	public void initialise() throws Exception{
 		
 		super.initialise();
-		//doPortConnection();
 	}
 	
 
