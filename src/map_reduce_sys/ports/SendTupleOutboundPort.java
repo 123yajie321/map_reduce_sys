@@ -1,4 +1,4 @@
-package map_reduce_sys;
+package map_reduce_sys.ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;

@@ -4,7 +4,7 @@ package map_reduce_sys;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import map_reduce_sys.componant.ComponentCalcul;
-import map_reduce_sys.gestion.ComponentGestion;
+import map_reduce_sys.componant.ComponentGestion;
 
 
 public class CVM extends AbstractCVM {
@@ -12,17 +12,7 @@ public class CVM extends AbstractCVM {
 	public static final String URI_PORT_REFLEXION1="COMPONENT1";
 	public static final String URI_PORT_REFLEXION2="COMPONENT2";
 	public static final String URI_PORT_REFLEXION3="COMPONENT3";
-	public static final String URI_PORT_REFLEXION4="COMPONENT4";
-	public static final String URI_PORT_REFLEXION5="COMPONENT5";
-	public static final String URI_PORT_REFLEXION6="COMPONENT6";
 	
-	/*
-	public static final String URI_PORT_CREATEPLUGIN1="CREATEPLUGINPORT1";
-	public static final String URI_PORT_CREATEPLUGIN2="CREATEPLUGINPORT2";
-	public static final String URI_PORT_CREATEPLUGIN3="CREATEPLUGINPORT3";
-	public static final String URI_PORT_CREATEPLUGIN4="CREATEPLUGINPORT4";
-	public static final String URI_PORT_CREATEPLUGIN5="CREATEPLUGINPORT5";
-	*/
 	
 	public CVM() throws Exception {
 
@@ -37,9 +27,6 @@ public class CVM extends AbstractCVM {
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION1});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION2});
 		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION3});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION4});
-		AbstractComponent.createComponent(ComponentCalcul.class.getCanonicalName(),new Object[] {URI_PORT_REFLEXION5});
-		System.out.println("created");
 		super.deploy();
 	
 	}

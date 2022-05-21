@@ -12,7 +12,6 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
-import map_reduce_sys.SendTupleOutboundPort;
 import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
@@ -22,6 +21,7 @@ import map_reduce_sys.interfaces.createPluginI;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.plugin.PluginResource;
+import map_reduce_sys.ports.SendTupleOutboundPort;
 import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
 //@OfferedInterfaces(offered ={createPluginI.class})
@@ -81,56 +81,6 @@ public class ComponentCalcul extends AbstractComponent implements SendTupleImple
 		System.out.println("Component Send  tuple id: "+((OrderedTuple) result).getId()); 
 		  
 	   }
-
-	public void createPluginResource(String managementResourceInboundPort,int nb,Function<Integer, Tuple> data_generator,String mapReceiveTupleinboundPorturi,int pluginId) throws Exception {
-		PluginResource pluginResourceIn=new PluginResource(managementResourceInboundPort, nb,data_generator,mapReceiveTupleinboundPorturi);
-		pluginResourceIn.setPluginURI("PluginResourceIn"+pluginId);
-		this.installPlugin(pluginResourceIn);
-		System.out.println("Component res plugin installed"); 
-		
-	}
-	
-	
-	public void createPluginMap(String managementMapInboundPort,int nb,Function<Tuple, Tuple> fonction_map,String mapReceiveTupleinboundPorturi,String ReduceReceiveTupleinboundPortUri,int pluginId) throws Exception {
-		PluginMap pluginMapIn=new PluginMap(managementMapInboundPort, nb,fonction_map,mapReceiveTupleinboundPorturi,ReduceReceiveTupleinboundPortUri);
-		pluginMapIn.setPluginURI("pluginMapIn"+pluginId);
-		this.installPlugin(pluginMapIn);
-		System.out.println("Component map plugin installed"); 
-	}
-	
-	
-	public void createPluginReduce(String managementReduceInboundPort,int nb,BiFunction<Tuple,Tuple, Tuple> fonction_reduce,String ReduceReceiveTupleinboundPorturi,String sendResultinboundPortUri,int pluginId) throws Exception {
-		
-		PluginReduce pluginReduceIn=new PluginReduce(managementReduceInboundPort,nb,fonction_reduce,ReduceReceiveTupleinboundPorturi,sendResultinboundPortUri);
-		pluginReduceIn.setPluginURI("pluginReduceIn"+pluginId);
-		this.installPlugin(pluginReduceIn);
-		System.out.println("Component reduce plugin installed"); 
-		
-	}
-	
-	 /*public  static long generateRandomNumber(){
-
-		 Random random = new Random();
-		 float pointeur = 0;
-		 long randomNumber;
-
-		 pointeur = random.nextFloat();
-
-		 if (pointeur < 0.5) {
-
-		 randomNumber = 0L+ (random.nextLong() * (5L - 0L));
-
-		 } else {
-
-			 randomNumber = 5L + (random.nextLong() * (10L - 5L));
-
-		 }
-
-		 	System.out.println(randomNumber);
-		 	return randomNumber;
-
-		 }
-	 */
 
 	
 	

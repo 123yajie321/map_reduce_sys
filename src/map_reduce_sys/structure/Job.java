@@ -1,11 +1,9 @@
-package map_reduce_sys.job;
+package map_reduce_sys.structure;
 
 import java.util.ArrayList;
 
 import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
-import map_reduce_sys.structure.Nature;
-import map_reduce_sys.structure.Tuple;
 
 public  class Job  {
 	

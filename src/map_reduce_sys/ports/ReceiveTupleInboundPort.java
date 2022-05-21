@@ -1,9 +1,9 @@
-package map_reduce_sys;
+package map_reduce_sys.ports;
 
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import map_reduce_sys.gestion.ComponentGestion;
+import map_reduce_sys.componant.ComponentGestion;
 import map_reduce_sys.interfaces.SendTupleServiceI;
 import map_reduce_sys.structure.Tuple;
 
