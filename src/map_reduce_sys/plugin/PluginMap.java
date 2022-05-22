@@ -6,10 +6,10 @@ import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
-import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.interfaces.ManagementCI;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
-import map_reduce_sys.interfaces.SendTupleServiceI;
-import map_reduce_sys.interfaces.createCalculServiceI;
+import map_reduce_sys.interfaces.SendTupleServiceCI;
+import map_reduce_sys.interfaces.CreateCalculServiceI;
 import map_reduce_sys.ports.ManagementInboundPortForPlugin;
 import map_reduce_sys.ports.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.ports.SendTupleOutboundPort;
@@ -18,12 +18,12 @@ import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Tuple;
 /**
  * The class <code>PluginMap</code> implements the calculate component side  plug-in
- * for the <code>ManagementI</code> component interface and it implements also the the client side and server side
- * for the <code>SendTupleServiceI</code> component interface
+ * for the <code>ManagementCI</code> component interface and it implements also the the client side and server side
+ * for the <code>SendTupleServiceCI</code> component interface
  * @author Yajie LIU, Zimeng ZHANG
  */
 
-public class PluginMap extends AbstractPlugin implements ManagementI{
+public class PluginMap extends AbstractPlugin implements ManagementCI{
 	private static final long serialVersionUID=1L;
 	/**Inbound port for management, Offer the service runTaskMap*/
 	protected ManagementInboundPortForPlugin managementMapPluginInboundPort;
@@ -67,7 +67,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI{
 	public void	installOn(ComponentI owner) throws Exception{
 		super.installOn(owner);
 
-		this.addRequiredInterface(SendTupleServiceI.class);
+		this.addRequiredInterface(SendTupleServiceCI.class);
 		this.sendTupleobp=new SendTupleOutboundPort(this.getOwner());
 		this.sendTupleobp.publishPort();
 		
@@ -77,12 +77,12 @@ public class PluginMap extends AbstractPlugin implements ManagementI{
 	public void initialise() throws Exception{
 		
 		super.initialise();
-		this.addOfferedInterface(ManagementI.class);
+		this.addOfferedInterface(ManagementCI.class);
 		this.managementMapPluginInboundPort = new ManagementInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementMapPluginInboundPort.publishPort();
 		
 		
-		this.addOfferedInterface(SendTupleServiceI.class);
+		this.addOfferedInterface(SendTupleServiceCI.class);
 		this.ReceiveTupleInboundPort=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri,this.getPluginURI(),this.getOwner() );
 		this.ReceiveTupleInboundPort.publishPort();
 		
@@ -101,15 +101,15 @@ public class PluginMap extends AbstractPlugin implements ManagementI{
 	public void uninstall() throws Exception {
 		this.managementMapPluginInboundPort.unpublishPort();
 		this.managementMapPluginInboundPort.destroyPort();
-		this.removeOfferedInterface(ManagementI.class);
+		this.removeOfferedInterface(ManagementCI.class);
 		
 		this.ReceiveTupleInboundPort.unpublishPort();
 		this.ReceiveTupleInboundPort.destroyPort();
-		this.removeOfferedInterface(SendTupleServiceI.class);
+		this.removeOfferedInterface(SendTupleServiceCI.class);
 		
 		this.sendTupleobp.unpublishPort();
 		this.sendTupleobp.destroyPort();
-		this.removeRequiredInterface(SendTupleServiceI.class);
+		this.removeRequiredInterface(SendTupleServiceCI.class);
 		
 		
 	}
@@ -118,7 +118,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI{
 	 * Launch the map task to execute foncion_map
 	 * @param function Function(Tuple, Tuple),the function to be executed
 	 * @param t Tuple of data size,Contains two int's, 
-	 * one storing the minimum value Function<Tuple, Tuple>of the generated Tuple's id and one storing the maximum value
+	 * one storing the minimum value Function(Tuple, Tuple)of the generated Tuple's id and one storing the maximum value
 	 * @throws Exception exception
 	 */
 	@Override
@@ -133,8 +133,8 @@ public class PluginMap extends AbstractPlugin implements ManagementI{
 		for(int i=tupleIdMin;i<tupleIdMax;i++) {
 			OrderedTuple result =(OrderedTuple) bufferSend.take();
 			
-			this.getOwner().runTask(indexSendExector, map -> {try {
-				((SendTupleImplementationI)map).send_Tuple(this.sendTupleobp, result);
+			this.getOwner().runTask(indexSendExector, ComponentCalcul -> {try {
+				((SendTupleImplementationI)ComponentCalcul).send_Tuple(this.sendTupleobp, result);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}});
@@ -156,7 +156,7 @@ public class PluginMap extends AbstractPlugin implements ManagementI{
 	public void tupleSender(Tuple t) throws Exception {
 		
 		this.getOwner().runTask(indexCalculExector, map->{	try {
-			((createCalculServiceI)map).createMapCalculTask(bufferSend,fonction_map,t);
+			((CreateCalculServiceI)map).createMapCalculTask(bufferSend,fonction_map,t);
 		} catch (Exception e) {
 
 			e.printStackTrace();

@@ -3,12 +3,12 @@ package map_reduce_sys.plugin;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.connector.ConnectorGestion;
-import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.interfaces.ManagementCI;
 import map_reduce_sys.ports.GestionOutboundPort;
 
 /**
  * The class <code>PluginManagementOut</code> implements the client side  plug-in
- * for the <code>ManagementI</code> component interface 
+ * for the <code>ManagementCI</code> component interface 
  * @author Yajie LIU, Zimeng ZHANG
  */
 
@@ -54,7 +54,7 @@ public class PluginManagementOut  extends AbstractPlugin {
 	}
 	
 	
-	public ManagementI getServicePort() {
+	public ManagementCI getServicePort() {
 		return this.gestionOp;
 	}
 	/**

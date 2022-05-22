@@ -1,20 +1,32 @@
 package map_reduce_sys;
-import org.apache.commons.math3.exception.util.DummyLocalizable;
-
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
 import map_reduce_sys.componant.ComponentCalcul;
 import map_reduce_sys.componant.ComponentGestion;
+/**
+ * The class <code>CVM</code> implements the deployment of a gestion component and three calculate components 
+ * in multi-Jvm.The 4 components are arranged in 4 different jvm's
+ *    
+ * @author Yajie LIU, Zimeng ZHANG
+ */
+
+
 
 public class DistributedCVM extends AbstractDistributedCVM{
+	/**uri of the reflection inbound port of the calculate component 1*/
 	public static final String URI_PORT_REFLEXION1="COMPONENT1";
+	/**uri of the reflection inbound port of the calculate component 2*/
 	public static final String URI_PORT_REFLEXION2="COMPONENT2";
+	/**uri of the reflection inbound port of the calculate component 3*/
 	public static final String URI_PORT_REFLEXION3="COMPONENT3";
 	
-	
+	/**uri of jvm where we deploy the getsion component */
 	public static final String GESTION_JVM_URI="gestion";
+	/**uri of jvm where we deploy the resource component */
 	public static final String RESOURCE_JVM_URI="resource";
+	/**uri of jvm where we deploy the map component */
 	public static final String MAP_JVM_URI="map";
+	/**uri of jvm where we deploy the reduce component */
 	public static final String REDUCE_JVM_URI="reduce";
 	
 	

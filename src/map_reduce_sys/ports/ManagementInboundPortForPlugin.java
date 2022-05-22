@@ -7,15 +7,21 @@ import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
-import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.interfaces.ManagementCI;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
 import map_reduce_sys.plugin.PluginResource;
 import map_reduce_sys.structure.Nature;
 import map_reduce_sys.structure.Tuple;
+/**
+ * The class <code>ManagementInboundPortForPlugin</code> implements an inbound port
+ * for the <code>ManagementCI</code> component interface that directs its calls to
+ * the plug-in rather than directly to the component implementation.
+ * 
+ * @author Yajie LIU, Zimeng ZHANG
+ */
 
-
-public class ManagementInboundPortForPlugin extends AbstractInboundPort implements ManagementI {
+public class ManagementInboundPortForPlugin extends AbstractInboundPort implements ManagementCI {
 
 
 	private static final long serialVersionUID = 1L;
@@ -25,12 +31,12 @@ public class ManagementInboundPortForPlugin extends AbstractInboundPort implemen
 
 	public ManagementInboundPortForPlugin(String uri,String pluginURI,ComponentI owner)
 			throws Exception {
-		super(uri,ManagementI.class, owner,pluginURI,null);
+		super(uri,ManagementCI.class, owner,pluginURI,null);
 	}
 	
 	public ManagementInboundPortForPlugin(String pluginURI,ComponentI owner)
 			throws Exception {
-		super(ManagementI.class, owner,pluginURI,null);
+		super(ManagementCI.class, owner,pluginURI,null);
 	}
 	
 	

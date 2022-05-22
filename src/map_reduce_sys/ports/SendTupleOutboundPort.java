@@ -3,23 +3,30 @@ package map_reduce_sys.ports;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.interfaces.SendTupleServiceCI;
 import map_reduce_sys.structure.Tuple;
 
-public class SendTupleOutboundPort extends AbstractOutboundPort implements SendTupleServiceI {
+/**
+ * The class <code>SendTupleOutboundPort</code> implements an outbound port for the
+ * <code>SendTupleServiceCI</code> component interface.
+ * @author	Yajie LIU, Zimeng ZHANG
+ */
+
+
+public class SendTupleOutboundPort extends AbstractOutboundPort implements SendTupleServiceCI {
 
 	
 	private static final long serialVersionUID = 1L;
 
 	public SendTupleOutboundPort( ComponentI owner)
 			throws Exception {
-		super(SendTupleServiceI.class, owner);
-		// TODO Auto-generated constructor stub
+		super(SendTupleServiceCI.class, owner);
+		
 	}
 
 	public SendTupleOutboundPort(String uri, ComponentI owner)
 			throws Exception {
-		super(uri, SendTupleServiceI.class, owner);
+		super(uri, SendTupleServiceCI.class, owner);
 	}
 	
 
@@ -27,7 +34,7 @@ public class SendTupleOutboundPort extends AbstractOutboundPort implements SendT
 
 	@Override
 	public void  tupleSender(Tuple t) throws Exception {
-		 ((SendTupleServiceI)this.getConnector()).tupleSender(t);
+		 ((SendTupleServiceCI)this.getConnector()).tupleSender(t);
 	}
 
 	

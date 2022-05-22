@@ -13,9 +13,9 @@ import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
-import map_reduce_sys.interfaces.ManagementI;
-import map_reduce_sys.interfaces.SendTupleServiceI;
-import map_reduce_sys.interfaces.createCalculServiceI;
+import map_reduce_sys.interfaces.ManagementCI;
+import map_reduce_sys.interfaces.SendTupleServiceCI;
+import map_reduce_sys.interfaces.CreateCalculServiceI;
 import map_reduce_sys.ports.ManagementInboundPortForPlugin;
 import map_reduce_sys.ports.ReceiveTupleWithPluginInboundPort;
 import map_reduce_sys.ports.SendTupleOutboundPort;
@@ -25,11 +25,11 @@ import map_reduce_sys.structure.Tuple;
 
 /**
  * The class <code>PluginReduce</code> implements the calculate component side  plug-in
- * for the <code>ManagementI</code> component interface and it implements also the the client side  and server side 
- * for the <code>SendTupleServiceI</code> component interface
+ * for the <code>ManagementCI</code> component interface and it implements also the the client side  and server side 
+ * for the <code>SendTupleServiceCI</code> component interface
  * @author Yajie LIU, Zimeng ZHANG
  */
-public class PluginReduce extends AbstractPlugin implements ManagementI{
+public class PluginReduce extends AbstractPlugin implements ManagementCI{
 	private static final long serialVersionUID=1L;
 	
 	/**Inbound port for management, Offer the service runTaskReduce*/
@@ -72,7 +72,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 	public void	installOn(ComponentI owner) throws Exception{
 		super.installOn(owner);
 
-		this.addRequiredInterface(SendTupleServiceI.class);
+		this.addRequiredInterface(SendTupleServiceCI.class);
 		this.sendTupleobp=new SendTupleOutboundPort(this.getOwner());
 		this.sendTupleobp.publishPort();
 		
@@ -84,11 +84,11 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 	public void initialise() throws Exception{
 		
 		super.initialise();
-		this.addOfferedInterface(ManagementI.class);
+		this.addOfferedInterface(ManagementCI.class);
 		this.managementReducePluginInboundPort = new ManagementInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementReducePluginInboundPort.publishPort();
 		
-		this.addOfferedInterface(SendTupleServiceI.class);
+		this.addOfferedInterface(SendTupleServiceCI.class);
 		this.ReceiveTupleInboundPort=new ReceiveTupleWithPluginInboundPort(receiveTupleInPortUri,this.getPluginURI(),this.getOwner() );
 		this.ReceiveTupleInboundPort.publishPort();
 		
@@ -107,16 +107,16 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 	public void uninstall() throws Exception {
 		this.managementReducePluginInboundPort.unpublishPort();
 		this.managementReducePluginInboundPort.destroyPort();
-		this.removeOfferedInterface(ManagementI.class);
+		this.removeOfferedInterface(ManagementCI.class);
 		
 		this.ReceiveTupleInboundPort.unpublishPort();
 		this.ReceiveTupleInboundPort.destroyPort();
-		this.removeOfferedInterface(SendTupleServiceI.class);
+		this.removeOfferedInterface(SendTupleServiceCI.class);
 
 		
 		this.sendTupleobp.unpublishPort();
 		this.sendTupleobp.destroyPort();
-		this.removeRequiredInterface(SendTupleServiceI.class);
+		this.removeRequiredInterface(SendTupleServiceCI.class);
 		
 	}
 
@@ -125,7 +125,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 	 * Launch the reduce task , run the code differently depending on the nature of fonction_reduce
 	 * @param function BiFunction(Tuple,Tuple, Tuple),the function to be executed
 	 * @param t Tuple of data size,Contains two int's, 
-	 * one storing the minimum value Function<Tuple, Tuple>of the generated Tuple's id and one storing the maximum value
+	 * one storing the minimum value Function(Tuple, Tuple)of the generated Tuple's id and one storing the maximum value
 	 * @param nature  Store the nature of the reduce function,It can be  COMMUTATIVE_ASSOCIATIVE,ASSOCIATIVE or ITERATIVE
 	 * @throws Exception exception
 	 */
@@ -149,7 +149,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 					OrderedTuple t2=(OrderedTuple) bufferReceive.take();
 					
 					this.getOwner().runTask(indexCalculExector,reduce -> {try {
-						((createCalculServiceI)reduce).createReduceCalculTask((LinkedBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
+						((CreateCalculServiceI)reduce).createReduceCalculTask((LinkedBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}});
@@ -198,7 +198,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 						
 						if(t1.getId()<t2.getId()) {
 							this.getOwner().runTask(indexCalculExector,reduce -> {try {
-								((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
+								((CreateCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}});
@@ -206,7 +206,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 						}else {
 		
 							this.getOwner().runTask(indexCalculExector,reduce -> {try {
-								((createCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t2, t1);
+								((CreateCalculServiceI)reduce).createReduceCalculTask((PriorityBlockingQueue<OrderedTuple>) bufferReceive, function, t2, t1);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}});
@@ -245,7 +245,7 @@ public class PluginReduce extends AbstractPlugin implements ManagementI{
 					OrderedTuple t2=tmp2;
 					this.getOwner().runTask(indexCalculExector,reduce -> {
 						try {
-						((createCalculServiceI)reduce).createReduceCalculTask((BlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
+						((CreateCalculServiceI)reduce).createReduceCalculTask((BlockingQueue<OrderedTuple>) bufferReceive, function, t1, t2);
 						
 					} 
 						catch (Exception e) {

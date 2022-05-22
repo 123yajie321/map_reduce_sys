@@ -7,10 +7,10 @@ import fr.sorbonne_u.components.ComponentI;
 import map_reduce_sys.connector.ConnectorSendTuple;
 import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
-import map_reduce_sys.interfaces.ManagementI;
+import map_reduce_sys.interfaces.ManagementCI;
 import map_reduce_sys.interfaces.SendTupleImplementationI;
-import map_reduce_sys.interfaces.SendTupleServiceI;
-import map_reduce_sys.interfaces.createCalculServiceI;
+import map_reduce_sys.interfaces.SendTupleServiceCI;
+import map_reduce_sys.interfaces.CreateCalculServiceI;
 import map_reduce_sys.ports.ManagementInboundPortForPlugin;
 import map_reduce_sys.ports.SendTupleOutboundPort;
 import map_reduce_sys.structure.Nature;
@@ -18,12 +18,12 @@ import map_reduce_sys.structure.Tuple;
 
 /**
  * The class <code>PluginResource</code> implements the calculate component side  plug-in
- * for the <code>ManagementI</code> component interface and it implements also the the client side plug-in
- * for the <code>SendTupleServiceI</code> component interface
+ * for the <code>ManagementCI</code> component interface and it implements also the the client side plug-in
+ * for the <code>SendTupleServiceCI</code> component interface
  * @author Yajie LIU, Zimeng ZHANG
  */
 
-public class PluginResource extends AbstractPlugin implements ManagementI{
+public class PluginResource extends AbstractPlugin implements ManagementCI{
 	private static final long serialVersionUID=1L;
 	/**Inbound port for management, Offer the service runTaskResource*/
 	protected ManagementInboundPortForPlugin managementPluginInboundPort;
@@ -62,7 +62,7 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	public void	installOn(ComponentI owner) throws Exception{
 		
 		super.installOn(owner);
-		this.addRequiredInterface(SendTupleServiceI.class);
+		this.addRequiredInterface(SendTupleServiceCI.class);
 		this.sendTupleobp=new SendTupleOutboundPort(this.getOwner());
 		this.sendTupleobp.publishPort();
 		
@@ -72,7 +72,7 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	public void initialise() throws Exception{
 		
 		super.initialise();
-		this.addOfferedInterface(ManagementI.class);
+		this.addOfferedInterface(ManagementCI.class);
 		this.managementPluginInboundPort = new ManagementInboundPortForPlugin(ManagementInPortUri,this.getPluginURI(),this.getOwner());
 		this.managementPluginInboundPort.publishPort();
 		
@@ -92,11 +92,11 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 	public void uninstall() throws Exception {
 		this.managementPluginInboundPort.unpublishPort();
 		this.managementPluginInboundPort.destroyPort();
-		this.removeOfferedInterface(ManagementI.class);
+		this.removeOfferedInterface(ManagementCI.class);
 		
 		this.sendTupleobp.unpublishPort();
 		this.sendTupleobp.destroyPort();
-		this.removeRequiredInterface(SendTupleServiceI.class);
+		this.removeRequiredInterface(SendTupleServiceCI.class);
 		
 		
 	}
@@ -120,15 +120,15 @@ public class PluginResource extends AbstractPlugin implements ManagementI{
 		
 			int tupleId=currentTupleId;
 			this.getOwner().runTask(indexCalculExector, res->{	try {
-				((createCalculServiceI)res).createResourceCalculTask(bufferSend,data_generator,tupleId);
+				((CreateCalculServiceI)res).createResourceCalculTask(bufferSend,data_generator,tupleId);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}});
 			currentTupleId++;
 			
 			Tuple result =bufferSend.take();
-			this.getOwner().runTask(indexSendExector, res -> {try {
-				((SendTupleImplementationI)res).send_Tuple(this.sendTupleobp, result);
+			this.getOwner().runTask(indexSendExector, ComponentCalcul -> {try {
+				((SendTupleImplementationI)ComponentCalcul).send_Tuple(this.sendTupleobp, result);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}});

@@ -20,8 +20,8 @@ import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import map_reduce_sys.DistributedCVM;
 import map_reduce_sys.interfaces.BiFunction;
 import map_reduce_sys.interfaces.Function;
-import map_reduce_sys.interfaces.ManagementI;
-import map_reduce_sys.interfaces.SendTupleServiceI;
+import map_reduce_sys.interfaces.ManagementCI;
+import map_reduce_sys.interfaces.SendTupleServiceCI;
 import map_reduce_sys.plugin.PluginManagementOut;
 import map_reduce_sys.plugin.PluginMap;
 import map_reduce_sys.plugin.PluginReduce;
@@ -33,23 +33,32 @@ import map_reduce_sys.structure.OrderedTuple;
 import map_reduce_sys.structure.Task;
 import map_reduce_sys.structure.Tuple;
 
-@RequiredInterfaces(required ={ManagementI.class,ReflectionCI.class})
-@OfferedInterfaces(offered ={SendTupleServiceI.class})
+/**
+ * The class <code>ComponentGestion</code> implements a component that can
+ * assign tasks to calculate components and receive tuple of result from Reduce component
+ *    
+ * @author Yajie LIU, Zimeng ZHANG
+ */
+@RequiredInterfaces(required ={ManagementCI.class,ReflectionCI.class})
+@OfferedInterfaces(offered ={SendTupleServiceCI.class})
 
 public class ComponentGestion extends AbstractComponent {
 	/**Generate the plugin id, which is used when setting the plugin URI*/
 	private static int pluginid=0;
-	
+	/**Thread pools used for launching task of calculation*/
 	protected ThreadPoolExecutor runTaskExecutor;
+	/**Record the start time for the experimental section*/
 	protected long startTime ;
+	/**Record the end time for the experimental section*/
 	protected long endTime;
+	/**Inbound port to receive tuple of result from Reduce component  */
 	protected ReceiveTupleInboundPort receiveResultInboundPort;
 	
 	protected ComponentGestion() throws Exception {
 		super(3, 0);
-		int N=3;
 		this.receiveResultInboundPort=new ReceiveTupleInboundPort(this);
 		this.receiveResultInboundPort.publishPort();
+		int N=3;
 		runTaskExecutor = new ThreadPoolExecutor(N, N, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(20));
 		runTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 		this.getTracer().setTitle("Gestion ");
@@ -86,37 +95,34 @@ public class ComponentGestion extends AbstractComponent {
 			String portUri=AbstractPort.generatePortURI();
 			managementInboundPortUriList.add(portUri);
 		}
-		//Create and install PluginManagementOut on Gestion component 
+		//Create PluginManagementOut for gestion component
 		ArrayList<PluginManagementOut> pluginsManagementOut=createPluginsManagementOut(managementInboundPortUriList);
 		
 		
+		/*Create and install ResourcePlugin,Map plugin,Reduce plugin on calculate component */
 		String ResourceSendInboundPort=AbstractPort.generatePortURI();
 		String mapSendInboundPort=AbstractPort.generatePortURI();
-		
 		PluginResource pluginResource=createPluginResource(managementInboundPortUriList.get(0), 3, jobAssoc.getDataGenerator(), ResourceSendInboundPort, pluginid);
 		pluginid++;
 		PluginMap pluginMap=createPluginMap(managementInboundPortUriList.get(1), 1, jobAssoc.getFunctionMap(), ResourceSendInboundPort, mapSendInboundPort, pluginid);
 		pluginid++;
-		
-		
 		PluginReduce pluginReduce=createPluginReduce(managementInboundPortUriList.get(2), 6,jobAssoc.getFunctionReduce(),mapSendInboundPort,receiveResultInboundPort.getPortURI(), pluginid);
 		pluginid++;
-		
-		
-		
 		listReflectionOutboundPort.get(0).installPlugin(pluginResource);
 		listReflectionOutboundPort.get(1).installPlugin(pluginMap);
 		listReflectionOutboundPort.get(2).installPlugin(pluginReduce);
 	
 		
-		
-	
 		for(PluginManagementOut plugin:pluginsManagementOut) {
 			
 			this.installPlugin(plugin);
 		}
 		
-		
+		/*
+		 * All the plugins have been created and installed, the next step is to start linking them together.
+		 *  It takes a little time for the plugins to finish initialising, 
+		 *  so if an exception occurs you can let the thread sleep for 100ms
+		 * */
 		//Thread.sleep(10);
 		
 		for(PluginManagementOut plugin:pluginsManagementOut) {
@@ -124,10 +130,7 @@ public class ComponentGestion extends AbstractComponent {
 			plugin.doManagementConnection();
 		}
 	
-		
 		for(PluginManagementOut plugin:pluginsManagementOut) {
-			
-
 			Runnable taskConnect = () -> {
 				 try {
 					plugin.getServicePort().DoPluginPortConnection();
@@ -138,17 +141,15 @@ public class ComponentGestion extends AbstractComponent {
 			runTaskExecutor.submit(taskConnect);
 			
 		}
-		
+		//submit the calculate jobs
 		submitRunCalculTask(pluginsManagementOut.get(0), jobAssoc, Task.ResourceTask, 0);
 		submitRunCalculTask(pluginsManagementOut.get(1), jobAssoc, Task.MapTask, 0);
 		submitRunCalculTask(pluginsManagementOut.get(2), jobAssoc, Task.ReduceTask, 0);
 		
-		
 		for(ReflectionOutboundPort port:listReflectionOutboundPort) {
 			port.doDisconnection();
 			port.unpublishPort();
-			port.destroyPort();
-			
+			port.destroyPort();	
 		}
 	
 	}
@@ -173,6 +174,10 @@ public class ComponentGestion extends AbstractComponent {
 		
 	}
 
+	/**
+	 * receive tuple from Reduce component  and calculate the time of execution 
+	 * @param t Tuple containing the result
+	 */
 	public boolean recieve_Tuple(Tuple t) {
 		long endTime=System.currentTimeMillis();
 		System.out.println("Executetime "+(endTime-startTime)+"ms"); 
@@ -180,6 +185,16 @@ public class ComponentGestion extends AbstractComponent {
 		this.traceMessage("Executetime "+(endTime-startTime)+"ms"+"\n");
 		return true;
 	}
+	
+	
+	/**
+	 * submit the calculate task , run the code differently depending on the type of Task
+	 * @param pluginOut PluginManagementOut, plug-in used to launch the task
+	 * @param job Job contains the functions used by task
+	 * @param typetask  store the type of the task,It can be  ResourceTask,MapTask or ReduceTask
+	 * @param numero For a single job there may be several resource components that work together, 
+	 * numero specifies which one this is
+	 */
 	
 	
 	public void submitRunCalculTask(PluginManagementOut pluginOut,Job job,Task typetask,int numero) {
@@ -228,20 +243,15 @@ public class ComponentGestion extends AbstractComponent {
 			break;
 		}
 		
-		
-		
-		
 	}
 	
 	
-	public ReflectionOutboundPort connectWithComponentCalcul(String inboundPortString) throws Exception {
-		
-		ReflectionOutboundPort reflectionOutboundPort=new ReflectionOutboundPort(this);
-		reflectionOutboundPort.publishPort();
-		this.doPortConnection(reflectionOutboundPort.getPortURI(),inboundPortString, ReflectionConnector.class.getCanonicalName());
-		return reflectionOutboundPort;
-		
-	}
+	/**
+	 * For the given uri of ports, create a ReflectionOutboundPort to connect with them
+	 * @param portUris String, uri of the reflection inbound port  to be connected
+	 * @throws Exception exception
+	 * @return ArrayList(ReflectionOutboundPort) rerturn the list of  ReflectionOutboundPort created
+	 */
 	
   public ArrayList<ReflectionOutboundPort>  connectWithComponentCalcul(String ...portUris ) throws Exception {
 	    ArrayList<ReflectionOutboundPort> portList=new ArrayList<ReflectionOutboundPort>();
@@ -254,11 +264,16 @@ public class ComponentGestion extends AbstractComponent {
 		return portList;	
 		
 	}
-	
 		
+
+	/**
+	 * For the given uri of ports, use them to create PluginManagementOut
+	 * @param inboundPortUris String, uri of the management inbound port of the PluginManagementOut created
+	 * @throws Exception exception
+	 * @return ArrayList(PluginManagementOut) rerturn the list of  PluginManagementOut created
+	 */
 	
-	public ArrayList<PluginManagementOut> createPluginsManagementOut(ArrayList<String> inboundPortUris) throws Exception {
-		
+	public ArrayList<PluginManagementOut> createPluginsManagementOut(ArrayList<String> inboundPortUris) throws Exception {	
 		ArrayList<PluginManagementOut>pluginOutList=new ArrayList<>();
 		for(String inboundPortUri:inboundPortUris) {
 			PluginManagementOut pluginOut=new PluginManagementOut();
@@ -271,29 +286,15 @@ public class ComponentGestion extends AbstractComponent {
 		return pluginOutList;
 	}
 	
-	public PluginManagementOut createPluginManagementOut(String inboundPortUri) throws Exception {
-		
-		PluginManagementOut pluginOut=new PluginManagementOut();
-		pluginOut.setInboundPortUri(inboundPortUri);
-		pluginOut.setPluginURI("PluginOut"+pluginid);
-		pluginid++;
-		return pluginOut;
-		
-	}
+
+	/**
+	 * depending on the parameters given, create map_reduce  job of different nature and size
+	 * @param n Nature, define the nature of the function_reduce of job
+	 * @param nbResource  number of resource components to generate the data
+	 * @param Sizetotal Total amount of data to be generated
+	 * @return Job  rerturn the job created
+	 */
 	
-	 public Tuple createTuplePluginInfo(int size, Object ...arg) {
-		 Tuple tupleinfo=new Tuple(size);
-		 int indice=0;
-		 for(Object info:arg) {
-			 tupleinfo.setIndiceTuple(indice, info);
-			 indice++;
-		 }
-		return tupleinfo;
-		 
-	 }
-	  /*
-	   * nbResource: nombre de composant resource pour generer les donnees
-	   */
 	public Job createJob(Nature n,int nbResource, int Sizetotal ) {
 		
 		Job job;
@@ -310,7 +311,6 @@ public class ComponentGestion extends AbstractComponent {
 		}
 
 		Function<Integer, Tuple> data_generator = (id)->{
-			//	int number=(int) (Math.random()*50);
 			int number=5;
 			Tuple tuple=new OrderedTuple(1,id);
 			tuple.setIndiceTuple(0, number);
@@ -318,8 +318,6 @@ public class ComponentGestion extends AbstractComponent {
 		};
 		
 	
-		
-		
 		Function<Integer, Tuple> matrix_generator = (v)->{
 			
 			int nb_line=2;
@@ -415,8 +413,6 @@ public class ComponentGestion extends AbstractComponent {
 				  
 		};
 		
-		
-
 		BiFunction<Tuple, Tuple, Tuple> g_reduce_iteratif = (a,b) -> {
 			OrderedTuple t=(OrderedTuple)b;
 
@@ -458,8 +454,6 @@ public class ComponentGestion extends AbstractComponent {
 	public PluginResource createPluginResource(String managementResourceInboundPort,int nb,Function<Integer, Tuple> data_generator,String mapReceiveTupleinboundPorturi,int pluginId) throws Exception {
 		PluginResource pluginResourceIn=new PluginResource(managementResourceInboundPort, nb,data_generator,mapReceiveTupleinboundPorturi);
 		pluginResourceIn.setPluginURI("PluginResourceIn"+pluginId);
-		//this.installPlugin(pluginResourceIn);
-		//System.out.println("Component res plugin installed"); 
 		return pluginResourceIn;
 		
 	}

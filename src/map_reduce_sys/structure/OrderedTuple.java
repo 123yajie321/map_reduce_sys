@@ -1,21 +1,32 @@
 package map_reduce_sys.structure;
 
 import java.io.Serializable;
+/**
+ * The class <code>OrderedTuple</code>This class defines 
+ * Basic structure for data transfer between components,
+ * its instances are orderable
+ * @author Yajie LIU, Zimeng ZHANG
+ */
 
 public class OrderedTuple extends Tuple implements Comparable<OrderedTuple> {
 	
 	  private static final long serialVersionUID = 1L;
+	  /**generate id for tuple */
 	  private static int TupleId=0;
+	  
+	  /**identifier of the tuple, 
+	   * it'a also can be the biggest tuple that is fused*/
 	  private int id;
-	  //Used to record the id of the smallest Tuple that is fused
+	  /**Used to record the id of the smallest Tuple that is fused*/
 	  private int rangeMin;
+	  
+	  
 	  
 	  public OrderedTuple (int dimention){
 		    super(dimention);
 		    this.id=TupleId;
 		    this.rangeMin=-100;
-		    TupleId++;
-		 
+		    TupleId++; 
 	  }
 	  
 	   

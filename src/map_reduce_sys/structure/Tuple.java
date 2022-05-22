@@ -4,11 +4,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
+/**
+ * The class <code>Tuple</code>This class defines 
+ * Basic structure for data transfer between components,
+ * @author Yajie LIU, Zimeng ZHANG
+ */
 
 public class Tuple implements Serializable {
 	
 	  private static final long serialVersionUID = 1L;
+	  /**Array that can be used to store different types of data*/
 	  private Object[] tuple;
+	  /**The size of the Array */
 	  private int dimension; 
 	  
 
